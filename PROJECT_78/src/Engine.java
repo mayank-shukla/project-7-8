@@ -46,7 +46,7 @@ public class Engine extends JFrame implements MouseMotionListener, MouseWheelLis
 
 	public static void main(String[] args) 
 	{
-		SlaatNergensOp();
+		//SlaatNergensOp();
 		whatTheFuck();
 		new Engine();
 	}
