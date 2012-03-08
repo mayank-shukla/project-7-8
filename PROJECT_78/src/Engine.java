@@ -1,4 +1,3 @@
-import java.awt.LayoutManager;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
@@ -8,17 +7,12 @@ import javax.media.opengl.GLCapabilities;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-
-//TEST HUE HU EHUE
 public class Engine extends JFrame implements MouseMotionListener, MouseWheelListener{
 
 	private static final long serialVersionUID = 1L;
 
 	private static MyJoglCanvas jogl;
 
-	private JPanel jpanel1;
-	private JPanel jpanel2;
-	
 	private int width = 500;
 	private int height = 500;
 
@@ -36,8 +30,6 @@ public class Engine extends JFrame implements MouseMotionListener, MouseWheelLis
 		jogl.addMouseWheelListener(this);
 		setFocusable(true);
 		//add(jogl);
-
-		
 
 		setVisible(true);
 		setSize(width, height);
