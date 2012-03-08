@@ -7,7 +7,7 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="PROJECT_78/JOGL"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="D:/eclipse programas/JOGL/jogl.all.jar">
+	<classpathentry kind="lib" path="JOGL/jogl.all.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="PROJECT_78/JOGL"/>
 		</attributes>
