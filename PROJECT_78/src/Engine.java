@@ -36,9 +36,15 @@ public class Engine extends JFrame implements MouseMotionListener, MouseWheelLis
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 	}
+	
+	public static void whatTheFuck()
+	{
+		System.out.println("apen");
+	}
 
 	public static void main(String[] args) 
 	{
+		whatTheFuck();
 		new Engine();
 	}
 
