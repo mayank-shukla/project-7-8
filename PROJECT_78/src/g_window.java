@@ -1,4 +1,5 @@
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
@@ -26,15 +27,20 @@ public class g_window implements MouseMotionListener, MouseWheelListener
 	
 	public void createWindow()
 	{
-		frame.setLocation(200, 50);
+		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        int width = 730;
+        int height = 600;
+        int x = (screen.width-width)/2;
+        int y = (screen.height-height)/2;
+        frame.setBounds(x,y,width,height);
+		
 		frame.addWindowListener(new WindowAdapter() 
 		{
 			public void windowClosing(WindowEvent e) 
 			{
 				System.exit(0);
 			}
-		});
-		frame.setSize(new Dimension(720, 600));
+		});        
 		frame.setResizable(false);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -63,10 +69,12 @@ public class g_window implements MouseMotionListener, MouseWheelListener
 		
 		frame.add(jpanel1);
 		frame.add(jpanel4);
+		//frame.repaint();
 	}
 
 	@Override
-	public void mouseWheelMoved(MouseWheelEvent e) {
+	public void mouseWheelMoved(MouseWheelEvent e) 
+	{
 		int afstand = jogl.getAfstand();
 		e.getWheelRotation();
 		if(e.getWheelRotation()>0) afstand+=2;
@@ -99,7 +107,8 @@ public class g_window implements MouseMotionListener, MouseWheelListener
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent e) {
+	public void mouseMoved(MouseEvent e) 
+	{
 		corX = e.getX();
 		corY = e.getY();
 	}
