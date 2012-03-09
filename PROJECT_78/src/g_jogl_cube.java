@@ -8,14 +8,14 @@ import javax.media.opengl.glu.gl2.GLUgl2;
 
 import com.jogamp.opengl.util.FPSAnimator;
 
-public class MyJoglCanvas extends GLCanvas implements GLEventListener {
+public class g_jogl_cube extends GLCanvas implements GLEventListener {
 
 	private static final long serialVersionUID = 1L;
 	private FPSAnimator animator;
 	private GLUgl2 glu;
 	private int afstand = 100, aanzicht = 0, hoogte = 0;//aanzicht van 0 t/m 360
 
-	public MyJoglCanvas(int width, int height, GLCapabilities capabilities) {
+	public g_jogl_cube(int width, int height, GLCapabilities capabilities) {
 		super(capabilities);
 		setSize(width, height);
 	}
