@@ -15,6 +15,7 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener {
 	private GLUgl2 glu;
 	private int afstand, aanzicht, hoogte;//aanzicht van 0 t/m 360
 	boolean[][][] cube_bool;
+	boolean[][][] cube_bool_draw;
 	int[][][] cube_red;
 	int[][][] cube_green;
 	
@@ -22,9 +23,24 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener {
 	public g_jogl_cube(int width, int height, GLCapabilities capabilities) {
 		super(capabilities);
 		setSize(width, height);
-		afstand = 100;
+		afstand = 125;
 		aanzicht = 0;
 		hoogte = 0;
+		cube_red = new int[16][16][16];
+		cube_green = new int[16][16][16];
+		cube_bool = new boolean[16][16][16];
+		cube_bool_draw = new boolean[16][16][16];
+		
+		for(int x=0;x<16;x++) {
+			for(int y=0;y<16;y++) {
+				for(int z=0;z<16;z++) {
+					cube_red[x][y][z]=255;
+					cube_green[x][y][z]=255;
+					cube_bool[x][y][z] = true;
+					cube_bool_draw[x][y][z] = true;
+				}
+			}
+		}
 	}
 
 	/**
@@ -34,53 +50,62 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener {
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
-		setCamera(gl, glu, 0, 0, 0, afstand, aanzicht, hoogte);
-		/*
-		gl.glBegin(GL2.GL_QUADS);
-		gl.glColor3f(0.9f, 0.5f, 0.2f);
-		gl.glEnd();
-		//*/
-		
-		// Draw QUADS.
-		gl.glColor3f(0.9f, 0.5f, 0.2f);
-		gl.glBegin(GL2.GL_QUADS);
-		gl.glVertex3f(20, 20, -20);
-		gl.glVertex3f(-20, 20, -20);
-		gl.glVertex3f(-20, 20, 20);
-		gl.glVertex3f(20, 20, 20);
+		setCamera(gl, glu, 24, 24, 24, afstand, aanzicht, hoogte);
 
-		gl.glColor3f(0.2f, 0.5f, 0.2f);
-		gl.glVertex3f(20, -20, 20);
-		gl.glVertex3f(-20, -20, 20);
-		gl.glVertex3f(-20, -20, -20);
-		gl.glVertex3f(20, -20, -20);
+		renderFilter();
 
-		gl.glColor3f(0.9f, 0.9f, 0.2f);
-		gl.glVertex3f(20, 20, 20);
-		gl.glVertex3f(-20, 20, 20);
-		gl.glVertex3f(-20, -20, 20);
-		gl.glVertex3f(20, -20, 20);
+		for(int x=0;x<16;x++) {
+			for(int y=0;y<16;y++) {
+				for(int z=0;z<16;z++) {
+					if(cube_bool_draw[x][y][z]) {
+						gl.glColor3f(cube_red[x][y][z]/255f, cube_green[x][y][z]/255f, 0);
+						gl.glBegin(GL2.GL_QUADS);
+						gl.glVertex3f(3+3*x, 3+3*y, 0);
+						gl.glVertex3f(0, 3+3*y, 0);
+						gl.glVertex3f(0, 3+3*y, 3+3*z);
+						gl.glVertex3f(3+3*x, 3+3*y, 3+3*z);
 
-		gl.glColor3f(0.9f, 0.5f, 0.8f);
-		gl.glVertex3f(20, -20, -20);
-		gl.glVertex3f(-20, -20, -20);
-		gl.glVertex3f(-20, 20, -20);
-		gl.glVertex3f(20, 20, -20);
+						gl.glVertex3f(3+3*x, 0, 3+3*z);
+						gl.glVertex3f(0, 0, 3+3*z);
+						gl.glVertex3f(0, 0, 0);
+						gl.glVertex3f(3+3*x, 0, 0);
 
-		gl.glColor3f(1f, 0.5f, 0.2f);
-		gl.glVertex3f(-20, 20, 20);
-		gl.glVertex3f(-20, 20, -20);
-		gl.glVertex3f(-20, -20, -20);
-		gl.glVertex3f(-20, -20, 20);
+						gl.glVertex3f(3+3*x, 3+3*y, 3+3*z);
+						gl.glVertex3f(0, 3+3*y, 3+3*z);
+						gl.glVertex3f(0, 0, 3+3*z);
+						gl.glVertex3f(3+3*x, 0, 3+3*z);
 
-		gl.glColor3f(0.9f, 0f, 0.2f);
-		gl.glVertex3f(20, 20, -20);
-		gl.glVertex3f(20, 20, 20);
-		gl.glVertex3f(20, -20, 20);
-		gl.glVertex3f(20, -20, -20);
-		gl.glEnd();
-		//*/
-		
+						gl.glVertex3f(3+3*x, 0, 0);
+						gl.glVertex3f(0, 0, 0);
+						gl.glVertex3f(0, 3+3*y, 0);
+						gl.glVertex3f(3+3*x, 3+3*y, 0);
+
+						gl.glVertex3f(0, 3+3*y, 3+3*z);
+						gl.glVertex3f(0, 3+3*y, 0);
+						gl.glVertex3f(0, 0, 0);
+						gl.glVertex3f(0, 0, 3+3*z);
+
+						gl.glVertex3f(3+3*x, 3+3*y, 0);
+						gl.glVertex3f(3+3*x, 3+3*y, 3+3*z);
+						gl.glVertex3f(3+3*x, 0, 3+3*z);
+						gl.glVertex3f(3+3*x, 0, 0);
+						gl.glEnd();
+					}
+				}
+			}
+		}
+	}
+
+
+	private void renderFilter() {
+		//TODO methode maken + aanroepen die bepaalt welke cubes moeten worden gerenderd
+		for(int x=0;x<16;x++) {
+			for(int y=0;y<16;y++) {
+				for(int z=0;z<16;z++) {
+					cube_bool_draw[x][y][z] = cube_bool[x][y][z]; 
+				}
+			}
+		}
 		
 		
 	}
@@ -188,5 +213,34 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener {
 
 	public void setHoogte(int hoogte) {
 		this.hoogte = hoogte;
+	}
+
+	public boolean getCube_bool(int x, int y, int z) {
+		return cube_bool[x][y][z];
+	}
+
+
+	public void setCube_bool(int x, int y, int z, boolean cube_bool) {
+		this.cube_bool[x][y][z] = cube_bool;
+	}
+
+
+	public int getCube_red(int x, int y, int z) {
+		return cube_red[x][y][z];
+	}
+
+
+	public void setCube_red(int x, int y, int z, int cube_red) {
+		this.cube_red[x][y][z] = cube_red;
+	}
+
+
+	public int getCube_green(int x, int y, int z) {
+		return cube_green[x][y][z];
+	}
+
+
+	public void setCube_green(int x, int y, int z, int cube_green) {
+		this.cube_green[x][y][z] = cube_green;
 	}
 }
