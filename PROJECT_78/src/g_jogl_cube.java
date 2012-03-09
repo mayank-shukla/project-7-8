@@ -13,19 +13,34 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener {
 	private static final long serialVersionUID = 1L;
 	private FPSAnimator animator;
 	private GLUgl2 glu;
-	private int afstand = 100, aanzicht = 0, hoogte = 0;//aanzicht van 0 t/m 360
-
+	private int afstand, aanzicht, hoogte;//aanzicht van 0 t/m 360
+	boolean[][][] cube_bool;
+	int[][][] cube_red;
+	int[][][] cube_green;
+	
+	
 	public g_jogl_cube(int width, int height, GLCapabilities capabilities) {
 		super(capabilities);
 		setSize(width, height);
+		afstand = 100;
+		aanzicht = 0;
+		hoogte = 0;
 	}
 
+	/**
+	 * teken 16*16*16 cubes aan de hand van fields, het heeft een rood groen waarde
+	 */
 	public void display(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
 		setCamera(gl, glu, 0, 0, 0, afstand, aanzicht, hoogte);
-
+		/*
+		gl.glBegin(GL2.GL_QUADS);
+		gl.glColor3f(0.9f, 0.5f, 0.2f);
+		gl.glEnd();
+		//*/
+		
 		// Draw QUADS.
 		gl.glColor3f(0.9f, 0.5f, 0.2f);
 		gl.glBegin(GL2.GL_QUADS);
@@ -64,6 +79,10 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener {
 		gl.glVertex3f(20, -20, 20);
 		gl.glVertex3f(20, -20, -20);
 		gl.glEnd();
+		//*/
+		
+		
+		
 	}
 
 	public void init(GLAutoDrawable drawable) {
