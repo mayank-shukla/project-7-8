@@ -25,7 +25,7 @@ public class g_window implements MouseMotionListener, MouseWheelListener
 	private int corX;
 	
 	public void createWindow()
-	{		
+	{
 		frame.setLocation(200, 50);
 		frame.addWindowListener(new WindowAdapter() 
 		{
@@ -79,11 +79,11 @@ public class g_window implements MouseMotionListener, MouseWheelListener
 		int aanzicht = jogl.getAanzicht();
 		int hoogte = jogl.getHoogte();
 
-		if(e.getX()<corX) aanzicht++;
-		else if(e.getX()>corX) aanzicht--;
+		if(e.getX()<corX) aanzicht+=3;
+		else if(e.getX()>corX) aanzicht-=3;
 
-		if(e.getY()<corY) hoogte--;
-		else if(e.getY()>corY) hoogte++;
+		if(e.getY()<corY) hoogte-=3;
+		else if(e.getY()>corY) hoogte+=3;
 
 		if(aanzicht<0) aanzicht = 360;
 		else if(aanzicht>360) aanzicht = 0;
@@ -93,6 +93,9 @@ public class g_window implements MouseMotionListener, MouseWheelListener
 
 		jogl.setAanzicht(aanzicht);
 		jogl.setHoogte(hoogte);
+
+		corX = e.getX();
+		corY = e.getY();
 	}
 
 	@Override
