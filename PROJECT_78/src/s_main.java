@@ -19,15 +19,5 @@ public class s_main extends Thread
 	{
 		g_window window = new g_window();
 		window.createWindow();
-		
-		try 
-		{
-			while(true)
-			{
-				window.updateFrame();
-				Thread.sleep(100);
-			}
-		} 
-		catch (Throwable t){}
 	}
 }

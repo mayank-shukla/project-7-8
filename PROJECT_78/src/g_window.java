@@ -65,11 +65,6 @@ public class g_window implements MouseMotionListener, MouseWheelListener
 		frame.add(jpanel4);
 	}
 
-	public void updateFrame() 
-	{
-		frame.repaint();
-	}
-
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		int afstand = jogl.getAfstand();
