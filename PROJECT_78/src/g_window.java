@@ -20,7 +20,7 @@ import javax.swing.JPanel;
 public class g_window implements MouseMotionListener, MouseWheelListener
 {
 	JFrame frame = new JFrame("3D LED Cube Simulator/Editor " + s_version.getVersion());
-	private MyJoglCanvas jogl;
+	private g_jogl_cube jogl;
 	private int corY;
 	private int corX;
 	
@@ -44,7 +44,7 @@ public class g_window implements MouseMotionListener, MouseWheelListener
 		capabilities.setBlueBits(8);
 		capabilities.setGreenBits(8);
 		capabilities.setAlphaBits(8);
-		jogl = new MyJoglCanvas(420, 420, capabilities);
+		jogl = new g_jogl_cube(420, 420, capabilities);
 		jogl.addGLEventListener(jogl);
 		jogl.setFocusable(true);
 		jogl.addMouseMotionListener(this);
