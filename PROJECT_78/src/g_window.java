@@ -40,7 +40,7 @@ public class g_window implements MouseMotionListener, MouseWheelListener
 			{
 				System.exit(0);
 			}
-		});        
+		});
 		frame.setResizable(false);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -93,14 +93,18 @@ public class g_window implements MouseMotionListener, MouseWheelListener
 		if(e.getY()<corY) hoogte-=3;
 		else if(e.getY()>corY) hoogte+=3;
 
-		if(aanzicht<0) aanzicht = 360;
-		else if(aanzicht>360) aanzicht = 0;
+		if(aanzicht<0) aanzicht = 359;
+		else if(aanzicht>359) aanzicht = 0;
 
 		if(hoogte>89) hoogte = 89;
 		else if(hoogte<-89) hoogte = -89;
 
-		jogl.setAanzicht(aanzicht);
-		jogl.setHoogte(hoogte);
+		try {
+			jogl.setAanzicht(aanzicht);
+			jogl.setHoogte(hoogte);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 
 		corX = e.getX();
 		corY = e.getY();
