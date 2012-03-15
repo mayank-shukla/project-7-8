@@ -24,7 +24,15 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener {
 		super(capabilities);
 		setSize(width, height);
 		afstand = 125;
-		aanzicht = 0;
+		aanzicht = 90;
+		
+		/*	TODO
+		 * bij aanzicht 0 de hoogste z waarde tekenen
+		 * bij aanzicht 90 de hoogste x waarde tekenen
+		 * bij aanzicht 180 de laagst z waarde tekenen
+		 * bij aanzicht 270 de laagst x waarde tekenen
+		*/
+		
 		hoogte = 0;
 		cube_red = new int[16][16][16];
 		cube_green = new int[16][16][16];
@@ -50,64 +58,262 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener {
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
-		setCamera(gl, glu, 24, 24, 24, afstand, aanzicht, hoogte);
+		final int cube_size=3;
+
+		setCamera(gl, glu, cube_size*8, cube_size*8, cube_size*8, afstand, aanzicht, hoogte);
 
 		renderFilter();
 
+		gl.glBegin(GL2.GL_QUADS);
 		for(int x=0;x<16;x++) {
 			for(int y=0;y<16;y++) {
 				for(int z=0;z<16;z++) {
 					if(cube_bool_draw[x][y][z]) {
-						gl.glColor3f(cube_red[x][y][z]/255f, cube_green[x][y][z]/255f, 0);
-						gl.glBegin(GL2.GL_QUADS);
-						gl.glVertex3f(3+3*x, 3+3*y, 0);
-						gl.glVertex3f(0, 3+3*y, 0);
-						gl.glVertex3f(0, 3+3*y, 3+3*z);
-						gl.glVertex3f(3+3*x, 3+3*y, 3+3*z);
+						//TODO aanpassen zodat alleen het gedeelte van de cube die je ziet wordt gerenderd
+						gl.glColor3f(cube_red[x][y][z]/255f, cube_green[x][y][z]/255f, 0f);
 
-						gl.glVertex3f(3+3*x, 0, 3+3*z);
-						gl.glVertex3f(0, 0, 3+3*z);
+						gl.glVertex3f(cube_size+cube_size*x, cube_size+cube_size*y, 0);
+						gl.glVertex3f(0, cube_size+cube_size*y, 0);
+						gl.glVertex3f(0, cube_size+cube_size*y, cube_size+cube_size*z);
+						gl.glVertex3f(cube_size+cube_size*x, cube_size+cube_size*y, cube_size+cube_size*z);
+
+						gl.glVertex3f(cube_size+cube_size*x, 0, cube_size+cube_size*z);
+						gl.glVertex3f(0, 0, cube_size+cube_size*z);
 						gl.glVertex3f(0, 0, 0);
-						gl.glVertex3f(3+3*x, 0, 0);
+						gl.glVertex3f(cube_size+cube_size*x, 0, 0);
 
-						gl.glVertex3f(3+3*x, 3+3*y, 3+3*z);
-						gl.glVertex3f(0, 3+3*y, 3+3*z);
-						gl.glVertex3f(0, 0, 3+3*z);
-						gl.glVertex3f(3+3*x, 0, 3+3*z);
+						gl.glVertex3f(cube_size+cube_size*x, cube_size+cube_size*y, cube_size+cube_size*z);
+						gl.glVertex3f(0, cube_size+cube_size*y, cube_size+cube_size*z);
+						gl.glVertex3f(0, 0, cube_size+cube_size*z);
+						gl.glVertex3f(cube_size+cube_size*x, 0, cube_size+cube_size*z);
 
-						gl.glVertex3f(3+3*x, 0, 0);
+						gl.glVertex3f(cube_size+cube_size*x, 0, 0);
 						gl.glVertex3f(0, 0, 0);
-						gl.glVertex3f(0, 3+3*y, 0);
-						gl.glVertex3f(3+3*x, 3+3*y, 0);
+						gl.glVertex3f(0, cube_size+cube_size*y, 0);
+						gl.glVertex3f(cube_size+cube_size*x, cube_size+cube_size*y, 0);
 
-						gl.glVertex3f(0, 3+3*y, 3+3*z);
-						gl.glVertex3f(0, 3+3*y, 0);
+						gl.glVertex3f(0, cube_size+cube_size*y, cube_size+cube_size*z);
+						gl.glVertex3f(0, cube_size+cube_size*y, 0);
 						gl.glVertex3f(0, 0, 0);
-						gl.glVertex3f(0, 0, 3+3*z);
+						gl.glVertex3f(0, 0, cube_size+cube_size*z);
 
-						gl.glVertex3f(3+3*x, 3+3*y, 0);
-						gl.glVertex3f(3+3*x, 3+3*y, 3+3*z);
-						gl.glVertex3f(3+3*x, 0, 3+3*z);
-						gl.glVertex3f(3+3*x, 0, 0);
-						gl.glEnd();
+						gl.glVertex3f(cube_size+cube_size*x, cube_size+cube_size*y, 0);
+						gl.glVertex3f(cube_size+cube_size*x, cube_size+cube_size*y, cube_size+cube_size*z);
+						gl.glVertex3f(cube_size+cube_size*x, 0, cube_size+cube_size*z);
+						gl.glVertex3f(cube_size+cube_size*x, 0, 0);
 					}
 				}
 			}
 		}
+		gl.glEnd();//*/
 	}
 
-
 	private void renderFilter() {
-		//TODO methode maken + aanroepen die bepaalt welke cubes moeten worden gerenderd
 		for(int x=0;x<16;x++) {
 			for(int y=0;y<16;y++) {
 				for(int z=0;z<16;z++) {
-					cube_bool_draw[x][y][z] = cube_bool[x][y][z]; 
+					cube_bool_draw[x][y][z] = cube_bool[x][y][z];
 				}
 			}
 		}
-		
-		
+
+		if(aanzicht==0) {
+			if(hoogte==0) {
+				for(int x=0;x<16;x++) {
+					for(int y=0;y<16;y++) {
+						boolean teken=true;
+						for(int z=15;z>=0;z--) {
+							if(!teken) {
+								cube_bool_draw[x][y][z]=false;
+							}
+							else if(cube_bool_draw[x][y][z]==true) {
+								teken=false;
+							}
+						}
+					}
+				}
+			}
+			else if(hoogte>0) {
+				for(int x=0;x<16;x++) {
+					for(int y=1;y<16;y++) {
+						boolean teken=true;
+						for(int z=15;z>=0;z--) {
+							if(!teken) {
+								cube_bool_draw[x][y][z]=false;
+							}
+							else if(cube_bool_draw[x][y][z]==true) {
+								teken=false;
+							}
+						}
+					}
+				}
+			}
+			else {
+				for(int x=0;x<16;x++) {
+					for(int y=0;y<15;y++) {
+						boolean teken=true;
+						for(int z=15;z>=0;z--) {
+							if(!teken) {
+								cube_bool_draw[x][y][z]=false;
+							}
+							else if(cube_bool_draw[x][y][z]==true) {
+								teken=false;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		else if(aanzicht == 180) {
+			if(hoogte==0) {
+				for(int x=0;x<16;x++) {
+					for(int y=0;y<16;y++) {
+						boolean teken=true;
+						for(int z=0;z<16;z++) {
+							if(!teken) {
+								cube_bool_draw[x][y][z]=false;
+							}
+							else if(cube_bool_draw[x][y][z]==true) {
+								teken=false;
+							}
+						}
+					}
+				}
+			}
+			else if(hoogte>0) {
+				for(int x=0;x<16;x++) {
+					for(int y=1;y<16;y++) {
+						boolean teken=true;
+						for(int z=0;z<16;z++) {
+							if(!teken) {
+								cube_bool_draw[x][y][z]=false;
+							}
+							else if(cube_bool_draw[x][y][z]==true) {
+								teken=false;
+							}
+						}
+					}
+				}
+			}
+			else {
+				for(int x=0;x<16;x++) {
+					for(int y=0;y<15;y++) {
+						boolean teken=true;
+						for(int z=0;z<16;z++) {
+							if(!teken) {
+								cube_bool_draw[x][y][z]=false;
+							}
+							else if(cube_bool_draw[x][y][z]==true) {
+								teken=false;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		else if(aanzicht==90) {
+			if(hoogte==0) {
+				for(int y=0;y<16;y++) {
+					for(int z=0;z<16;z++) {
+						boolean teken=true;
+						for(int x=15;x>=0;x--) {
+							if(!teken) {
+								cube_bool_draw[x]
+										[y]
+												[z]=false;
+							}
+							else if(cube_bool_draw[x][y][z]==true) {
+								teken=false;
+							}
+						}
+					}
+				}
+			}
+			else if(hoogte>0) {
+				for(int y=1;y<16;y++) {
+					for(int z=0;z<16;z++) {
+						boolean teken=true;
+						for(int x=15;x>=0;x--) {
+							if(!teken) {
+								cube_bool_draw[x][y][z]=false;
+							}
+							else if(cube_bool_draw[x][y][z]==true) {
+								teken=false;
+							}
+						}
+					}
+				}
+			}
+			else {
+				for(int y=0;y<15;y++) {
+					for(int z=0;z<16;z++) {
+						boolean teken=true;
+						for(int x=15;x>=0;x--) {
+							if(!teken) {
+								cube_bool_draw[x][y][z]=false;
+							}
+							else if(cube_bool_draw[x][y][z]==true) {
+								teken=false;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		else if(aanzicht==270) {
+			if(hoogte==0) {
+				for(int y=0;y<16;y++) {
+					for(int z=0;z<16;z++) {
+						boolean teken=true;
+						for(int x=0;x<16;x++) {
+							if(!teken) {
+								cube_bool_draw[x][y][z]=false;
+							}
+							else if(cube_bool_draw[x][y][z]==true) {
+								teken=false;
+							}
+						}
+					}
+				}
+			}
+			else if(hoogte>0) {
+				for(int y=1;y<16;y++) {
+					for(int z=0;z<16;z++) {
+						boolean teken=true;
+						for(int x=0;x<16;x++) {
+							if(!teken) {
+								cube_bool_draw[x][y][z]=false;
+							}
+							else if(cube_bool_draw[x][y][z]==true) {
+								teken=false;
+							}
+						}
+					}
+				}
+			}
+			else {
+				for(int y=0;y<15;y++) {
+					for(int z=0;z<16;z++) {
+						boolean teken=true;
+						for(int x=0;x<16;x++) {
+							if(!teken) {
+								cube_bool_draw[x][y][z]=false;
+							}
+							else if(cube_bool_draw[x][y][z]==true) {
+								teken=false;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		else if(aanzicht>=1 || aanzicht <=89) {
+			//TODO hier verder methode maken die bepaalt welke cubes moeten worden gerenderd
+		}
 	}
 
 	public void init(GLAutoDrawable drawable) {
@@ -186,6 +392,7 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener {
 		integer[0] = (int) eyeX;
 		integer[1] = (int) eyeY;
 		integer[2] = (int) eyeZ;
+		
 		return integer;
 	}
 
@@ -203,7 +410,9 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener {
 		return aanzicht;
 	}
 
-	public void setAanzicht(int aanzicht) {
+	public void setAanzicht(int aanzicht) throws Exception {
+		if(aanzicht<0 || aanzicht > 359)
+			throw new Exception("this value should be between 0 & 359");
 		this.aanzicht = aanzicht;
 	}
 
@@ -211,7 +420,9 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener {
 		return hoogte;
 	}
 
-	public void setHoogte(int hoogte) {
+	public void setHoogte(int hoogte) throws Exception {
+		if(hoogte<-89 || hoogte>89)
+			throw new Exception("this value should be between -89 & 89");
 		this.hoogte = hoogte;
 	}
 
