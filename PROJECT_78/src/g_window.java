@@ -8,7 +8,7 @@ import java.awt.event.WindowEvent;
 
 import javax.media.opengl.GLCapabilities;
 import javax.swing.JFrame;
-
+//TODO max 10 fps op display
 /* g_window.java
  *
  * Hier wordt het venster geïnitialiseerd dat voor heel het programma
@@ -17,8 +17,9 @@ import javax.swing.JFrame;
  */
 public class g_window implements MouseListener
 {
-	JFrame frame = new JFrame("3D LED Cube Simulator/Editor " + s_version.getVersion());
+	private JFrame frame = new JFrame("3D LED Cube Simulator/Editor " + s_version.getVersion());
 	private g_jogl_cube jogl;
+	private g_jogl_cube_layer layer;
 
 	public void createWindow()
 	{
@@ -50,15 +51,25 @@ public class g_window implements MouseListener
 		jogl.setFocusable(true);
 		jogl.addMouseMotionListener(jogl);
 		jogl.addMouseWheelListener(jogl);
+		
+		layer = new g_jogl_cube_layer(370, 370, capabilities);
+		layer.addGLEventListener(layer);
+		layer.setFocusable(true);
+		layer.addMouseListener(layer);
+		
 		frame.addMouseListener(this);
 
 		Container pane = frame.getContentPane();
 		pane.setLayout(null);
 
 		pane.add(jogl);
+		pane.add(layer);
 
 		Dimension size = jogl.getPreferredSize();
 		jogl.setBounds(0, 0, size.width, size.height);
+		
+		size = layer.getPreferredSize();
+		layer.setBounds(380, 0, size.width, size.height);
 	}
 
 	public void mousePressed(MouseEvent e) {
