@@ -21,26 +21,22 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	private GLUgl2 glu;
 	private int afstand, aanzicht, hoogte;//aanzicht van 0 t/m 360
 	boolean[][][] cube_bool;
-	int[][][] cube_red;
-	int[][][] cube_green;
+	private s_display display;
 	private int corY;
 	private int corX;
 
 	public g_jogl_cube(int width, int height, GLCapabilities capabilities) {
 		super(capabilities);
 		setSize(width, height);
-		afstand = 300;
+		afstand = 280;
 		aanzicht = 0;
 		hoogte = 0;
-		cube_red = new int[16][16][16];
-		cube_green = new int[16][16][16];
+		display = new s_display();
 		cube_bool = new boolean[16][16][16];
 		
 		for(int x=0;x<16;x++) {
 			for(int y=0;y<16;y++) {
 				for(int z=0;z<16;z++) {
-					cube_red[x][y][z]=255;
-					cube_green[x][y][z]=255;
 					cube_bool[x][y][z] = true;
 				}
 			}
@@ -51,7 +47,7 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
-		setCamera(gl, glu, 64, 64, 64, afstand, aanzicht, hoogte);
+		setCamera(gl, glu, 68, 68, 68, afstand, aanzicht, hoogte);
 
 		GLUquadric sphere = glu.gluNewQuadric();
 		glu.gluQuadricDrawStyle(sphere, GLUgl2.GLU_FILL);
@@ -61,13 +57,16 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		final int slices = 3;
 		final int stacks = 2;
 
+		int[][][] cube_red = display.getLedsRed();
+		int[][][] cube_green = display.getLedsGreen();
+
 		for(int x=0;x<16;x++) {
 			gl.glTranslatef(8f, 0f, 0f);
 			for(int y=0;y<16;y++) {
 				gl.glTranslatef(0f, 8f, 0f);
 				for(int z=0;z<16;z++) {
 					gl.glTranslatef(0f, 0f, 8f);
-					if(cube_bool[x][y][z] && cube_red[x][y][z]!=0 && cube_green[x][y][z]!=0) {
+					if(cube_bool[x][y][z]) {
 						gl.glColor3f(cube_red[x][y][z]/255f, cube_green[x][y][z]/255f, 0f);
 						glu.gluSphere(sphere, radius, slices, stacks);
 						glu.gluDeleteQuadric(sphere);
@@ -194,31 +193,9 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		return cube_bool[x][y][z];
 	}
 
-
 	public void setCube_bool(int x, int y, int z, boolean cube_bool) {
 		this.cube_bool[x][y][z] = cube_bool;
 	}
-
-
-	public int getCube_red(int x, int y, int z) {
-		return cube_red[x][y][z];
-	}
-
-
-	public void setCube_red(int x, int y, int z, int cube_red) {
-		this.cube_red[x][y][z] = cube_red;
-	}
-
-
-	public int getCube_green(int x, int y, int z) {
-		return cube_green[x][y][z];
-	}
-
-
-	public void setCube_green(int x, int y, int z, int cube_green) {
-		this.cube_green[x][y][z] = cube_green;
-	}
-	
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) 
@@ -256,5 +233,13 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	{
 		corX = e.getX();
 		corY = e.getY();
+	}
+
+	public s_display getDisplay() {
+		return display;
+	}
+
+	public void setDisplay(s_display display) {
+		this.display = display;
 	}
 }
