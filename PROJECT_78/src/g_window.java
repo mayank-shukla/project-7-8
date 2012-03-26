@@ -1,3 +1,4 @@
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
@@ -22,10 +23,10 @@ public class g_window implements MouseListener
 	public void createWindow()
 	{
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-		int width = 730;
-		int height = 600;
+		int width = 800;
+		int height = 660;
 		int x = (screen.width-width)/2;
-		int y = (screen.height-height)/2;
+		int y = (screen.height-height)/2-20;
 		frame.setBounds(x,y,width,height);
 
 		frame.addWindowListener(new WindowAdapter() 
@@ -44,37 +45,35 @@ public class g_window implements MouseListener
 		capabilities.setBlueBits(8);
 		capabilities.setGreenBits(8);
 		capabilities.setAlphaBits(8);
-		jogl = new g_jogl_cube(420, 420, capabilities);
+		jogl = new g_jogl_cube(370, 370, capabilities);
 		jogl.addGLEventListener(jogl);
 		jogl.setFocusable(true);
 		jogl.addMouseMotionListener(jogl);
 		jogl.addMouseWheelListener(jogl);
+		frame.addMouseListener(this);
 
-		frame.add(jogl);
-		//frame.repaint();
+		Container pane = frame.getContentPane();
+		pane.setLayout(null);
+
+		pane.add(jogl);
+
+		Dimension size = jogl.getPreferredSize();
+		jogl.setBounds(0, 0, size.width, size.height);
 	}
 
 	public void mousePressed(MouseEvent e) {
-		saySomething("Mouse pressed; # of clicks: " + e.getClickCount(), e);
+		System.out.println("X:" + e.getX() + " Y:" + e.getY());
 	}
 
 	public void mouseReleased(MouseEvent e) {
-		saySomething("Mouse released; # of clicks: "+ e.getClickCount(), e);
 	}
 
 	public void mouseEntered(MouseEvent e) {
-		saySomething("Mouse entered", e);
 	}
 
 	public void mouseExited(MouseEvent e) {
-		saySomething("Mouse exited", e);
 	}
 
 	public void mouseClicked(MouseEvent e) {
-		saySomething("Mouse clicked (# of clicks: " + e.getClickCount() + ")", e);
-	}
-
-	void saySomething(String eventDescription, MouseEvent e) {
-		System.out.println(eventDescription + " detected on " + e.getComponent().getClass().getName() + ".");
 	}
 }
