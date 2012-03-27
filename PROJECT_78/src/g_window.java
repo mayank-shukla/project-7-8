@@ -52,7 +52,7 @@ public class g_window implements MouseListener
 		jogl.addMouseMotionListener(jogl);
 		jogl.addMouseWheelListener(jogl);
 		
-		layer = new g_jogl_cube_layer(370, 370, capabilities);
+		layer = new g_jogl_cube_layer(415, 370, capabilities);
 		layer.addGLEventListener(layer);
 		layer.setFocusable(true);
 		layer.addMouseListener(layer);

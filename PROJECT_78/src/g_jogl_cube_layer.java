@@ -26,42 +26,46 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 		y=0;
 	}
 
-	public void display(GLAutoDrawable drawable) {
+	public void display(GLAutoDrawable drawable) 
+	{
+		int value1 = 18;
+		int value2 = 16;
+		
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
 		setCamera(gl, glu, 450);
 		
 		// Write triangle.
-		gl.glColor3f(1f, 1f, 1f);
 		gl.glBegin(GL2.GL_QUADS);
 
-		for(int x=0;x<16;x++) {
-			for(int y=0;y<16;y++) {
-				if(x==this.x && y==this.y)
+		for(int x=0;x<16;x++) 
+		{
+			for(int y=0;y<16;y++) 
+			{
+				if (g_jogl_cube.cube_bool[x][0][15-y])
 					gl.glColor3f(1f, 1f, 0f);
-				gl.glVertex3f(0+15*x, 10+15*y, 0);
-				gl.glVertex3f(10+15*x, 10+15*y, 0);
-				gl.glVertex3f(10+15*x, 0+15*y, 0);
-				gl.glVertex3f(0+15*x, 0+15*y, 0);
-				gl.glColor3f(1f, 1f, 1f);
+				gl.glVertex3f(0+value1*x, value2+value1*y-32, 0);
+				gl.glVertex3f(value2+value1*x, value2+value1*y-32, 0);
+				gl.glVertex3f(value2+value1*x, 0+value1*y-32, 0);
+				gl.glVertex3f(0+value1*x, 0+value1*y-32, 0);
+				gl.glColor3f(0.9f, 0.9f, 0.9f);
 				
-				if(x==15) {
-					if(y==layer)
-						gl.glColor3f(1f, 1f, 0f);
-					gl.glVertex3f(0+15*x+60, 10+15*y, 0);
-					gl.glVertex3f(10+15*x+60, 10+15*y, 0);
-					gl.glVertex3f(10+15*x+60, 0+15*y, 0);
-					gl.glVertex3f(0+15*x+60, 0+15*y, 0);
-					gl.glColor3f(1f, 1f, 1f);
+				if(x==15) 
+				{
+					gl.glVertex3f(0+value1*x+60, value2+value1*y-32, 0);
+					gl.glVertex3f(value2+value1*x+60, value2+value1*y-32, 0);
+					gl.glVertex3f(value2+value1*x+60, 0+value1*y-32, 0);
+					gl.glVertex3f(0+value1*x+60, 0+value1*y-32, 0);
+					gl.glColor3f(0.9f, 0.9f, 0.9f);
 				}
 			}
 		}
-
 		gl.glEnd();
 	}
 
-	private void setCamera(GL2 gl, GLUgl2 glu2, float distance) {
+	private void setCamera(GL2 gl, GLUgl2 glu2, float distance) 
+	{
 		// Change to projection matrix.
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
@@ -87,7 +91,7 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 		gl.glDepthFunc(GL2.GL_LEQUAL);
 		gl.glShadeModel(GL2.GL_SMOOTH);
 		gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
-		gl.glClearColor(0f, 0f, 0f, 1f);
+		gl.glClearColor(0.5f, 0.5f, 0.5f, 1f);
 
 		// Start animator (which should be a field).
 		animator = new FPSAnimator(this, 60);
@@ -101,9 +105,27 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
         gl.glViewport(0, 0, width, height);
 	}
 
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		System.out.println("X:"+e.getX()+" Y:"+e.getY());
+	public void mouseClicked(MouseEvent e)
+	{	
+		double x = e.getX();
+		double z = e.getY();
+		
+		x -= 42;
+		z -= 52;
+		
+		x /= 17.5;
+		z /= 17.5;
+		
+		if (x > 16 || z > 16)
+			return;
+		// Geen idee, je weet maar nooit met jabajaba
+		if (x < 0 || z < 0)
+			return;
+		
+		if (!g_jogl_cube.cube_bool[(int)x][0][(int)z])
+			g_jogl_cube.cube_bool[(int)x][0][(int)z] = true;
+		else
+			g_jogl_cube.cube_bool[(int)x][0][(int)z] = false;
 	}
 
 	public int getLayer() {
