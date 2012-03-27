@@ -13,6 +13,7 @@ import javax.media.opengl.glu.GLUquadric;
 import javax.media.opengl.glu.gl2.GLUgl2;
 
 import com.jogamp.opengl.util.FPSAnimator;
+import com.jogamp.opengl.util.gl2.GLUT;
 
 public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotionListener, MouseWheelListener {
 
@@ -20,7 +21,8 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	private FPSAnimator animator;
 	private GLUgl2 glu;
 	private int afstand, aanzicht, hoogte;//aanzicht van 0 t/m 360
-	boolean[][][] cube_bool;
+	static boolean[][][] cube_bool;
+	static boolean skeleton_bool;
 	private s_display display;
 	private int corY;
 	private int corX;
@@ -33,14 +35,28 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		hoogte = 0;
 		display = new s_display();
 		cube_bool = new boolean[16][16][16];
+		skeleton_bool = true;
 		
 		for(int x=0;x<16;x++) {
 			for(int y=0;y<16;y++) {
 				for(int z=0;z<16;z++) {
-					cube_bool[x][y][z] = true;
+					cube_bool[x][y][z] = false;
 				}
 			}
 		}
+	}
+
+
+	private void drawCubeSkeleton(GL2 gl)
+	{
+	    GLUT glut = new GLUT();
+
+	    gl.glColor3f(0.2f, 0.2f, 0.2f);
+	    gl.glLoadIdentity();
+	    //glu.gluLookAt(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	    gl.glScalef(128.0f, 128.0f, 128.0f);
+	    gl.glTranslatef(0.525f, 0.525f, 0.525f);
+	    glut.glutWireCube(1f);
 	}
 
 	public void display(GLAutoDrawable drawable) {
@@ -53,7 +69,7 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		glu.gluQuadricDrawStyle(sphere, GLUgl2.GLU_FILL);
 		glu.gluQuadricNormals(sphere, GLUgl2.GLU_FLAT);
 		glu.gluQuadricOrientation(sphere, GLUgl2.GLU_OUTSIDE);
-		final float radius = 1f;
+		final float radius = 4f;
 		final int slices = 3;
 		final int stacks = 2;
 
@@ -77,6 +93,7 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 			gl.glTranslatef(0f, -128f, 0f);
 		}
 		gl.glTranslatef(-128f, 0f, 0f);
+		drawCubeSkeleton(gl);
 	}
 
 	public void init(GLAutoDrawable drawable) {
@@ -96,7 +113,7 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 
 		glu = new GLUgl2();
 	}
-
+	
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glViewport(0, 0, width, height);
@@ -194,7 +211,7 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	}
 
 	public void setCube_bool(int x, int y, int z, boolean cube_bool) {
-		this.cube_bool[x][y][z] = cube_bool;
+		g_jogl_cube.cube_bool[x][y][z] = cube_bool;
 	}
 
 	@Override
