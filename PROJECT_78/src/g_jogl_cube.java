@@ -22,12 +22,16 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	private GLUgl2 glu;
 	private int afstand, aanzicht, hoogte;//aanzicht van 0 t/m 360
 	static boolean[][][] cube_bool;
+	static boolean[][][] cube_copy;
+	static int y_axis = 0;
+	static boolean[] y_bool;
 	static boolean skeleton_bool;
 	private s_display display;
 	private int corY;
 	private int corX;
 
-	public g_jogl_cube(int width, int height, GLCapabilities capabilities) {
+	public g_jogl_cube(int width, int height, GLCapabilities capabilities) 
+	{
 		super(capabilities);
 		setSize(width, height);
 		afstand = 280;
@@ -35,12 +39,21 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		hoogte = 0;
 		display = new s_display();
 		cube_bool = new boolean[16][16][16];
+		cube_copy = new boolean[16][16][16];
+		y_bool = new boolean[16];
+		y_axis = 0;
 		skeleton_bool = true;
 		
-		for(int x=0;x<16;x++) {
-			for(int y=0;y<16;y++) {
-				for(int z=0;z<16;z++) {
+		for(int x=0;x<16;x++) 
+		{
+			for(int y=0;y<16;y++) 
+			{
+				for(int z=0;z<16;z++) 
+				{
+					y_bool[z] = false;
+					y_bool[0] = true;
 					cube_bool[x][y][z] = false;
+					cube_copy[x][y][z] = false;
 				}
 			}
 		}
@@ -50,7 +63,7 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	private void drawCubeSkeleton(GL2 gl)
 	{
 	    GLUT glut = new GLUT();
-
+	    
 	    gl.glColor3f(0.2f, 0.2f, 0.2f);
 	    gl.glLoadIdentity();
 	    //glu.gluLookAt(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
