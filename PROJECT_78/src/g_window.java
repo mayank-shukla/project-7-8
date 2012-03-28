@@ -1,6 +1,8 @@
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
@@ -15,9 +17,9 @@ import javax.swing.JFrame;
  * gebruikt zal worden.
  * 
  */
-public class g_window implements MouseListener
+public class g_window implements MouseListener, KeyListener
 {
-	private JFrame frame = new JFrame("3D LED Cube Simulator/Editor " + s_version.getVersion());
+	private JFrame frame = new JFrame("3D LED Cube Simulator and Editor " + s_version.getVersion());
 	private g_jogl_cube jogl;
 	private g_jogl_cube_layer layer;
 
@@ -58,6 +60,7 @@ public class g_window implements MouseListener
 		layer.addMouseListener(layer);
 		
 		frame.addMouseListener(this);
+		layer.addKeyListener(layer);
 
 		Container pane = frame.getContentPane();
 		pane.setLayout(null);
@@ -86,5 +89,23 @@ public class g_window implements MouseListener
 	}
 
 	public void mouseClicked(MouseEvent e) {
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
