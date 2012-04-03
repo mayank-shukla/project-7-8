@@ -36,10 +36,8 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		hoogte = 0;
 		frame = 0;
 		display = new LinkedList<s_display>();
-		//TODO rest van display initen
 		display.add(new s_display());
 	}
-
 
 	private void drawCubeSkeleton(GL2 gl)
 	{
@@ -245,4 +243,33 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	public s_display getDisplay() {
 		return display.get(frame);
 	}
+	
+	public int getFrame() {
+		return frame;
+	}
+	
+	public void setFrame(int frame) {
+		this.frame = frame;
+	}
+
+	public void next() {
+		if(frame==display.size()-1) {
+			display.add(new s_display());
+			frame++;
+		}
+		else
+			frame++;
+	}
+	
+	public void prev() {
+		frame--;
+	}
+	
+	public void save() {}
+	
+	public void load() {}
+	
+	public void copy() {}
+	
+	public void past() {}
 }
