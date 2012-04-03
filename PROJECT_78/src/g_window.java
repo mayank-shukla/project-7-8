@@ -54,13 +54,13 @@ public class g_window implements MouseListener, KeyListener
 		jogl.addMouseMotionListener(jogl);
 		jogl.addMouseWheelListener(jogl);
 		
-		layer = new g_jogl_cube_layer(415, 370, capabilities);
+		layer = new g_jogl_cube_layer(415, 370, capabilities,jogl);
 		layer.addGLEventListener(layer);
 		layer.setFocusable(true);
 		layer.addMouseListener(layer);
+		layer.addKeyListener(layer);
 		
 		frame.addMouseListener(this);
-		layer.addKeyListener(layer);
 
 		Container pane = frame.getContentPane();
 		pane.setLayout(null);
