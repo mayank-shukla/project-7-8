@@ -13,21 +13,32 @@ import javax.media.opengl.glu.gl2.GLUgl2;
 
 import com.jogamp.opengl.util.FPSAnimator;
 
-public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, MouseListener, KeyListener
-{
+public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, MouseListener, KeyListener{
+
 	private static final long serialVersionUID = 1L;
 	private FPSAnimator animator;
 	private GLUgl2 glu;
-	private int layer,x,y,copied_y;
+	private int layer,x,y;
+	private g_jogl_cube jogl;
+	private int[][] cpyred;
+	private int[][] cpygreen;
 
-	public g_jogl_cube_layer(int width, int height, GLCapabilities capabilities) 
-	{
+	public g_jogl_cube_layer(int width, int height, GLCapabilities capabilities, g_jogl_cube jogl) {
 		super(capabilities);
 		setSize(width, height);
 		layer = 0;
 		x=0;
 		y=0;
-		copied_y=0;
+		this.jogl = jogl;
+		cpyred = new int[16][16];
+		cpygreen = new int[16][16];
+		
+		for(int x=0;x<16;x++) {
+			for(int z=0;z<16;z++) {
+				cpyred[x][z] = 0;
+				cpygreen[x][z] = 0;
+			}
+		}
 	}
 
 	public void display(GLAutoDrawable drawable) 
@@ -39,34 +50,34 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
 		setCamera(gl, glu, 450);
-		
-		// Write triangle.
+
 		gl.glBegin(GL2.GL_QUADS);
+
+		s_display display = jogl.getDisplay();
 
 		for(int x=0;x<16;x++) 
 		{
 			for(int y=0;y<16;y++) 
-			{	
-				if (x==15) 
+			{
+				if(display.getLedsRed()[x][layer][15-y]!=0 && display.getLedsGreen()[x][layer][15-y]!=0)
+					gl.glColor3f(display.getLedsRed()[x][layer][15-y]/255f, display.getLedsGreen()[x][layer][15-y]/255f, 0f);
+
+				gl.glVertex3f(0+value1*x, value2+value1*y-32, 0);
+				gl.glVertex3f(value2+value1*x, value2+value1*y-32, 0);
+				gl.glVertex3f(value2+value1*x, 0+value1*y-32, 0);
+				gl.glVertex3f(0+value1*x, 0+value1*y-32, 0);
+				gl.glColor3f(0.9f, 0.9f, 0.9f);
+				
+				if(x==15) 
 				{
-					gl.glColor3f(0.6f, 0.9f, 0.9f);
-					if (g_jogl_cube.y_bool[y])
-						gl.glColor3f(0.9f, 0.6f, 1f);
+					if(y==layer)
+						gl.glColor3f(1f, 1f, 0f);
 					gl.glVertex3f(0+value1*x+60, value2+value1*y-32, 0);
 					gl.glVertex3f(value2+value1*x+60, value2+value1*y-32, 0);
 					gl.glVertex3f(value2+value1*x+60, 0+value1*y-32, 0);
 					gl.glVertex3f(0+value1*x+60, 0+value1*y-32, 0);
 					gl.glColor3f(0.9f, 0.9f, 0.9f);
 				}
-				
-				if (g_jogl_cube.cube_bool[x][g_jogl_cube.y_axis][15-y])
-					gl.glColor3f(1f, 1f, 0f);
-				
-				gl.glVertex3f(0+value1*x, value2+value1*y-32, 0);
-				gl.glVertex3f(value2+value1*x, value2+value1*y-32, 0);
-				gl.glVertex3f(value2+value1*x, 0+value1*y-32, 0);
-				gl.glVertex3f(0+value1*x, 0+value1*y-32, 0);
-				gl.glColor3f(0.9f, 0.9f, 0.9f);
 			}
 		}
 		gl.glEnd();
@@ -110,7 +121,7 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 		GL2 gl = drawable.getGL().getGL2();
-        gl.glViewport(0, 0, width, height);
+		gl.glViewport(0, 0, width, height);
 	}
 
 	public void mouseClicked(MouseEvent e)
@@ -118,26 +129,14 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 		double x = e.getX();
 		double z = e.getY();
 		
-		if (x >= 369 && z >= 49 && x <= 384 && z <= 332)
-		{
-			x -= 369;
+		if (x >= 369 && z >= 49 && x <= 384 && z <= 332) {
 			z -= 49;
 			
 			z /= 17.5;
-			g_jogl_cube.y_axis = (int)(16-z);
-			
-			if (!g_jogl_cube.y_bool[g_jogl_cube.y_axis])
-			{
-				for (int i = 0; i < 16; i++)
-				{
-					g_jogl_cube.y_bool[i] = false;
-				}
-				g_jogl_cube.y_bool[g_jogl_cube.y_axis] = true;
-			}
-			else
-				g_jogl_cube.y_bool[g_jogl_cube.y_axis] = false;
+			layer = 15-(int)z;
 			return;
 		}
+		
 		
 		x -= 42;
 		z -= 52;
@@ -145,16 +144,25 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 		x /= 17.5;
 		z /= 17.5;
 		
-		if (x >= 16 || z >= 16 || g_jogl_cube.y_axis >= 16)
-			return;
-		// Geen idee, je weet maar nooit met jabajaba
-		if (x < 0 || z < 0 || g_jogl_cube.y_axis < 0)
+		if (x > 16 || z > 16 || x < 0 || z < 0)
 			return;
 		
-		if (!g_jogl_cube.cube_bool[(int)x][g_jogl_cube.y_axis][(int)z])
-			g_jogl_cube.cube_bool[(int)x][g_jogl_cube.y_axis][(int)z] = true;
+		s_display display = jogl.getDisplay();
+		
+		try {
+		if(display.getLedsGreen()[(int)x][layer][(int)z]!=0)
+			display.setGreen(0, (int)x, layer, (int)z);
 		else
-			g_jogl_cube.cube_bool[(int)x][g_jogl_cube.y_axis][(int)z] = false;
+			display.setGreen(255, (int)x, layer, (int)z);
+		
+		if(display.getLedsRed()[(int)x][layer][(int)z]!=0)
+			display.setRed(0, (int)x, layer, (int)z);
+		else
+			display.setRed(255, (int)x, layer, (int)z);
+		}
+		catch(Exception e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	public int getLayer() {
@@ -176,81 +184,67 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 	public void mousePressed(MouseEvent e) {}
 
 	public void mouseReleased(MouseEvent e) {}
-	
-	public void keyPressed(KeyEvent e) 
-	{
+
+	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
-		int y = g_jogl_cube.y_axis;
-		
-		if (key == KeyEvent.VK_UP || key == KeyEvent.VK_DOWN)
-		{
-			if (key == KeyEvent.VK_UP)
-				y++;
-			else if (key == KeyEvent.VK_DOWN)
-				y--;
-			
-			if (y < 0)
-				y = 15;
-			if (y > 15)
-				y = 0;
-			
-			for (int i = 0; i < 16; i++)
-			{
-				g_jogl_cube.y_bool[i] = false;
-			}
-			
-			g_jogl_cube.y_axis = y;
-			g_jogl_cube.y_bool[y] = true;
-			return;
-		}
-		
-		if (key == KeyEvent.VK_BACK_SPACE)
-		{
-			for (int x = 0; x < 16; x++)
-			{
-				for (int z = 0; z < 16; z++)
-				{
-					g_jogl_cube.cube_bool[x][y][z] = false;
-				}
-			}
-			return;
-		}
-		
-		if (key == KeyEvent.VK_DELETE)
-		{
-			for (int x = 0; x < 16; x++)
-			{
-				for (int z = 0; z < 16; z++)
-				{
-					for (int i = 0; i < 16; i++)
-					{
-						g_jogl_cube.cube_bool[x][i][z] = false;
+		s_display display = jogl.getDisplay();
+
+		switch(key) {
+			case KeyEvent.VK_UP:
+				layer++;
+				if(layer>15)
+					layer=0;
+				break;
+			case KeyEvent.VK_DOWN:
+				layer--;
+				if(layer<0)
+					layer=15;
+				break;
+			case KeyEvent.VK_BACK_SPACE:
+				for(int x=0;x<16;x++) {
+					for(int z=0;z<16;z++) {
+						try {
+							display.setGreen(0,x,layer,z);
+							display.setRed(0,x,layer,z);
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
 					}
 				}
-			}
-		}
-		
-		if (key == KeyEvent.VK_C)
-		{
-			for (int x = 0; x < 16; x++)
-			{
-				for (int z = 0; z < 16; z++)
-				{
-					g_jogl_cube.cube_copy[x][y][z] = g_jogl_cube.cube_bool[x][y][z];
-					copied_y = y;
+				break;
+			case KeyEvent.VK_DELETE:
+				for(int x=0;x<16;x++) {
+					for(int y=0;y<16;y++) {
+						for(int z=0;z<16;z++) {
+							try {
+								display.setGreen(0,x,y,z);
+								display.setRed(0,x,y,z);
+							} catch (Exception e1) {
+								e1.printStackTrace();
+							}
+						}
+					}
 				}
-			}
-		}
-		
-		if (key == KeyEvent.VK_V)
-		{
-			for (int x = 0; x < 16; x++)
-			{
-				for (int z = 0; z < 16; z++)
-				{
-					g_jogl_cube.cube_bool[x][y][z] = g_jogl_cube.cube_copy[x][copied_y][z];
+				break;
+			case KeyEvent.VK_C:
+				for(int x=0;x<16;x++) {
+					for(int z=0;z<16;z++) {
+						cpyred[x][z] = display.getLedsRed()[x][layer][z];
+						cpygreen[x][z] = display.getLedsGreen()[x][layer][z];
+					}
 				}
-			}
+				break;
+			case KeyEvent.VK_V:
+				for(int x=0;x<16;x++) {
+					for(int z=0;z<16;z++) {
+						try {
+							display.setGreen(cpygreen[x][z], x, layer, z);
+							display.setRed(cpygreen[x][z], x, layer, z);
+						}
+						catch (Exception e1) {e1.printStackTrace();}
+					}
+				}
+				break;
 		}
 	}
 

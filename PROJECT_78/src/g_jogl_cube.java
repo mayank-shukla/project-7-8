@@ -2,6 +2,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.LinkedList;
 
 import javax.media.opengl.DebugGL2;
 import javax.media.opengl.GL2;
@@ -21,14 +22,10 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	private FPSAnimator animator;
 	private GLUgl2 glu;
 	private int afstand, aanzicht, hoogte;//aanzicht van 0 t/m 360
-	static boolean[][][] cube_bool;
-	static boolean[][][] cube_copy;
-	static int y_axis = 0;
-	static boolean[] y_bool;
-	static boolean skeleton_bool;
-	private s_display display;
+	private LinkedList<s_display> display;
 	private int corY;
 	private int corX;
+	private int frame;
 
 	public g_jogl_cube(int width, int height, GLCapabilities capabilities) 
 	{
@@ -37,26 +34,10 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		afstand = 280;
 		aanzicht = 0;
 		hoogte = 0;
-		display = new s_display();
-		cube_bool = new boolean[16][16][16];
-		cube_copy = new boolean[16][16][16];
-		y_bool = new boolean[16];
-		y_axis = 0;
-		skeleton_bool = true;
-		
-		for(int x=0;x<16;x++) 
-		{
-			for(int y=0;y<16;y++) 
-			{
-				for(int z=0;z<16;z++) 
-				{
-					y_bool[z] = false;
-					y_bool[0] = true;
-					cube_bool[x][y][z] = false;
-					cube_copy[x][y][z] = false;
-				}
-			}
-		}
+		frame = 0;
+		display = new LinkedList<s_display>();
+		//TODO rest van display initen
+		display.add(new s_display());
 	}
 
 
@@ -86,8 +67,8 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		final int slices = 3;
 		final int stacks = 2;
 
-		int[][][] cube_red = display.getLedsRed();
-		int[][][] cube_green = display.getLedsGreen();
+		int[][][] cube_red = display.get(frame).getLedsRed();
+		int[][][] cube_green = display.get(frame).getLedsGreen();
 
 		for(int x=0;x<16;x++) {
 			gl.glTranslatef(8f, 0f, 0f);
@@ -95,7 +76,7 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 				gl.glTranslatef(0f, 8f, 0f);
 				for(int z=0;z<16;z++) {
 					gl.glTranslatef(0f, 0f, 8f);
-					if(cube_bool[x][y][z]) {
+					if(cube_red[x][y][z]!=0 && cube_green[x][y][z]!=0) {
 						gl.glColor3f(cube_red[x][y][z]/255f, cube_green[x][y][z]/255f, 0f);
 						glu.gluSphere(sphere, radius, slices, stacks);
 						glu.gluDeleteQuadric(sphere);
@@ -219,13 +200,9 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		this.hoogte = hoogte;
 	}
 
-	public boolean getCube_bool(int x, int y, int z) {
+	/*public boolean getCube_bool(int x, int y, int z) {
 		return cube_bool[x][y][z];
-	}
-
-	public void setCube_bool(int x, int y, int z, boolean cube_bool) {
-		g_jogl_cube.cube_bool[x][y][z] = cube_bool;
-	}
+	}*/
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) 
@@ -266,10 +243,6 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	}
 
 	public s_display getDisplay() {
-		return display;
-	}
-
-	public void setDisplay(s_display display) {
-		this.display = display;
+		return display.get(frame);
 	}
 }
