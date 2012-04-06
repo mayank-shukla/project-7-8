@@ -1,30 +1,45 @@
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import javax.media.opengl.GLCapabilities;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-//TODO max 10 fps op display
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+//TODO save en load fixen + insert en remove functies toevoegen
 /* g_window.java
  *
  * Hier wordt het venster geïnitialiseerd dat voor heel het programma
  * gebruikt zal worden.
  * 
  */
-public class g_window implements MouseListener, KeyListener
+public class g_window implements MouseListener
 {
 	private JFrame frame = new JFrame("3D LED Cube Simulator and Editor " + s_version.getVersion());
 	private g_jogl_cube jogl;
 	private g_jogl_cube_layer layer;
+	private JButton prev,next,save,saveas,load,copy,paste;
+	private JLabel framenumber;
+	private File curFile;
+	private JFileChooser fc;
 
 	public void createWindow()
 	{
+		fc = new JFileChooser();
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = 800;
 		int height = 660;
@@ -48,7 +63,7 @@ public class g_window implements MouseListener, KeyListener
 		capabilities.setBlueBits(8);
 		capabilities.setGreenBits(8);
 		capabilities.setAlphaBits(8);
-		jogl = new g_jogl_cube(370, 370, capabilities);
+		jogl = new g_jogl_cube(370, 370, capabilities,this);
 		jogl.addGLEventListener(jogl);
 		jogl.setFocusable(true);
 		jogl.addMouseMotionListener(jogl);
@@ -59,7 +74,59 @@ public class g_window implements MouseListener, KeyListener
 		layer.setFocusable(true);
 		layer.addMouseListener(layer);
 		layer.addKeyListener(layer);
-		
+
+		prev = new JButton("Prev");
+		prev.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				actionPrev();
+			}
+		});
+		next = new JButton("Next");
+		next.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				actionNext();
+			}
+		});
+		copy = new JButton("Copy");
+		copy.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				actionCopy();
+			}
+		});
+		paste = new JButton("Paste");
+		paste.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				actionPaste();
+			}
+		});
+		save = new JButton("Save");
+		save.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				actionSave();
+			}
+		});
+		saveas = new JButton("Save As");
+		saveas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				actionSaveAs();
+			}
+		});
+		load = new JButton("Load");
+		load.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				actionLoad();
+			}
+		});
+
+		framenumber = new JLabel("1/1");
+
 		frame.addMouseListener(this);
 
 		Container pane = frame.getContentPane();
@@ -67,45 +134,173 @@ public class g_window implements MouseListener, KeyListener
 
 		pane.add(jogl);
 		pane.add(layer);
+		pane.add(prev);
+		pane.add(next);
+		pane.add(copy);
+		pane.add(paste);
+		pane.add(save);
+		pane.add(saveas);
+		pane.add(load);
+		pane.add(framenumber);
 
 		Dimension size = jogl.getPreferredSize();
 		jogl.setBounds(0, 0, size.width, size.height);
 		
 		size = layer.getPreferredSize();
 		layer.setBounds(380, 0, size.width, size.height);
+		
+		size = prev.getPreferredSize();
+		prev.setBounds(50, 380, size.width, size.height);
+		
+		size = next.getPreferredSize();
+		next.setBounds(250, 380, size.width, size.height);
+		
+		size = copy.getPreferredSize();
+		copy.setBounds(50, 420, size.width, size.height);
+		
+		size = paste.getPreferredSize();
+		paste.setBounds(250, 420, size.width, size.height);
+		
+		size = save.getPreferredSize();
+		save.setBounds(50, 460, size.width, size.height);
+		
+		size = saveas.getPreferredSize();
+		saveas.setBounds(50, 500, size.width, size.height);
+		
+		size = load.getPreferredSize();
+		load.setBounds(250, 460, size.width, size.height);
+		
+		size = framenumber.getPreferredSize();
+		framenumber.setBounds(250, 500, size.width, size.height);
+	}
+	
+	protected void actionSaveAs() {
+		while(fc.getFileFilter() != null)
+			fc.removeChoosableFileFilter(fc.getFileFilter());
+
+		fc.setFileFilter(new s_extensionfilefilter(new String[] {"3dmod"},"select 3d model"));
+
+		int returnVal = fc.showOpenDialog(frame);
+
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File tempFile = fc.getSelectedFile();
+
+			String name =tempFile.getAbsolutePath();
+
+			if(!name.contains(".3dmod")) {
+				if(name.contains(".")) {
+					int index = name.indexOf(".");
+					char[] temp = new char[index];
+					name.getChars(0, index, temp, 0);
+					name = temp.toString();
+					JOptionPane.showMessageDialog(frame, "you can not save a file with a \".\" in it");
+				}
+				name += ".3dmod";
+			}
+			curFile = new File(name);
+
+			actionSave();
+		}
+	}
+
+	protected void actionLoad() {
+		while(fc.getFileFilter() != null)
+			fc.removeChoosableFileFilter(fc.getFileFilter());
+
+		fc.setFileFilter(new s_extensionfilefilter(new String[] {"3dmod"},"select 3d model"));
+
+		int returnVal = fc.showOpenDialog(frame);
+
+		if (returnVal != JFileChooser.APPROVE_OPTION)
+			return;
+
+		curFile = fc.getSelectedFile();
+
+		String name = curFile.getName();
+
+		if(!name.contains(".3dmod")) {
+			if(name.contains(".")) {
+				int index = name.indexOf(".");
+				char[] temp = new char[index];
+				name.getChars(0, index, temp, 0);
+				name = temp.toString();
+				JOptionPane.showMessageDialog(frame, "you can not open a file that does not end with \".3dmod\"");
+				return;
+			}
+			name += ".3dmod";
+		}
+
+		FileInputStream fin;
+		try {
+			fin = new FileInputStream(curFile);
+			byte data[] = new byte[(int)curFile.length()];
+			fin.read(data);
+			jogl.load(data);
+		}
+		catch (FileNotFoundException e) {}
+		catch (IOException e) {}
+	}
+
+	protected void actionSave() {
+		if(curFile==null) {
+			actionSaveAs();
+		}
+		else {
+			
+			if(!curFile.exists()){
+				try {curFile.createNewFile();}
+				catch (IOException e) {}
+			}
+			else {
+				curFile.delete();
+				try {curFile.createNewFile();}
+				catch (IOException e) {}
+			}
+			
+			FileOutputStream fos;
+			
+			try {
+				fos = new FileOutputStream(curFile.getPath());
+				fos.write(jogl.save());
+				fos.close();
+			}
+			catch (FileNotFoundException e) {}
+			catch (IOException e) {}
+		}
+	}
+
+	protected void actionPaste() {
+		jogl.paste();
+	}
+
+	protected void actionCopy() {
+		jogl.copy();
+	}
+
+	protected void actionNext() {
+		jogl.next();
+	}
+
+	protected void actionPrev() {
+		jogl.prev();
+	}
+
+	public void setFrameNumber(String frame) {
+		framenumber.setText(frame);
+
+		Dimension size = framenumber.getPreferredSize();
+		framenumber.setBounds(250, 500, size.width, size.height);
 	}
 
 	public void mousePressed(MouseEvent e) {
 		System.out.println("X:" + e.getX() + " Y:" + e.getY());
 	}
 
-	public void mouseReleased(MouseEvent e) {
-	}
+	public void mouseReleased(MouseEvent e) {}
 
-	public void mouseEntered(MouseEvent e) {
-	}
+	public void mouseEntered(MouseEvent e) {}
 
-	public void mouseExited(MouseEvent e) {
-	}
+	public void mouseExited(MouseEvent e) {}
 
-	public void mouseClicked(MouseEvent e) {
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseClicked(MouseEvent e) {}
 }

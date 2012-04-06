@@ -23,11 +23,13 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	private GLUgl2 glu;
 	private int afstand, aanzicht, hoogte;//aanzicht van 0 t/m 360
 	private LinkedList<s_display> display;
+	private s_display cpydisplay;
 	private int corY;
 	private int corX;
 	private int frame;
+	private g_window window;
 
-	public g_jogl_cube(int width, int height, GLCapabilities capabilities) 
+	public g_jogl_cube(int width, int height, GLCapabilities capabilities, g_window window) 
 	{
 		super(capabilities);
 		setSize(width, height);
@@ -37,6 +39,8 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		frame = 0;
 		display = new LinkedList<s_display>();
 		display.add(new s_display());
+		cpydisplay = null;
+		this.window = window;
 	}
 
 	private void drawCubeSkeleton(GL2 gl)
@@ -105,7 +109,7 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 
 		glu = new GLUgl2();
 	}
-	
+
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glViewport(0, 0, width, height);
@@ -243,11 +247,11 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	public s_display getDisplay() {
 		return display.get(frame);
 	}
-	
+
 	public int getFrame() {
 		return frame;
 	}
-	
+
 	public void setFrame(int frame) {
 		this.frame = frame;
 	}
@@ -259,17 +263,59 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		}
 		else
 			frame++;
+		window.setFrameNumber((frame+1)+"/"+display.size());
 	}
-	
+
 	public void prev() {
+		if(frame==0)
+			return;
 		frame--;
+		window.setFrameNumber((frame+1)+"/"+display.size());
 	}
-	
-	public void save() {}
-	
-	public void load() {}
-	
-	public void copy() {}
-	
-	public void past() {}
+
+	public byte[] save() {
+		//TODO deze methode unburke
+		int size = display.size();
+		byte[] save = new byte[size*8192+2];
+		save[0] = (byte) size;
+		save[1] = (byte)(size >> 8);
+		for(int i=0;i<size;i++) {
+			byte[] temp = display.get(i).displayToByte();
+			for(int j=0;j<8192;j++) {
+				save[2+i*j] = temp[j];
+				System.out.println(temp[2+i*j] +" = " + temp[j]);
+			}
+		}
+		return save;
+	}
+
+	public void load(byte[] save) {
+		//TODO en deze ook
+		display = new LinkedList<s_display>();
+		int size = save[0] & 0xff;
+		size += (save[1] & 0xff) << 8;
+		
+		for(int i=0;i<size;i++) {
+			display.add(new s_display());
+			byte[] temp = new byte[8192];
+			for(int j=0;j<8192;j++) {
+				temp[j] = 0;
+				temp[j] = save[2+i*j];
+
+				System.out.println(temp[j] + " = " +save[2+i*j]);
+			}
+			display.get(i).byteToDisplay(temp);
+		}
+		frame=size-1;
+		window.setFrameNumber((frame+1)+"/"+display.size());
+	}
+
+	public void copy() {
+		cpydisplay = display.get(frame);
+	}
+
+	public void paste() {
+		display.remove(frame);
+		display.add(frame, cpydisplay);
+	}
 }
