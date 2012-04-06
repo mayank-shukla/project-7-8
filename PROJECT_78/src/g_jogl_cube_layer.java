@@ -160,9 +160,7 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 		else
 			display.setRed(255, (int)x, layer, (int)z);
 		}
-		catch(Exception e1) {
-			e1.printStackTrace();
-		}
+		catch(Exception e1) {}
 	}
 
 	public int getLayer() {
