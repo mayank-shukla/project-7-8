@@ -80,6 +80,22 @@ public class s_display {
 		return red;
 	}
 
+	public String generate5CubeText() {
+		String code = "";
+		for(int z=0;z<5;z++) {
+			for(int y=0;y<5;y++) {
+				for(int x=0;x<5;x++) {
+					if(cube_red[x][y][z] == 255 || cube_green[x][y][z] == 255)
+						code = code + (x+5*y+5*5*z+1) + ",";
+				}
+			}
+		}
+		code = code+"e,50";
+		//System.out.println(code);
+		
+		return code;
+	}
+
 	public void setGreen(int green, int x, int y, int z) throws Exception {
 		if(green<0 || green >255 || x<0 || y<0 || z<0 || x>15 || y>15 || z>15)
 			throw new Exception("invalid value");

@@ -45,14 +45,14 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 
 	private void drawCubeSkeleton(GL2 gl)
 	{
-	    GLUT glut = new GLUT();
-	    
-	    gl.glColor3f(0.2f, 0.2f, 0.2f);
-	    gl.glLoadIdentity();
-	    //glu.gluLookAt(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-	    gl.glScalef(128.0f, 128.0f, 128.0f);
-	    gl.glTranslatef(0.525f, 0.525f, 0.525f);
-	    glut.glutWireCube(1f);
+		GLUT glut = new GLUT();
+
+		gl.glColor3f(0.2f, 0.2f, 0.2f);
+		gl.glLoadIdentity();
+		//glu.gluLookAt(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+		gl.glScalef(128.0f, 128.0f, 128.0f);
+		gl.glTranslatef(0.525f, 0.525f, 0.525f);
+		glut.glutWireCube(1f);
 	}
 
 	public void display(GLAutoDrawable drawable) {
@@ -72,6 +72,11 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		int[][][] cube_red = display.get(frame).getLedsRed();
 		int[][][] cube_green = display.get(frame).getLedsGreen();
 
+		//teken een herkenings punt
+		gl.glColor3f(0f, 0f, 1f);
+		glu.gluSphere(sphere, radius, slices, stacks);
+
+		//teken alle lampjes
 		for(int x=0;x<16;x++) {
 			gl.glTranslatef(8f, 0f, 0f);
 			for(int y=0;y<16;y++) {
@@ -326,5 +331,16 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	public void remove() {
 		display.remove(frame);
 		window.setFrameNumber((frame+1)+"/"+display.size());
+	}
+
+	public String generate5Cube() {
+		String code = "";
+		s_display d = null;
+		for(int i=0;i<display.size();i++) {
+			d = display.get(i);
+			code = code + d.generate5CubeText()+"{end}";
+		}
+		System.out.println(code);
+		return code;
 	}
 }
