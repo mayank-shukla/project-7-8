@@ -257,6 +257,8 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	}
 
 	public void next() {
+		if(frame == 65535)
+			return;
 		if(frame==display.size()-1) {
 			display.add(new s_display());
 			frame++;
@@ -274,37 +276,34 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	}
 
 	public byte[] save() {
-		//TODO deze methode unburke
 		int size = display.size();
 		byte[] save = new byte[size*8192+2];
 		save[0] = (byte) size;
 		save[1] = (byte)(size >> 8);
-		for(int i=0;i<size;i++) {
-			byte[] temp = display.get(i).displayToByte();
+		for(int i=1;i<=size;i++) {
+			byte[] temp = display.get(i-1).displayToByte();
 			for(int j=0;j<8192;j++) {
-				save[2+i*j] = temp[j];
-				System.out.println(temp[2+i*j] +" = " + temp[j]);
+				save[2+i*j] = (byte) temp[j];
 			}
 		}
 		return save;
 	}
 
 	public void load(byte[] save) {
-		//TODO en deze ook
 		display = new LinkedList<s_display>();
 		int size = save[0] & 0xff;
 		size += (save[1] & 0xff) << 8;
-		
-		for(int i=0;i<size;i++) {
+/*
+		for(int k=0;k<save.length;k++)
+			System.out.println(save[k]);
+//*/
+		for(int i=1;i<=size;i++) {
 			display.add(new s_display());
 			byte[] temp = new byte[8192];
 			for(int j=0;j<8192;j++) {
-				temp[j] = 0;
 				temp[j] = save[2+i*j];
-
-				System.out.println(temp[j] + " = " +save[2+i*j]);
 			}
-			display.get(i).byteToDisplay(temp);
+			display.get(i-1).byteToDisplay(temp);
 		}
 		frame=size-1;
 		window.setFrameNumber((frame+1)+"/"+display.size());
@@ -317,5 +316,15 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	public void paste() {
 		display.remove(frame);
 		display.add(frame, cpydisplay);
+	}
+
+	public void insert() {
+		display.add(frame, new s_display());
+		window.setFrameNumber((frame+1)+"/"+display.size());
+	}
+
+	public void remove() {
+		display.remove(frame);
+		window.setFrameNumber((frame+1)+"/"+display.size());
 	}
 }

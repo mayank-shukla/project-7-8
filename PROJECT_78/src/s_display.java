@@ -14,10 +14,8 @@ public class s_display {
 	 * met eerder genoemde methode hoofd maximaal 75% van alle lampjes worden verstuurd
 	 * 16^3=4096
 	 * 4096*0.75 = 3072
-	 * 3072*2 = 6144 
-	 * 6144+1 = 6145bytes per frame
-	 * 
-	 * 
+	 * 3072*2 = 6144
+	 * 6144+1 = 6145 bytes per frame
 	 */
 
 	private int[][][] cube_red;
@@ -117,7 +115,6 @@ public class s_display {
 			for(int y=0;y<16;y++) {
 				for(int z=0;z<16;z++) {
 					display[x+y*16+z*256]=(byte) cube_red[x][y][z];
-					
 					display[x+y*16+z*256+4096]=(byte) cube_green[x][y][z];
 				}
 			}

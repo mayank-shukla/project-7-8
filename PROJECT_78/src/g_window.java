@@ -20,7 +20,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
-//TODO save en load fixen + insert en remove functies toevoegen
 /* g_window.java
  *
  * Hier wordt het venster geïnitialiseerd dat voor heel het programma
@@ -32,7 +31,7 @@ public class g_window implements MouseListener
 	private JFrame frame = new JFrame("3D LED Cube Simulator and Editor " + s_version.getVersion());
 	private g_jogl_cube jogl;
 	private g_jogl_cube_layer layer;
-	private JButton prev,next,save,saveas,load,copy,paste;
+	private JButton prev,next,save,saveas,load,copy,paste,insert,remove;
 	private JLabel framenumber;
 	private File curFile;
 	private JFileChooser fc;
@@ -124,6 +123,20 @@ public class g_window implements MouseListener
 				actionLoad();
 			}
 		});
+		insert = new JButton("Insert");
+		insert.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				actionInsert();
+			}
+		});
+		remove = new JButton("Remove");
+		remove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				actionRemove();
+			}
+		});
 
 		framenumber = new JLabel("1/1");
 
@@ -142,6 +155,8 @@ public class g_window implements MouseListener
 		pane.add(saveas);
 		pane.add(load);
 		pane.add(framenumber);
+		pane.add(insert);
+		pane.add(remove);
 
 		Dimension size = jogl.getPreferredSize();
 		jogl.setBounds(0, 0, size.width, size.height);
@@ -162,18 +177,32 @@ public class g_window implements MouseListener
 		paste.setBounds(250, 420, size.width, size.height);
 		
 		size = save.getPreferredSize();
-		save.setBounds(50, 460, size.width, size.height);
+		save.setBounds(50, 500, size.width, size.height);
 		
 		size = saveas.getPreferredSize();
-		saveas.setBounds(50, 500, size.width, size.height);
+		saveas.setBounds(50, 540, size.width, size.height);
 		
 		size = load.getPreferredSize();
-		load.setBounds(250, 460, size.width, size.height);
+		load.setBounds(250, 500, size.width, size.height);
 		
 		size = framenumber.getPreferredSize();
-		framenumber.setBounds(250, 500, size.width, size.height);
+		framenumber.setBounds(250, 540, size.width, size.height);
+		
+		size = insert.getPreferredSize();
+		insert.setBounds(50,460, size.width, size.height);
+		
+		size = remove.getPreferredSize();
+		remove.setBounds(250, 460, size.width, size.height);
 	}
 	
+	protected void actionRemove() {
+		jogl.remove();
+	}
+
+	protected void actionInsert() {
+		jogl.insert();
+	}
+
 	protected void actionSaveAs() {
 		while(fc.getFileFilter() != null)
 			fc.removeChoosableFileFilter(fc.getFileFilter());
@@ -259,9 +288,12 @@ public class g_window implements MouseListener
 			
 			FileOutputStream fos;
 			
+			byte[] save = jogl.save();
+			
 			try {
 				fos = new FileOutputStream(curFile.getPath());
-				fos.write(jogl.save());
+				
+				fos.write(save);
 				fos.close();
 			}
 			catch (FileNotFoundException e) {}
@@ -287,9 +319,9 @@ public class g_window implements MouseListener
 
 	public void setFrameNumber(String frame) {
 		framenumber.setText(frame);
-
+		
 		Dimension size = framenumber.getPreferredSize();
-		framenumber.setBounds(250, 500, size.width, size.height);
+		framenumber.setBounds(250, 540, size.width, size.height);
 	}
 
 	public void mousePressed(MouseEvent e) {
