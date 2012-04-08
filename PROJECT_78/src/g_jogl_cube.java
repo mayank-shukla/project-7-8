@@ -340,8 +340,10 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	}
 
 	public void remove() {
-		display.remove(frame);
-		frame--;
+		if(display.size()>1)
+			display.remove(frame);
+		if(frame!=0)
+			frame--;
 		window.setFrameNumber((frame+1)+"/"+display.size());
 	}
 
