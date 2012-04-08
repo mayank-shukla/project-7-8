@@ -1,3 +1,4 @@
+//TODO play en stop button die de frames afspeelt
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -274,7 +275,6 @@ public class g_window implements MouseListener
 
 	protected void actionSave() {
 		String code = jogl.generate5Cube();
-		//TODO code naar text file schrijven
 
 		try {
 			PrintWriter out = new PrintWriter(new FileWriter("C:\\Program Files\\simulatoroutput.txt"));

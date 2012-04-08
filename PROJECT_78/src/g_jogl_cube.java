@@ -320,7 +320,18 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 
 	public void paste() {
 		display.remove(frame);
-		display.add(frame, cpydisplay);
+		display.add(frame, new s_display());
+		for(int x=0;x<16;x++) {
+			for(int y=0;y<16;y++) {
+				for(int z=0;z<16;z++) {
+					try {
+						display.get(frame).setGreen(cpydisplay.getLedsGreen()[x][y][z], x, y, z);
+						display.get(frame).setRed(cpydisplay.getLedsRed()[x][y][z], x, y, z);
+					}
+					catch (Exception e) {}
+				}
+			}
+		}
 	}
 
 	public void insert() {
@@ -330,6 +341,7 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 
 	public void remove() {
 		display.remove(frame);
+		frame--;
 		window.setFrameNumber((frame+1)+"/"+display.size());
 	}
 
