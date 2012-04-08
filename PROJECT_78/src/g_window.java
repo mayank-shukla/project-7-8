@@ -271,6 +271,7 @@ public class g_window implements MouseListener
 		}
 		catch (FileNotFoundException e) {}
 		catch (IOException e) {}
+		catch (Exception e) {}
 	}
 
 	protected void actionSave() {
