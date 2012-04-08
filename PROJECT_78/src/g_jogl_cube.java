@@ -2,6 +2,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.LinkedList;
 
 import javax.media.opengl.DebugGL2;
@@ -282,38 +285,33 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 
 	public byte[] save() {
 		int size = display.size();
-		byte[] save = new byte[size*8192+2];
-		save[0] = (byte) size;
-		save[1] = (byte)(size >> 8);
+		byte[] data = new byte[size*8192+2];
+		data[0] = (byte) size;
+		data[1] = (byte) (size >> 8);
 		for(int i=1;i<=size;i++) {
 			byte[] temp = display.get(i-1).displayToByte();
 			for(int j=0;j<8192;j++) {
-				save[2+i*j] = (byte) temp[j];
+				data[2+j*i] = temp[j];
 			}
 		}
-		return save;
+		return data;
 	}
 
-	public void load(byte[] save) throws Exception {
+	public void load(byte[] data) {
 		display = new LinkedList<s_display>();
-		int size = save[0] & 0xff;
-		size += (save[1] & 0xff) << 8;
-		if(save.length!=(size*8192+2)) {
-			display = new LinkedList<s_display>();
-			display.add(new s_display());
-			frame=0;
-			throw new Exception("corupt file");
-		}
+		int size;
+		size = data[0] & 0xff;
+		size += (data[1] & 0xff0) << 8;
 		for(int i=1;i<=size;i++) {
-			display.add(new s_display());
 			byte[] temp = new byte[8192];
 			for(int j=0;j<8192;j++) {
-				temp[j] = save[2+i*j];
+				temp[j] = data[2+j*i];
 			}
-			display.get(i-1).byteToDisplay(temp);
+			s_display temp2 = new s_display();
+			temp2.byteToDisplay(temp);
+			display.add(temp2);
 		}
-		frame=size-1;
-		window.setFrameNumber((frame+1)+"/"+display.size());
+		
 	}
 
 	public void copy() {
@@ -349,13 +347,31 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		window.setFrameNumber((frame+1)+"/"+display.size());
 	}
 
-	public String generate5Cube() {
-		String code = "";
+	public void generate5Cube() {
+		//TODO dit genereren
+	/*
+		for(int i = 0;i<250;i++) { //eerste frame!
+			led1();
+			led24();
+			led100();
+		}
+	*/
+		
+		try {
+			PrintWriter out = new PrintWriter(new FileWriter("C:\\Program Files\\simulatoroutput.txt"));
+			s_display d = null;
+			for(int i=0;i<display.size();i++) {
+				d = display.get(i);
+				out.println(d.generate5CubeText());
+			}
+			out.close();
+		}
+		catch (IOException e) {e.printStackTrace();}
+		
 		s_display d = null;
 		for(int i=0;i<display.size();i++) {
 			d = display.get(i);
-			code = code + d.generate5CubeText()+"{end}";
+			d.generate5CubeText();
 		}
-		return code;
 	}
 }

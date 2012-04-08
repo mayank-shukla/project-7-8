@@ -12,9 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.media.opengl.GLCapabilities;
 import javax.swing.JButton;
@@ -275,15 +273,15 @@ public class g_window implements MouseListener
 	}
 
 	protected void actionSave() {
-		String code = jogl.generate5Cube();
-
+		jogl.generate5Cube();
+/*
 		try {
 			PrintWriter out = new PrintWriter(new FileWriter("C:\\Program Files\\simulatoroutput.txt"));
 			out.println(code);
 			out.close();
 		}
 		catch (IOException e) {e.printStackTrace();}
-
+//*/
 		if(curFile==null) {
 			actionSaveAs();
 		}
