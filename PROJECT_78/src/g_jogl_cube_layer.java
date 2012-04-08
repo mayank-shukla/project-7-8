@@ -43,6 +43,7 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 
 	public void display(GLAutoDrawable drawable) 
 	{
+		try {
 		int value1 = 18;
 		int value2 = 16;
 		
@@ -81,6 +82,8 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 			}
 		}
 		gl.glEnd();
+		}
+		catch(ArrayIndexOutOfBoundsException e) {};
 	}
 
 	private void setCamera(GL2 gl, GLUgl2 glu2, float distance) 

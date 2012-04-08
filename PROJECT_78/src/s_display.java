@@ -81,17 +81,32 @@ public class s_display {
 	}
 
 	public String generate5CubeText() {
-		String code = "";
+		int len=0;
 		for(int z=0;z<5;z++) {
 			for(int y=0;y<5;y++) {
 				for(int x=0;x<5;x++) {
 					if(cube_red[x][y][z] == 255 || cube_green[x][y][z] == 255)
-						code = code + (x+5*y+5*5*z+1) + ",";
+						//code = code + (x+5*y+5*5*z+1) + ",";
+						len++;
 				}
 			}
 		}
-		code = code+"e,50";
-		//System.out.println(code);
+
+		String code;
+		if(len<=100)
+			code = "for(int i=0;i<"+100/len+";i++) {";
+		else
+			code = "for(int i=0;i<"+(100/len+1)+";i++) {";
+
+		for(int z=0;z<5;z++) {
+			for(int y=0;y<5;y++) {
+				for(int x=0;x<5;x++) {
+					if(cube_red[x][y][z] == 255 || cube_green[x][y][z] == 255)
+						code = code + "led" + (x+5*y+5*5*z+1) + "();";
+				}
+			}
+		}
+		code=code+"}";
 		
 		return code;
 	}
@@ -126,24 +141,24 @@ public class s_display {
 	}
 
 	public byte[] displayToByte() {
-		byte[] display = new byte[8192];
+		byte[] data = new byte[8192];
 		for(int x=0;x<16;x++) {
 			for(int y=0;y<16;y++) {
 				for(int z=0;z<16;z++) {
-					display[x+y*16+z*256]=(byte) cube_red[x][y][z];
-					display[x+y*16+z*256+4096]=(byte) cube_green[x][y][z];
+					data[z+y*16+x*256] = (byte) cube_red[x][y][z];
+					data[z+y*16+x*256+4096] = (byte) cube_green[x][y][z];
 				}
 			}
 		}
-		return display;
+		return data;
 	}
 
-	public void byteToDisplay(byte[] display) {
+	public void byteToDisplay(byte[] data) {
 		for(int x=0;x<16;x++) {
 			for(int y=0;y<16;y++) {
 				for(int z=0;z<16;z++) {
-					cube_red[x][y][z] = display[x+y*16+z*256] & 0xff;
-					cube_green[x][y][z] = display[x+y*16+z*256+4096] & 0xff;
+					cube_red[x][y][z] = data[z+y*16+x*256] & 0xff;
+					cube_green[x][y][z] = data[z+y*16+x*256+4096] & 0xff;
 				}
 			}
 		}
