@@ -294,14 +294,16 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		return save;
 	}
 
-	public void load(byte[] save) {
+	public void load(byte[] save) throws Exception {
 		display = new LinkedList<s_display>();
 		int size = save[0] & 0xff;
 		size += (save[1] & 0xff) << 8;
-/*
-		for(int k=0;k<save.length;k++)
-			System.out.println(save[k]);
-//*/
+		if(save.length!=(size*8192+2)) {
+			display = new LinkedList<s_display>();
+			display.add(new s_display());
+			frame=0;
+			throw new Exception("corupt file");
+		}
 		for(int i=1;i<=size;i++) {
 			display.add(new s_display());
 			byte[] temp = new byte[8192];
@@ -354,7 +356,6 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 			d = display.get(i);
 			code = code + d.generate5CubeText()+"{end}";
 		}
-		System.out.println(code);
 		return code;
 	}
 }
