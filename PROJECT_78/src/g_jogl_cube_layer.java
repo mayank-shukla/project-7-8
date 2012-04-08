@@ -1,7 +1,9 @@
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import javax.media.opengl.DebugGL2;
 import javax.media.opengl.GL2;
@@ -13,7 +15,7 @@ import javax.media.opengl.glu.gl2.GLUgl2;
 
 import com.jogamp.opengl.util.FPSAnimator;
 
-public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, MouseListener, KeyListener{
+public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, MouseListener, MouseMotionListener, KeyListener{
 
 	private static final long serialVersionUID = 1L;
 	private FPSAnimator animator;
@@ -126,9 +128,9 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glViewport(0, 0, width, height);
 	}
-
-	public void mouseClicked(MouseEvent e)
-	{	
+	
+	public void checkMouseAction(MouseEvent e)
+	{
 		double x = e.getX();
 		double z = e.getY();
 		
@@ -139,7 +141,6 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 			layer = 15-(int)z;
 			return;
 		}
-		
 		
 		x -= 42;
 		z -= 52;
@@ -153,17 +154,27 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 		s_display display = jogl.getDisplay();
 		
 		try {
-		if(display.getLedsGreen()[(int)x][layer][(int)z]!=0)
+		if(display.getLedsGreen()[(int)x][layer][(int)z]!=0 && (e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK)
 			display.setGreen(0, (int)x, layer, (int)z);
-		else
+		else if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK)
 			display.setGreen(255, (int)x, layer, (int)z);
 		
-		if(display.getLedsRed()[(int)x][layer][(int)z]!=0)
+		if(display.getLedsRed()[(int)x][layer][(int)z]!=0 && (e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK)
 			display.setRed(0, (int)x, layer, (int)z);
-		else
+		else if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK)
 			display.setRed(255, (int)x, layer, (int)z);
 		}
 		catch(Exception e1) {}
+	}
+
+	public void mouseClicked(MouseEvent e)
+	{	
+		checkMouseAction(e);
+	}
+	
+	public void mouseDragged(MouseEvent e)
+	{
+		checkMouseAction(e);
 	}
 
 	public int getLayer() {
@@ -252,4 +263,6 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 	public void keyReleased(KeyEvent e) {}
 
 	public void keyTyped(KeyEvent e) {}
+
+	public void mouseMoved(MouseEvent e) {}
 }
