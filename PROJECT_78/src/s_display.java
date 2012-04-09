@@ -27,7 +27,7 @@ public class s_display {
 		cube_red = new int [16][16][16];
 		cube_green = new int [16][16][16];
 		objects = new s_object[0];
-		
+
 		for(int x=0;x<16;x++) {
 			for(int y=0;y<16;y++) {
 				for(int z=0;z<16;z++) {
@@ -93,6 +93,8 @@ public class s_display {
 		}
 
 		String code;
+		if(len==0)
+			code = "for(int i=0;i<100;i++) {";
 		if(len<=100)
 			code = "for(int i=0;i<"+100/len+";i++) {";
 		else
