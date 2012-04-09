@@ -134,7 +134,11 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 		double x = e.getX();
 		double z = e.getY();
 		
-		// Fix voor OpenGL crash
+		// Only allow right/left mouse button (to prevent OpenGL crashes)
+		if ((e.getModifiers() & InputEvent.BUTTON2_MASK) == InputEvent.BUTTON2_MASK)
+			return;
+		
+		// Fix for OpenGL crash
 		if ((e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK && (x > 325 || z > 332))
 			return;
 		
@@ -143,6 +147,12 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 			
 			z /= 17.5;
 			layer = 15-(int)z;
+			
+			// Cap the layer, it caused crashes!
+			if (layer < 0)
+				layer = 0;
+			if (layer > 15)
+				layer = 15;
 			return;
 		}
 		
