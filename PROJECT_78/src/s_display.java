@@ -95,7 +95,7 @@ public class s_display {
 		String code;
 		if(len==0)
 			code = "for(int i=0;i<100;i++) {";
-		if(len<=100)
+		else if(len<=100)
 			code = "for(int i=0;i<"+100/len+";i++) {";
 		else
 			code = "for(int i=0;i<"+(100/len+1)+";i++) {";
