@@ -134,6 +134,10 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 		double x = e.getX();
 		double z = e.getY();
 		
+		// Fix voor OpenGL crash
+		if ((e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK && (x > 325 || z > 332))
+			return;
+		
 		if (x >= 369 && z >= 49 && x <= 384 && z <= 332) {
 			z -= 49;
 			
