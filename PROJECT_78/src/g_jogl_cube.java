@@ -13,7 +13,6 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.awt.GLCanvas;
-import javax.media.opengl.glu.GLUquadric;
 import javax.media.opengl.glu.gl2.GLUgl2;
 
 import com.jogamp.opengl.util.FPSAnimator;
@@ -31,7 +30,7 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	private int corX;
 	private int frame;
 	private g_window window;
-
+	
 	public g_jogl_cube(int width, int height, GLCapabilities capabilities, g_window window) 
 	{
 		super(capabilities);
@@ -57,39 +56,54 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		gl.glTranslatef(0.525f, 0.525f, 0.525f);
 		glut.glutWireCube(1f);
 	}
-
-	public void display(GLAutoDrawable drawable) {
+	
+	public void display(GLAutoDrawable drawable)
+	{
 		GL2 gl = drawable.getGL().getGL2();
-		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-
+		
+        gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+		
 		setCamera(gl, glu, 68, 68, 68, afstand, aanzicht, hoogte);
-
-		GLUquadric sphere = glu.gluNewQuadric();
-		glu.gluQuadricDrawStyle(sphere, GLUgl2.GLU_FILL);
-		glu.gluQuadricNormals(sphere, GLUgl2.GLU_FLAT);
-		glu.gluQuadricOrientation(sphere, GLUgl2.GLU_OUTSIDE);
-		final float radius = 4f;
-		final int slices = 3;
-		final int stacks = 2;
-
+		
 		int[][][] cube_red = display.get(frame).getLedsRed();
 		int[][][] cube_green = display.get(frame).getLedsGreen();
-
+		
 		//teken een herkenings punt
-		gl.glColor3f(0f, 0f, 1f);
-		glu.gluSphere(sphere, radius, slices, stacks);
-
+		//gl.glColor4f(1.0f,1.0f,1.0f,1.0f);
+		
+	    gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+	    gl.glLoadIdentity();
+	    
 		//teken alle lampjes
-		for(int x=0;x<16;x++) {
+		for(int x=0;x<16;x++) 
+		{
 			gl.glTranslatef(8f, 0f, 0f);
-			for(int y=0;y<16;y++) {
+			for(int y=0;y<16;y++)
+			{
 				gl.glTranslatef(0f, 8f, 0f);
-				for(int z=0;z<16;z++) {
+				for(int z=0;z<16;z++) 
+				{
 					gl.glTranslatef(0f, 0f, 8f);
-					if(cube_red[x][y][z]!=0 && cube_green[x][y][z]!=0) {
-						gl.glColor3f(cube_red[x][y][z]/255f, cube_green[x][y][z]/255f, 0f);
-						glu.gluSphere(sphere, radius, slices, stacks);
-						glu.gluDeleteQuadric(sphere);
+					if(cube_red[x][y][z]!=0 && cube_green[x][y][z]!=0) 
+					{
+						// TODO: textures (.png) ipv gele vlakken :(, gele vlakken is te onoverzichtelijk
+						gl.glColor3f(1.0f, 1.0f, 0.0f);
+						
+					    gl.glEnable(GL2.GL_BLEND);
+					    gl.glDepthMask(false);
+					    
+						gl.glPushMatrix();
+					    gl.glRotatef(aanzicht,0.0f,1.0f,0.0f);
+					    gl.glRotatef(-hoogte,1.0f,0.0f,0.0f);
+
+					    gl.glBegin(GL2.GL_QUADS);
+					    gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3i(0,-3,-4);
+					    gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3i(0, 3,-4);
+					    gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3i(4, 3,-4);
+					    gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3i(4,-3,-4);
+
+					    gl.glEnd();
+					    gl.glPopMatrix();
 					}
 				}
 				gl.glTranslatef(0f, 0f, -128f);
@@ -97,18 +111,40 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 			gl.glTranslatef(0f, -128f, 0f);
 		}
 		gl.glTranslatef(-128f, 0f, 0f);
+		gl.glDepthMask(true);
+		
 		drawCubeSkeleton(gl);
+		gl.glFlush();
 	}
 
-	public void init(GLAutoDrawable drawable) {
+	public void init(GLAutoDrawable drawable) 
+	{   
 		GL2 gl = drawable.getGL().getGL2();
+		
+        /*try
+        {
+            InputStream stream = getClass().getResourceAsStream("earth.png");
+            TextureData data = TextureIO.newTextureData(stream, false, "png");
+            yellowLed = TextureIO.newTexture(data);
+        }
+        catch (IOException exc) {
+            exc.printStackTrace();
+            System.exit(1);
+        }*/
+        
 		drawable.setGL(new DebugGL2(gl));
 
-		// Global settings.
+		// Enable z-buffer
 		gl.glEnable(GL2.GL_DEPTH_TEST);
-		gl.glDepthFunc(GL2.GL_LEQUAL);
-		gl.glShadeModel(GL2.GL_SMOOTH);
-		gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
+		 
+		// Enable blending
+		gl.glEnable(GL2.GL_BLEND);
+		gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glEnable(GL2.GL_TEXTURE_2D);
+		
+	    // Reset view
+	    gl.glLoadIdentity(); 
+	    gl.glClear(GL2.GL_DEPTH_BUFFER_BIT | GL2.GL_COLOR_BUFFER_BIT);
 		gl.glClearColor(0f, 0f, 0f, 1f);
 
 		// Start animator.
@@ -135,7 +171,8 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	 * @param aanzicht een waarde van 0 t/m 360 die de hoek waarnaar het object gekeken wordt bepaaldt
 	 * @param hoogte een waarde van -89 t/m 89 die de hoogte van het oog bepaaldt 
 	 */
-	private int[] setCamera(GL2 gl, GLUgl2 glu, int X, int Y, int Z,int afstand, int aanzicht, int hoogte) {
+	private int[] setCamera(GL2 gl, GLUgl2 glu, int X, int Y, int Z,int afstand, int aanzicht, int hoogte) 
+	{
 		// Change to projection matrix.
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
@@ -218,8 +255,8 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	public void mouseWheelMoved(MouseWheelEvent e) 
 	{
 		e.getWheelRotation();
-		if(e.getWheelRotation()>0) afstand+=4;
-		else if(e.getWheelRotation()<0) afstand-=4;
+		if(e.getWheelRotation()>0) afstand+=24;
+		else if(e.getWheelRotation()<0) afstand-=24;
 		if(afstand<1)
 			afstand = 1;
 		if(afstand>1000)
@@ -229,11 +266,11 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	@Override
 	public void mouseDragged(MouseEvent e) {
 
-		if(e.getX()<corX) aanzicht+=4;
-		else if(e.getX()>corX) aanzicht-=4;
+		if(e.getX()<corX) aanzicht+=5;
+		else if(e.getX()>corX) aanzicht-=5;
 
-		if(e.getY()<corY) hoogte-=4;
-		else if(e.getY()>corY) hoogte+=4;
+		if(e.getY()<corY) hoogte-=5;
+		else if(e.getY()>corY) hoogte+=5;
 
 		if(aanzicht<0) aanzicht = 359;
 		else if(aanzicht>359) aanzicht = 0;

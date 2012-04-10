@@ -129,6 +129,10 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 		gl.glViewport(0, 0, width, height);
 	}
 	
+	//TODO: scroll voor de y-as selectie
+	//TODO: keylistener links/rechts voor frame selectie
+	//TODO: billboard ipv rendered spheres
+	
 	public void checkMouseAction(MouseEvent e)
 	{
 		double x = e.getX();
