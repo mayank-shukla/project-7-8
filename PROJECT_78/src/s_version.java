@@ -7,7 +7,7 @@
  */
 public class s_version 
 {
-	static String version = "(Alpha version 0.3)";
+	static String version = "(Alpha version 0.4)";
 	
 	public static String getVersion()
 	{

@@ -87,10 +87,18 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 					if(cube_red[x][y][z]!=0 && cube_green[x][y][z]!=0) 
 					{
 						// TODO: textures (.png) ipv gele vlakken :(, gele vlakken is te onoverzichtelijk
-						gl.glColor3f(1.0f, 1.0f, 0.0f);
+						//gl.glColor3f(1.0f, 1.0f, 0.0f);
+						
+						if (g_window.getLEDColor() == 0)
+							gl.glColor3f(1f, 0.3f, 0.3f);
+						else if (g_window.getLEDColor() == 1)
+							gl.glColor3f(0.2f, 0.8f, 0.4f);
+						else
+							gl.glColor3f(1.0f, 0.8f, 0.3f);
 						
 					    gl.glEnable(GL2.GL_BLEND);
-					    gl.glDepthMask(false);
+					    gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE); 
+					    //gl.glDepthMask(false);
 					    
 						gl.glPushMatrix();
 					    gl.glRotatef(aanzicht,0.0f,1.0f,0.0f);
@@ -119,19 +127,7 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 
 	public void init(GLAutoDrawable drawable) 
 	{   
-		GL2 gl = drawable.getGL().getGL2();
-		
-        /*try
-        {
-            InputStream stream = getClass().getResourceAsStream("earth.png");
-            TextureData data = TextureIO.newTextureData(stream, false, "png");
-            yellowLed = TextureIO.newTexture(data);
-        }
-        catch (IOException exc) {
-            exc.printStackTrace();
-            System.exit(1);
-        }*/
-        
+		GL2 gl = drawable.getGL().getGL2();      
 		drawable.setGL(new DebugGL2(gl));
 
 		// Enable z-buffer
@@ -259,8 +255,8 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		else if(e.getWheelRotation()<0) afstand-=24;
 		if(afstand<1)
 			afstand = 1;
-		if(afstand>1000)
-			afstand=1000;
+		if(afstand>800)
+			afstand=800;
 	}
 
 	@Override

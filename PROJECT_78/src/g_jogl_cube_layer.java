@@ -25,7 +25,8 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 	private int[][] cpyred;
 	private int[][] cpygreen;
 
-	public g_jogl_cube_layer(int width, int height, GLCapabilities capabilities, g_jogl_cube jogl) {
+	public g_jogl_cube_layer(int width, int height, GLCapabilities capabilities, g_jogl_cube jogl) 
+	{
 		super(capabilities);
 		setSize(width, height);
 		layer = 0;
@@ -53,7 +54,6 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
 		setCamera(gl, glu, 450);
-
 		gl.glBegin(GL2.GL_QUADS);
 
 		s_display display = jogl.getDisplay();
@@ -63,7 +63,16 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 			for(int y=0;y<16;y++) 
 			{
 				if(display.getLedsRed()[x][layer][15-y]!=0 && display.getLedsGreen()[x][layer][15-y]!=0)
-					gl.glColor3f(display.getLedsRed()[x][layer][15-y]/255f, display.getLedsGreen()[x][layer][15-y]/255f, 0f);
+				{
+					//gl.glColor3f(display.getLedsRed()[x][layer][15-y]/255f, display.getLedsGreen()[x][layer][15-y]/255f, 0f);
+					
+					if (g_window.getLEDColor() == 0)
+						gl.glColor3f(1f, 0.3f, 0.3f);
+					else if (g_window.getLEDColor() == 1)
+						gl.glColor3f(0.2f, 0.8f, 0.4f);
+					else
+						gl.glColor3f(1.0f, 0.8f, 0.3f);
+				}
 
 				gl.glVertex3f(0+value1*x, value2+value1*y-32, 0);
 				gl.glVertex3f(value2+value1*x, value2+value1*y-32, 0);
@@ -74,7 +83,14 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 				if(x==15) 
 				{
 					if(y==layer)
-						gl.glColor3f(1f, 1f, 0f);
+					{
+						if (g_window.getLEDColor() == 0)
+							gl.glColor3f(1f, 0.3f, 0.3f);
+						else if (g_window.getLEDColor() == 1)
+							gl.glColor3f(0.2f, 0.8f, 0.4f);
+						else
+							gl.glColor3f(1.0f, 0.8f, 0.3f);
+					}
 					gl.glVertex3f(0+value1*x+60, value2+value1*y-32, 0);
 					gl.glVertex3f(value2+value1*x+60, value2+value1*y-32, 0);
 					gl.glVertex3f(value2+value1*x+60, 0+value1*y-32, 0);
