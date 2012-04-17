@@ -41,25 +41,6 @@ public class g_window implements MouseListener
 	private File curFile;
 	private JFileChooser fc;
 	private JTextArea console, border, space;
-	ImageIcon prevIcon = createImageIcon("graphics/icons/prev.png");
-	ImageIcon nextIcon = createImageIcon("graphics/icons/next.png");
-	ImageIcon copyIcon = createImageIcon("graphics/icons/copy.png");
-	ImageIcon pasteIcon = createImageIcon("graphics/icons/paste.png");
-	ImageIcon insertIcon = createImageIcon("graphics/icons/insert.png");
-	ImageIcon removeIcon = createImageIcon("graphics/icons/delete.png");
-	ImageIcon loadIcon = createImageIcon("graphics/icons/load.png");
-	ImageIcon saveIcon = createImageIcon("graphics/icons/save.png");
-	ImageIcon saveAsIcon = createImageIcon("graphics/icons/save_ass.png");
-	
-	ImageIcon redIcon = createImageIcon("graphics/icons/red.png");
-	ImageIcon greenIcon = createImageIcon("graphics/icons/green.png");
-	ImageIcon yellowIcon = createImageIcon("graphics/icons/yellow.png");
-	
-	ImageIcon firstFrameIcon = createImageIcon("graphics/icons/first.png");
-	ImageIcon playIcon = createImageIcon("graphics/icons/play.png");
-	ImageIcon pauseIcon = createImageIcon("graphics/icons/stop.png");
-	ImageIcon lastFrameIcon = createImageIcon("graphics/icons/last.png");
-	ImageIcon loopIcon = createImageIcon("graphics/icons/loop.png");
 	
 	static boolean[] selectedLED;
 	boolean anim_loop;
@@ -110,6 +91,26 @@ public class g_window implements MouseListener
 		layer.addMouseMotionListener(layer);
 		layer.addMouseListener(layer);
 		layer.addKeyListener(layer);
+
+		ImageIcon prevIcon = createImageIcon("graphics/icons/prev.png");
+		ImageIcon nextIcon = createImageIcon("graphics/icons/next.png");
+		ImageIcon copyIcon = createImageIcon("graphics/icons/copy.png");
+		ImageIcon pasteIcon = createImageIcon("graphics/icons/paste.png");
+		ImageIcon insertIcon = createImageIcon("graphics/icons/insert.png");
+		ImageIcon removeIcon = createImageIcon("graphics/icons/delete.png");
+		ImageIcon loadIcon = createImageIcon("graphics/icons/load.png");
+		ImageIcon saveIcon = createImageIcon("graphics/icons/save.png");
+		ImageIcon saveAsIcon = createImageIcon("graphics/icons/save_ass.png");
+		
+		ImageIcon redIcon = createImageIcon("graphics/icons/red.png");
+		ImageIcon greenIcon = createImageIcon("graphics/icons/green.png");
+		ImageIcon yellowIcon = createImageIcon("graphics/icons/yellow.png");
+		
+		ImageIcon firstFrameIcon = createImageIcon("graphics/icons/first.png");
+		ImageIcon playIcon = createImageIcon("graphics/icons/play.png");
+		ImageIcon pauseIcon = createImageIcon("graphics/icons/stop.png");
+		ImageIcon lastFrameIcon = createImageIcon("graphics/icons/last.png");
+		ImageIcon loopIcon = createImageIcon("graphics/icons/loop.png");
 
 		prev = new JButton(prevIcon);
 		prev.setToolTipText("Select previous frame.");
