@@ -1,3 +1,8 @@
+/**
+ * deze classe maakt het mogelijk om de ledjes als een object op te slaan deze worden gebruikt in de classe s_object om meerdere ledjes te gelijk te kunnen besturen
+ * @author Jimmy
+ *
+ */
 public class s_led {
 
 	private int x,y,z,green,red;

@@ -1,3 +1,8 @@
+/**
+ * deze classe wordt gebruikt om meerdere ledjes tegelijk aan te sturen
+ * @author Jimmy
+ * 
+ */
 public class s_object {
 
 	private s_led[] leds;

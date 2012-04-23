@@ -1,3 +1,8 @@
+/**
+ * deze classe wordt gebruikt om de gegevens van een frame op te slaan er is ook een mogelijkheid om objecten aan een display toe te voegen om meerdere ledjes te gelijk te besturen
+ * @author Jimmy
+ *
+ */
 public class s_display {
 
 	/* manier om gegevens naar led cube te streamen:
@@ -23,6 +28,9 @@ public class s_display {
 
 	private s_object[] objects;
 
+	/**
+	 * initialiseert een nieuwe frame
+	 */
 	public s_display() {
 		cube_red = new int [16][16][16];
 		cube_green = new int [16][16][16];
@@ -125,6 +133,11 @@ public class s_display {
 		cube_red[x][y][z] = red;
 	}
 
+	/**
+	 * voegt een object toe aan de display
+	 * @param obj
+	 * @throws Exception
+	 */
 	public void addObject(s_object obj) throws Exception {
 		if(objects.length==255)
 			throw new Exception("niet meer dan 255 objecten");

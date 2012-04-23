@@ -24,10 +24,19 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 	private g_jogl_cube jogl;
 	private int[][] cpyred;
 	private int[][] cpygreen;
+	private int mode;
 
+	/**
+	 * constructor voor de layer object
+	 * @param width
+	 * @param height
+	 * @param capabilities
+	 * @param jogl
+	 */
 	public g_jogl_cube_layer(int width, int height, GLCapabilities capabilities, g_jogl_cube jogl) 
 	{
 		super(capabilities);
+		mode=2;
 		setSize(width, height);
 		layer = 0;
 		x=0;
@@ -44,6 +53,9 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 		}
 	}
 
+	/**
+	 * geeft een veld weer waarin je vakjes kan aan kliken om de kleuren van de ledcube te bepalen
+	 */
 	public void display(GLAutoDrawable drawable) 
 	{
 		try {
@@ -62,16 +74,9 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 		{
 			for(int y=0;y<16;y++) 
 			{
-				if(display.getLedsRed()[x][layer][15-y]!=0 && display.getLedsGreen()[x][layer][15-y]!=0)
-				{
-					//gl.glColor3f(display.getLedsRed()[x][layer][15-y]/255f, display.getLedsGreen()[x][layer][15-y]/255f, 0f);
-					
-					if (g_window.getLEDColor() == 0)
-						gl.glColor3f(1f, 0.3f, 0.3f);
-					else if (g_window.getLEDColor() == 1)
-						gl.glColor3f(0.2f, 0.8f, 0.4f);
-					else
-						gl.glColor3f(1.0f, 0.8f, 0.3f);
+				gl.glColor3f(display.getLedsRed()[x][layer][15-y]/255f, display.getLedsGreen()[x][layer][15-y]/255f, 0f);
+				if(display.getLedsRed()[x][layer][15-y]/255f==0 && display.getLedsGreen()[x][layer][15-y]/255f==0) {
+					gl.glColor3f(0.9f, 0.9f, 0.9f);
 				}
 
 				gl.glVertex3f(0+value1*x, value2+value1*y-32, 0);
@@ -84,12 +89,7 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 				{
 					if(y==layer)
 					{
-						if (g_window.getLEDColor() == 0)
-							gl.glColor3f(1f, 0.3f, 0.3f);
-						else if (g_window.getLEDColor() == 1)
-							gl.glColor3f(0.2f, 0.8f, 0.4f);
-						else
-							gl.glColor3f(1.0f, 0.8f, 0.3f);
+						gl.glColor3f(0f, 200/255f, 200/255f);
 					}
 					gl.glVertex3f(0+value1*x+60, value2+value1*y-32, 0);
 					gl.glVertex3f(value2+value1*x+60, value2+value1*y-32, 0);
@@ -104,6 +104,12 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 		catch(ArrayIndexOutOfBoundsException e) {};
 	}
 
+	/**
+	 * bepaald het camera punt aan de hand van distance
+	 * @param gl
+	 * @param glu2
+	 * @param distance
+	 */
 	private void setCamera(GL2 gl, GLUgl2 glu2, float distance) 
 	{
 		// Change to projection matrix.
@@ -122,6 +128,9 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 
 	public void dispose(GLAutoDrawable drawable) {}
 
+	/**
+	 * initialiseert dit OpenGL object
+	 */
 	public void init(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
 		drawable.setGL(new DebugGL2(gl));
@@ -140,6 +149,9 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 		glu = new GLUgl2();
 	}
 
+	/**
+	 * methode om de dit object te verkleinen/vergroten
+	 */
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glViewport(0, 0, width, height);
@@ -147,8 +159,11 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 	
 	//TODO: scroll voor de y-as selectie
 	//TODO: keylistener links/rechts voor frame selectie
-	//TODO: billboard ipv rendered spheres
 	
+	/**
+	 * bepaalt aan de hand van de positie van de muis welke vakje in de cube aan moet
+	 * @param e
+	 */
 	public void checkMouseAction(MouseEvent e)
 	{
 		double x = e.getX();
@@ -187,25 +202,48 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 		
 		s_display display = jogl.getDisplay();
 		
+		//met mode == 0 rood, mode == 1 groen, mode == 2 geel
 		try {
-		if(display.getLedsGreen()[(int)x][layer][(int)z]!=0 && (e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK)
-			display.setGreen(0, (int)x, layer, (int)z);
-		else if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK)
-			display.setGreen(255, (int)x, layer, (int)z);
-		
-		if(display.getLedsRed()[(int)x][layer][(int)z]!=0 && (e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK)
-			display.setRed(0, (int)x, layer, (int)z);
-		else if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK)
-			display.setRed(255, (int)x, layer, (int)z);
+			if((e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
+				System.out.println(mode);
+				display.setGreen(0, (int)x, layer, (int)z);
+				display.setRed(0, (int)x, layer, (int)z);
+			}
+			else if(mode==1||mode==2) {
+				if((e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
+					System.out.println(mode);
+					display.setGreen(0, (int)x, layer, (int)z);
+				}
+				if((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
+					System.out.println(mode);
+					display.setGreen(255, (int)x, layer, (int)z);
+				}
+			}
+			if(mode==0||mode==2) {
+				if((e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
+					System.out.println(mode);
+					display.setRed(0, (int)x, layer, (int)z);
+				}
+				if((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
+					System.out.println(mode);
+					display.setRed(255, (int)x, layer, (int)z);
+				}
+			}
 		}
 		catch(Exception e1) {}
 	}
 
+	/**
+	 * bepaalt aan de hand van de positie van de muis welke vakje in de cube aan moet
+	 */
 	public void mouseClicked(MouseEvent e)
 	{	
 		checkMouseAction(e);
 	}
-	
+
+	/**
+	 * bepaalt aan de hand van de positie van de muis welke vakje in de cube aan moet
+	 */
 	public void mouseDragged(MouseEvent e)
 	{
 		checkMouseAction(e);
@@ -223,6 +261,10 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 		return y;
 	}
 
+	public void setMode(int mode) {
+		this.mode = mode;
+	}
+
 	public void mouseEntered(MouseEvent e) {}
 
 	public void mouseExited(MouseEvent e) {}
@@ -231,6 +273,9 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 
 	public void mouseReleased(MouseEvent e) {}
 
+	/**
+	 * een aantal sneltoetsen om de cube te besturen
+	 */
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
 		s_display display = jogl.getDisplay();

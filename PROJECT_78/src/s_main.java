@@ -38,7 +38,7 @@ public class s_main extends Thread
 		b[0] = 49;
 
 		double start = System.nanoTime();;
-		for(int i=0;i<1000/usb.getOutputReportLength();i++)
+		for(int i=0;i<1;i++)
 			usb.writeData(b);
 		double stop = System.nanoTime();
 		System.out.println((stop-start)/1000000000.0);
