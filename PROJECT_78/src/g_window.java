@@ -1,4 +1,4 @@
-//TODO play en stop button die de frames afspeelt
+//TODO play en stop button die de frames afspeelt cube ook van voor en zijkant bewerken
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -42,9 +42,11 @@ public class g_window implements MouseListener
 	private JFileChooser fc;
 	private JTextArea console, border, space;
 	
-	static boolean[] selectedLED;
 	boolean anim_loop;
-	
+
+	/**
+	 * een nieuw window initialiseren
+	 */
 	public void createWindow()
 	{
 		fc = new JFileChooser();
@@ -53,14 +55,7 @@ public class g_window implements MouseListener
 		int height = 660;
 		int x = (screen.width-width)/2;
 		int y = (screen.height-height)/2-20;
-		selectedLED = new boolean[3];
 		anim_loop = false;
-		
-		for (int i = 0; i < 3; i++)
-		{
-			selectedLED[i] = false;
-			selectedLED[0] = true;
-		}
 		
 		frame.setBounds(x,y,width,height);
 		frame.addWindowListener(new WindowAdapter() 
@@ -295,7 +290,6 @@ public class g_window implements MouseListener
 		pane.add(border);
 		pane.add(space);
 		
-		//TODO: at Save window change 'Open' -> 'Save'
 		Dimension size = jogl.getPreferredSize();
 		jogl.setBounds(0, 0, size.width, size.height);
 		
@@ -365,17 +359,13 @@ public class g_window implements MouseListener
 		size = console.getPreferredSize();
 		console.setBounds(170, 486, 613, size.height);
 	}
-	
-	public static int getLEDColor()
-	{
-		for (int i = 0; i < 3; i++)
-		{
-			if (selectedLED[i])
-				return i;
-		}
-		return 0;
-	}
-	
+
+	/**
+	 * print een message op de console
+	 * @param message
+	 * @param console
+	 * @param type
+	 */
 	public void consoleMessage(String message, JTextArea console, int type)
 	{
 		Calendar rightNow = Calendar.getInstance();
@@ -395,25 +385,24 @@ public class g_window implements MouseListener
 		
 		console.append("(" + h + hour + ":" + m + minute + ":" + s + second + ") " + message + "\n");
 	}
-	
+
+	/**
+	 * zet de ledmode op een kleur en print een message op de console
+	 * @param value
+	 * @param console
+	 */
 	protected void actionLED(int value, JTextArea console) 
 	{
-		for (int i = 0; i < 3; i++)
-		{
-			if (i != value)
-				selectedLED[i] = false;
-		}
-		selectedLED[value] = true;
+		layer.setMode(value);
 		
 		String colour = "yellow";
-		
-		if (selectedLED[0])
+		if (value == 0)
 			colour = "red";
-		else if (selectedLED[1])
+		else if (value == 1)
 			colour = "green";
 		consoleMessage("LED paint colour set to " + colour + ".", console, 0);
 	}
-	
+
 	protected void actionLoop(JTextArea console) 
 	{
 		if (anim_loop)
@@ -427,16 +416,26 @@ public class g_window implements MouseListener
 			anim_loop = true;
 		}
 	}
-	
+
+	/**
+	 * haalt een frame weg uit de cube
+	 */
 	protected void actionRemove() {
 		jogl.remove();
 	}
 
+	/**
+	 * plaatst een frame tussen twee bestaande frames
+	 */
 	protected void actionInsert() {
 		jogl.insert();
 	}
 
+	/**
+	 * slaat de gegevens op in een nieuw bestand
+	 */
 	protected void actionSaveAs() {
+		fc.setApproveButtonText("Save");
 		while(fc.getFileFilter() != null)
 			fc.removeChoosableFileFilter(fc.getFileFilter());
 
@@ -465,7 +464,11 @@ public class g_window implements MouseListener
 		}
 	}
 
+	/**
+	 * laad gegevens uit een bestaand bestand
+	 */
 	protected void actionLoad() {
+		fc.setApproveButtonText("Open");
 		while(fc.getFileFilter() != null)
 			fc.removeChoosableFileFilter(fc.getFileFilter());
 
@@ -504,6 +507,9 @@ public class g_window implements MouseListener
 		catch (Exception e) {}
 	}
 
+	/**
+	 * slaat de gegevens op in een bestaand bestand
+	 */
 	protected void actionSave() {
 		jogl.generate5Cube();
 /*
@@ -543,22 +549,38 @@ public class g_window implements MouseListener
 		}
 	}
 
+	/**
+	 * plakt de inhoud van een eerder gekopieerde cube
+	 */
 	protected void actionPaste() {
 		jogl.paste();
 	}
 
+	/**
+	 * kopieert de inhoud van een cube
+	 */
 	protected void actionCopy() {
 		jogl.copy();
 	}
 
+	/**
+	 * ga naar de volgende frame
+	 */
 	protected void actionNext() {
 		jogl.next();
 	}
 
+	/**
+	 * ga naar de vorige frame
+	 */
 	protected void actionPrev() {
 		jogl.prev();
 	}
 
+	/**
+	 * zet een nieuw frame nummer op de label en past zo nodig de groote van de label aan
+	 * @param frame
+	 */
 	public void setFrameNumber(String frame) {
 		framenumber.setText(frame);
 		
@@ -566,8 +588,7 @@ public class g_window implements MouseListener
 		framenumber.setBounds(102, 588, size.width, size.height);
 	}
 
-	public void mousePressed(MouseEvent e) {
-	}
+	public void mousePressed(MouseEvent e) {}
 
 	public void mouseReleased(MouseEvent e) {}
 

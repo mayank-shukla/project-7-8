@@ -1,8 +1,11 @@
-
-
 import java.io.File;
 import javax.swing.filechooser.FileFilter;
 
+/**
+ * deze class wordt gebruikt om alleen een bepaald type bestand te kunnen lezen bij de fileselectie
+ * @author Jimmy
+ *
+ */
 public class s_extensionfilefilter extends FileFilter{
 
 	String[] valid;

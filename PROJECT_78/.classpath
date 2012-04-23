@@ -17,6 +17,5 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="PROJECT_78/USB"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="USB/AtUsbHidGui.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -9,13 +9,27 @@ import java.awt.Graphics;
  */
 public class g_effects 
 {
+	/**
+	 * zet de kleur op meegegeven Graphics object en returned een Color object aan de hand van RGB waarden
+	 * @param gfx
+	 * @param r
+	 * @param g
+	 * @param b
+	 * @return
+	 */
 	public static Color setRGB(Graphics gfx, int r, int g, int b)
 	{
 		Color RGB = new Color(r, g, b);
-		gfx.setColor(RGB);
+		try {gfx.setColor(RGB);}
+		catch(NullPointerException e) {}
 		return RGB;
 	}
-	
+
+	/**
+	 * zet de kl;uer op meegegeven Graphics object aan de hand van een String
+	 * @param gfx
+	 * @param colour
+	 */
 	public static void setRGB(Graphics gfx, String colour)
 	{
 		if (colour.equalsIgnoreCase("black")) {gfx.setColor(setRGB(gfx, 0, 0, 0)); return;}

@@ -45,6 +45,10 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		this.window = window;
 	}
 
+	/**
+	 * teken de frame van de cube
+	 * @param gl
+	 */
 	private void drawCubeSkeleton(GL2 gl)
 	{
 		GLUT glut = new GLUT();
@@ -56,7 +60,10 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		gl.glTranslatef(0.525f, 0.525f, 0.525f);
 		glut.glutWireCube(1f);
 	}
-	
+
+	/**
+	 * tekent de cube
+	 */
 	public void display(GLAutoDrawable drawable)
 	{
 		GL2 gl = drawable.getGL().getGL2();
@@ -74,6 +81,8 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	    gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 	    gl.glLoadIdentity();
 	    
+	    s_display display = getDisplay();
+	    
 		//teken alle lampjes
 		for(int x=0;x<16;x++) 
 		{
@@ -84,17 +93,18 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 				for(int z=0;z<16;z++) 
 				{
 					gl.glTranslatef(0f, 0f, 8f);
-					if(cube_red[x][y][z]!=0 && cube_green[x][y][z]!=0) 
+					if(cube_red[x][y][z]!=0 || cube_green[x][y][z]!=0) 
 					{
 						// TODO: textures (.png) ipv gele vlakken :(, gele vlakken is te onoverzichtelijk
 						//gl.glColor3f(1.0f, 1.0f, 0.0f);
-						
-						if (g_window.getLEDColor() == 0)
+						gl.glColor3f(display.getLedsRed()[x][y][z]/255f, display.getLedsGreen()[x][y][z]/255f, 0f);
+						/*
+						if (window.getLEDColor() == 0)
 							gl.glColor3f(1f, 0.3f, 0.3f);
-						else if (g_window.getLEDColor() == 1)
+						else if (window.getLEDColor() == 1)
 							gl.glColor3f(0.2f, 0.8f, 0.4f);
 						else
-							gl.glColor3f(1.0f, 0.8f, 0.3f);
+							gl.glColor3f(1.0f, 0.8f, 0.3f);*/
 						
 					    gl.glEnable(GL2.GL_BLEND);
 					    gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE); 
@@ -125,6 +135,9 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		gl.glFlush();
 	}
 
+	/**
+	 * initialisert dit OpenGL object
+	 */
 	public void init(GLAutoDrawable drawable) 
 	{   
 		GL2 gl = drawable.getGL().getGL2();      
@@ -150,6 +163,9 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		glu = new GLUgl2();
 	}
 
+	/**
+	 * methode om dit object te resizen
+	 */
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glViewport(0, 0, width, height);
@@ -243,10 +259,9 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		this.hoogte = hoogte;
 	}
 
-	/*public boolean getCube_bool(int x, int y, int z) {
-		return cube_bool[x][y][z];
-	}*/
-
+	/**
+	 * verandert de afstand tot de cube
+	 */
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) 
 	{
@@ -259,6 +274,9 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 			afstand=800;
 	}
 
+	/**
+	 * verandert het aanzicht van de cube
+	 */
 	@Override
 	public void mouseDragged(MouseEvent e) {
 
@@ -278,6 +296,9 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		corY = e.getY();
 	}
 
+	/**
+	 * houdt de X en Y coordinaten bij
+	 */
 	@Override
 	public void mouseMoved(MouseEvent e) 
 	{
@@ -297,6 +318,9 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		this.frame = frame;
 	}
 
+	/**
+	 * methode om naar de volgende frame te gaan
+	 */
 	public void next() {
 		if(frame == 65535)
 			return;
@@ -309,6 +333,9 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		window.setFrameNumber((frame+1)+"/"+display.size());
 	}
 
+	/**
+	 * methode om naar de vorige frame te gaan
+	 */
 	public void prev() {
 		if(frame==0)
 			return;
@@ -316,6 +343,10 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		window.setFrameNumber((frame+1)+"/"+display.size());
 	}
 
+	/**
+	 * methode om dit objct om te zetten naar een byte array
+	 * @return
+	 */
 	public byte[] save() {
 		int size = display.size();
 		byte[] data = new byte[size*8192+2];
@@ -330,6 +361,10 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		return data;
 	}
 
+	/**
+	 * methode om een byte array om te zetten naar dit object
+	 * @param data
+	 */
 	public void load(byte[] data) {
 		display = new LinkedList<s_display>();
 		int size;
@@ -347,10 +382,16 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		
 	}
 
+	/**
+	 * methode om het hudgie frame te kopieren
+	 */
 	public void copy() {
 		cpydisplay = display.get(frame);
 	}
 
+	/**
+	 * methode om een gekopierd frame te plaatsen
+	 */
 	public void paste() {
 		display.remove(frame);
 		display.add(frame, new s_display());
@@ -367,11 +408,17 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		}
 	}
 
+	/**
+	 * methode om een frame tussen twee andere frames te plaatsen
+	 */
 	public void insert() {
 		display.add(frame, new s_display());
 		window.setFrameNumber((frame+1)+"/"+display.size());
 	}
 
+	/**
+	 * methode om een frame tussen twee andere frames uit te halen
+	 */
 	public void remove() {
 		if(display.size()>1)
 			display.remove(frame);
@@ -381,15 +428,6 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	}
 
 	public void generate5Cube() {
-		//TODO dit genereren
-	/*
-		for(int i = 0;i<250;i++) { //eerste frame!
-			led1();
-			led24();
-			led100();
-		}
-	*/
-		
 		try {
 			PrintWriter out = new PrintWriter(new FileWriter("C:\\Program Files\\simulatoroutput.txt"));
 			s_display d = null;
