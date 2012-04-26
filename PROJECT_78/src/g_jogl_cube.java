@@ -30,10 +30,13 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	private int corX;
 	private int frame;
 	private g_window window;
+	private Anim anim;
 	
 	public g_jogl_cube(int width, int height, GLCapabilities capabilities, g_window window) 
 	{
 		super(capabilities);
+		anim = new Anim();
+		anim.run = false;
 		setSize(width, height);
 		afstand = 280;
 		aanzicht = 0;
@@ -67,22 +70,38 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	public void display(GLAutoDrawable drawable)
 	{
 		GL2 gl = drawable.getGL().getGL2();
-		
-        gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-		
+
+		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+
 		setCamera(gl, glu, 68, 68, 68, afstand, aanzicht, hoogte);
-		
-		int[][][] cube_red = display.get(frame).getLedsRed();
-		int[][][] cube_green = display.get(frame).getLedsGreen();
-		
+
+		int[][][] cube_red = null;
+		int[][][] cube_green = null;
+
 		//teken een herkenings punt
 		//gl.glColor4f(1.0f,1.0f,1.0f,1.0f);
-		
-	    gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-	    gl.glLoadIdentity();
-	    
-	    s_display display = getDisplay();
-	    
+
+		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+		gl.glLoadIdentity();
+
+		s_display display = null;
+		if(anim.run) {
+			
+			try {
+				display = this.display.get(anim.frame);
+				cube_red = display.getLedsRed();
+				cube_green = display.getLedsGreen();
+			}
+			catch(IndexOutOfBoundsException e) {}
+			
+			
+		}
+		else {
+			display = getDisplay();
+			cube_red = display.getLedsRed();
+			cube_green = display.getLedsGreen();
+		}
+
 		//teken alle lampjes
 		for(int x=0;x<16;x++) 
 		{
@@ -93,36 +112,39 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 				for(int z=0;z<16;z++) 
 				{
 					gl.glTranslatef(0f, 0f, 8f);
-					if(cube_red[x][y][z]!=0 || cube_green[x][y][z]!=0) 
-					{
-						// TODO: textures (.png) ipv gele vlakken :(, gele vlakken is te onoverzichtelijk
-						//gl.glColor3f(1.0f, 1.0f, 0.0f);
-						gl.glColor3f(display.getLedsRed()[x][y][z]/255f, display.getLedsGreen()[x][y][z]/255f, 0f);
-						/*
-						if (window.getLEDColor() == 0)
-							gl.glColor3f(1f, 0.3f, 0.3f);
-						else if (window.getLEDColor() == 1)
-							gl.glColor3f(0.2f, 0.8f, 0.4f);
-						else
-							gl.glColor3f(1.0f, 0.8f, 0.3f);*/
-						
-					    gl.glEnable(GL2.GL_BLEND);
-					    gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE); 
-					    //gl.glDepthMask(false);
-					    
-						gl.glPushMatrix();
-					    gl.glRotatef(aanzicht,0.0f,1.0f,0.0f);
-					    gl.glRotatef(-hoogte,1.0f,0.0f,0.0f);
-
-					    gl.glBegin(GL2.GL_QUADS);
-					    gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3i(0,-3,-4);
-					    gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3i(0, 3,-4);
-					    gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3i(4, 3,-4);
-					    gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3i(4,-3,-4);
-
-					    gl.glEnd();
-					    gl.glPopMatrix();
+					try {
+						if(cube_red[x][y][z]!=0 || cube_green[x][y][z]!=0) 
+						{
+							// TODO: textures (.png) ipv gele vlakken :(, gele vlakken is te onoverzichtelijk
+							//gl.glColor3f(1.0f, 1.0f, 0.0f);
+							gl.glColor3f(display.getLedsRed()[x][y][z]/255f, display.getLedsGreen()[x][y][z]/255f, 0f);
+							/*
+							if (window.getLEDColor() == 0)
+								gl.glColor3f(1f, 0.3f, 0.3f);
+							else if (window.getLEDColor() == 1)
+								gl.glColor3f(0.2f, 0.8f, 0.4f);
+							else
+								gl.glColor3f(1.0f, 0.8f, 0.3f);*/
+							
+						    gl.glEnable(GL2.GL_BLEND);
+						    gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE); 
+						    //gl.glDepthMask(false);
+						    
+							gl.glPushMatrix();
+						    gl.glRotatef(aanzicht,0.0f,1.0f,0.0f);
+						    gl.glRotatef(-hoogte,1.0f,0.0f,0.0f);
+	
+						    gl.glBegin(GL2.GL_QUADS);
+						    gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3i(0,-3,-4);
+						    gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3i(0, 3,-4);
+						    gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3i(4, 3,-4);
+						    gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3i(4,-3,-4);
+	
+						    gl.glEnd();
+						    gl.glPopMatrix();
+						}
 					}
+					catch(NullPointerException e) {}
 				}
 				gl.glTranslatef(0f, 0f, -128f);
 			}
@@ -258,6 +280,7 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 			throw new Exception("this value should be between -89 & 89");
 		this.hoogte = hoogte;
 	}
+
 
 	/**
 	 * verandert de afstand tot de cube
@@ -443,6 +466,82 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		for(int i=0;i<display.size();i++) {
 			d = display.get(i);
 			d.generate5CubeText();
+		}
+	}
+
+	public void startAnim() {
+		anim = new Anim();
+		anim.start();
+	}
+
+	public void stopAnim() {
+		anim.run = false;
+	}
+
+	/**
+	 * pauzeert de animatie
+	 * @return true als de animatie is gepauseert false als de animatie niet is gepauseert
+	 */
+	public boolean pauseAnim() {
+		if(anim.pause) {
+			anim.pause = false;
+		}
+		else {
+			anim.pause = true;
+		}
+		return anim.pause;
+	}
+
+	public void animGoToFrame(int frame) {
+		anim.frame = frame;
+	}
+
+	public boolean getLoop() {
+		return anim.loop;
+	}
+
+	public void setLoop(boolean loop) {
+		anim.loop = loop;
+	}
+
+	public boolean getRun() {
+		return anim.isAlive();
+	}
+
+	private class Anim extends Thread {
+
+		private boolean run;
+		private boolean loop;
+		private int frame;
+		private boolean pause;
+
+		public Anim() {
+			run = true;
+			frame = 0;
+			loop = true;
+			pause = false;
+		}
+
+		public void run() {
+			while(run) {
+				while(!pause) {
+					System.out.println(loop);
+					if(frame==display.size() && !loop) {
+						run = false;
+						break;
+					}
+					else if(frame>=display.size() && loop) {
+						frame=0;
+					}
+					try {
+						sleep(100);
+						notify();
+					}
+					catch (InterruptedException e1) {}
+					catch (IllegalMonitorStateException e1) {}
+					frame ++;
+				}
+			}
 		}
 	}
 }
