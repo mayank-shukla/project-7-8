@@ -23,8 +23,10 @@ public class s_main extends Thread
 		usb = new AtUsbHidJni();
 		System.loadLibrary("AtUsbHid");
 		usb.loadLibraryUsbHid();
-		if(usb.findHidDevice(0x03EB, 0x2013)!=1)
+		if(usb.findHidDevice(0x03EB, 0x2013)!=1) {
+			System.out.println("USB niet gevonden");
 			return;
+		}
 
 		System.out.println(usb.getOutputReportLength());
 
@@ -38,7 +40,7 @@ public class s_main extends Thread
 		b[0] = 49;
 
 		double start = System.nanoTime();;
-		for(int i=0;i<1;i++)
+		for(int i=0;i<1024/usb.getOutputReportLength();i++)
 			usb.writeData(b);
 		double stop = System.nanoTime();
 		System.out.println((stop-start)/1000000000.0);

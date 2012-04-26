@@ -205,28 +205,21 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 		//met mode == 0 rood, mode == 1 groen, mode == 2 geel
 		try {
 			if((e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
-				System.out.println(mode);
 				display.setGreen(0, (int)x, layer, (int)z);
 				display.setRed(0, (int)x, layer, (int)z);
 			}
-			else if(mode==1||mode==2) {
-				if((e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
-					System.out.println(mode);
+			else if((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
+				if(mode==0) {
+					display.setRed(255, (int)x, layer, (int)z);
 					display.setGreen(0, (int)x, layer, (int)z);
 				}
-				if((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
-					System.out.println(mode);
+				else if(mode==1) {
+					display.setRed(0, (int)x, layer, (int)z);
 					display.setGreen(255, (int)x, layer, (int)z);
 				}
-			}
-			if(mode==0||mode==2) {
-				if((e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
-					System.out.println(mode);
-					display.setRed(0, (int)x, layer, (int)z);
-				}
-				if((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
-					System.out.println(mode);
+				else if(mode==2) {
 					display.setRed(255, (int)x, layer, (int)z);
+					display.setGreen(255, (int)x, layer, (int)z);
 				}
 			}
 		}

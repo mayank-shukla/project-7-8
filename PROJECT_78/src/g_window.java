@@ -234,6 +234,12 @@ public class g_window implements MouseListener
 		play = new JButton(playIcon);
 		play.setToolTipText("Play the cube animation.");
 		play.setFocusable(false);
+		play.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				actionPlay();
+			}
+		});
 		
 		stop = new JButton(pauseIcon);
 		stop.setToolTipText("Stop the current animation.");
@@ -360,6 +366,19 @@ public class g_window implements MouseListener
 		console.setBounds(170, 486, 613, size.height);
 	}
 
+	protected void actionPlay() {
+		if(!jogl.getRun()) {
+			jogl.startAnim();
+			play.setIcon(createImageIcon("graphics/icons/pause.png"));
+		}
+		else {
+			if(jogl.pauseAnim())
+				play.setIcon(createImageIcon("graphics/icons/play.png"));
+			else
+				play.setIcon(createImageIcon("graphics/icons/pause.png"));
+		}
+	}
+
 	/**
 	 * print een message op de console
 	 * @param message
@@ -405,15 +424,15 @@ public class g_window implements MouseListener
 
 	protected void actionLoop(JTextArea console) 
 	{
-		if (anim_loop)
+		if (jogl.getLoop())
 		{
 			consoleMessage("Animation loop has been disabled.", console, 0);
-			anim_loop = false;
+			jogl.setLoop(false);
 		}
 		else if (!anim_loop)
 		{
 			consoleMessage("Animation loop has been enabled.", console, 0);
-			anim_loop = true;
+			jogl.setLoop(true);
 		}
 	}
 
