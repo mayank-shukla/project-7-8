@@ -1,12 +1,19 @@
-//TODO play en stop button die de frames afspeelt cube ook van voor en zijkant bewerken
+//TODO cube ook van voor en zijkant bewerken
+//TODO waneer er geanimeerd wordt frame nummer en animatie tijd naar poi schrijven
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -21,9 +28,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 /* g_window.java
  *
@@ -31,13 +38,13 @@ import javax.swing.JTextArea;
  * gebruikt zal worden.
  * 
  */
-public class g_window implements MouseListener
+public class g_window implements MouseListener, MouseWheelListener, KeyListener
 {
 	private JFrame frame = new JFrame("3D LED Cube Simulator and Editor " + s_version.getVersion());
 	private g_jogl_cube jogl;
 	private g_jogl_cube_layer layer;
 	private JButton prev,next,save,saveas,load,copy,paste,insert,remove,red,green,yellow,first,play,stop,last,loop;
-	private JLabel framenumber;
+	private JTextField framenumber2;
 	private File curFile;
 	private JFileChooser fc;
 	private JTextArea console, border, space;
@@ -77,15 +84,20 @@ public class g_window implements MouseListener
 		jogl = new g_jogl_cube(370, 370, capabilities,this);
 		jogl.addGLEventListener(jogl);
 		jogl.setFocusable(true);
-		jogl.addMouseMotionListener(jogl);
-		jogl.addMouseWheelListener(jogl);
 		
 		layer = new g_jogl_cube_layer(415, 370, capabilities,jogl);
 		layer.addGLEventListener(layer);
 		layer.setFocusable(true);
+
+		frame.addKeyListener(this);
+		frame.addMouseListener(this);
+		frame.addMouseWheelListener(this);
+		jogl.addMouseMotionListener(jogl);
+		jogl.addMouseWheelListener(this);
 		layer.addMouseMotionListener(layer);
-		layer.addMouseListener(layer);
-		layer.addKeyListener(layer);
+		layer.addMouseListener(this);
+		layer.addKeyListener(this);
+		layer.addMouseWheelListener(this);
 
 		ImageIcon prevIcon = createImageIcon("graphics/icons/prev.png");
 		ImageIcon nextIcon = createImageIcon("graphics/icons/next.png");
@@ -108,7 +120,7 @@ public class g_window implements MouseListener
 		ImageIcon loopIcon = createImageIcon("graphics/icons/loop.png");
 
 		prev = new JButton(prevIcon);
-		prev.setToolTipText("Select previous frame.");
+		prev.setToolTipText("Select previous frame. Left arrow key");
 		prev.setFocusable(false);
 		prev.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -117,7 +129,7 @@ public class g_window implements MouseListener
 			}
 		});
 		next = new JButton(nextIcon);
-		next.setToolTipText("Select next frame.");
+		next.setToolTipText("Select next frame. Right arrow key");
 		next.setFocusable(false);
 		next.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -126,7 +138,7 @@ public class g_window implements MouseListener
 			}
 		});
 		copy = new JButton(copyIcon);
-		copy.setToolTipText("Copy selected frame.");
+		copy.setToolTipText("Copy selected frame. Ctrl + C");
 		copy.setFocusable(false);
 		copy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -135,7 +147,7 @@ public class g_window implements MouseListener
 			}
 		});
 		paste = new JButton(pasteIcon);
-		paste.setToolTipText("Paste copied frame.");
+		paste.setToolTipText("Paste copied frame. Ctrl + V");
 		paste.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
@@ -143,7 +155,7 @@ public class g_window implements MouseListener
 			}
 		});
 		save = new JButton(saveIcon);
-		save.setToolTipText("Save file.");
+		save.setToolTipText("Save file. Ctrl + S");
 		save.setFocusable(false);
 		save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -152,7 +164,7 @@ public class g_window implements MouseListener
 			}
 		});
 		saveas = new JButton(saveAsIcon);
-		saveas.setToolTipText("Save file as...");
+		saveas.setToolTipText("Save file as... Alt + S");
 		saveas.setFocusable(false);
 		saveas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -161,7 +173,7 @@ public class g_window implements MouseListener
 			}
 		});
 		load = new JButton(loadIcon);
-		load.setToolTipText("Load file.");
+		load.setToolTipText("Load file. Ctrl + O");
 		load.setFocusable(false);
 		load.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -170,7 +182,7 @@ public class g_window implements MouseListener
 			}
 		});
 		insert = new JButton(insertIcon);
-		insert.setToolTipText("Insert a new frame.");
+		insert.setToolTipText("Insert a new frame. Ctrl + N");
 		insert.setFocusable(false);
 		insert.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -179,7 +191,7 @@ public class g_window implements MouseListener
 			}
 		});
 		remove = new JButton(removeIcon);
-		remove.setToolTipText("Remove selected frame.");
+		remove.setToolTipText("Remove selected frame. DEL");
 		remove.setFocusable(false);
 		remove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -188,10 +200,22 @@ public class g_window implements MouseListener
 			}
 		});
 
-		//TODO: Het eerste getal kunnen editten zodat je meteen naar die frame skipt
-		framenumber = new JLabel("1/1");
-		frame.addMouseListener(this);
-		
+		framenumber2 = new JTextField("1/1");
+		framenumber2.addFocusListener(new FocusListener() {
+			public void focusGained(FocusEvent e) {
+				framenumberFocusGained(e);
+			}
+			public void focusLost(FocusEvent e) {
+				framenumberFocusLost(e);
+			}
+		});
+		framenumber2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				actionChangeNumber(e);
+			}
+		});
+
 		console = new JTextArea(8, 56);
 		console.setEditable(false);
 
@@ -230,6 +254,12 @@ public class g_window implements MouseListener
 		first = new JButton(firstFrameIcon);
 		first.setToolTipText("Skip to the first frame of the cube.");
 		first.setFocusable(false);
+		first.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				actionFirst();
+			}
+		});
 		
 		play = new JButton(playIcon);
 		play.setToolTipText("Play the cube animation.");
@@ -244,10 +274,23 @@ public class g_window implements MouseListener
 		stop = new JButton(pauseIcon);
 		stop.setToolTipText("Stop the current animation.");
 		stop.setFocusable(false);
+		stop.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				actionStop();
+			}
+		});
+		stop.setEnabled(false);
 		
 		last = new JButton(lastFrameIcon);
 		last.setToolTipText("Skip to the last frame of the cube.");
 		last.setFocusable(false);
+		last.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				actionLast();
+			}
+		});
 		
 		loop = new JButton(loopIcon);
 		loop.setToolTipText("Toggle animation loop.");
@@ -278,7 +321,7 @@ public class g_window implements MouseListener
 		pane.add(save);
 		pane.add(saveas);
 		pane.add(load);
-		pane.add(framenumber);
+		pane.add(framenumber2);
 		pane.add(insert);
 		pane.add(remove);
 		
@@ -323,8 +366,8 @@ public class g_window implements MouseListener
 		size = load.getPreferredSize();
 		load.setBounds(10, 578, size.width, size.height);
 		
-		size = framenumber.getPreferredSize();
-		framenumber.setBounds(102, 588, size.width, size.height);
+		size = framenumber2.getPreferredSize();
+		framenumber2.setBounds(102, 588, size.width, size.height);
 		
 		size = insert.getPreferredSize();
 		insert.setBounds(10, 528, size.width, size.height);
@@ -366,16 +409,78 @@ public class g_window implements MouseListener
 		console.setBounds(170, 486, 613, size.height);
 	}
 
+	protected void framenumberFocusLost(FocusEvent e) {
+		framenumber2.setText((jogl.getFrame()+1)+"/"+jogl.getMaxFrame());
+	}
+
+	protected void framenumberFocusGained(FocusEvent e) {
+		framenumber2.setText("");
+	}
+
+	protected void actionChangeNumber(ActionEvent e) {
+		try {
+			if(Integer.parseInt(e.getActionCommand())%1==0)
+				jogl.setFrame(Integer.parseInt(e.getActionCommand()));
+			frame.requestFocus();
+		}
+		catch(NumberFormatException e1) {
+			frame.requestFocus();
+		}
+	}
+
+	protected void actionLast() {
+		jogl.last();
+	}
+
+	protected void actionFirst() {
+		jogl.first();
+	}
+
+	protected void actionStop() {
+		jogl.stopAnim();
+	}
+
+	/**
+	 * zet de img op de play knop naar play
+	 */
+	public void PlayToPlay() {
+		play.setIcon(createImageIcon("graphics/icons/play.png"));
+		prev.setEnabled(true);
+		next.setEnabled(true);
+		save.setEnabled(true);
+		saveas.setEnabled(true);
+		load.setEnabled(true);
+		copy.setEnabled(true);
+		paste.setEnabled(true);
+		insert.setEnabled(true);
+		remove.setEnabled(true);
+		layer.setEnable(true);
+		stop.setEnabled(false);
+	}
+
 	protected void actionPlay() {
 		if(!jogl.getRun()) {
 			jogl.startAnim();
 			play.setIcon(createImageIcon("graphics/icons/pause.png"));
+			prev.setEnabled(false);
+			next.setEnabled(false);
+			save.setEnabled(false);
+			saveas.setEnabled(false);
+			load.setEnabled(false);
+			copy.setEnabled(false);
+			paste.setEnabled(false);
+			insert.setEnabled(false);
+			remove.setEnabled(false);
+			layer.setEnable(false);
+			stop.setEnabled(true);
 		}
 		else {
-			if(jogl.pauseAnim())
+			if(jogl.pauseAnim()){
 				play.setIcon(createImageIcon("graphics/icons/play.png"));
-			else
+			}
+			else {
 				play.setIcon(createImageIcon("graphics/icons/pause.png"));
+			}
 		}
 	}
 
@@ -530,6 +635,7 @@ public class g_window implements MouseListener
 	 * slaat de gegevens op in een bestaand bestand
 	 */
 	protected void actionSave() {
+		//TODO goede opslag en laad algorthmes
 		jogl.generate5Cube();
 /*
 		try {
@@ -601,11 +707,79 @@ public class g_window implements MouseListener
 	 * @param frame
 	 */
 	public void setFrameNumber(String frame) {
-		framenumber.setText(frame);
+		framenumber2.setText(frame);
 		
-		Dimension size = framenumber.getPreferredSize();
-		framenumber.setBounds(102, 588, size.width, size.height);
+		Dimension size = framenumber2.getPreferredSize();
+		framenumber2.setBounds(102, 588, size.width, size.height);
 	}
+
+    /** Returns an ImageIcon, or null if the path was invalid. */
+    protected static ImageIcon createImageIcon(String path) 
+    {
+        java.net.URL imgURL = g_window.class.getResource(path);
+        if (imgURL != null) { return new ImageIcon(imgURL);} 
+        else { System.err.println("Couldn't find file: " + path); return null; }
+    }
+
+
+	public void keyTyped(KeyEvent e) {}
+
+
+	public void keyPressed(KeyEvent e) {
+		layer.keyPressed(e);
+		int key = e.getKeyCode();
+		switch(key) {
+			case KeyEvent.VK_LEFT:
+				jogl.prev();
+			break;
+			case KeyEvent.VK_RIGHT:
+				jogl.next();
+			break;
+			case KeyEvent.VK_C:
+				if(e.getModifiers()==KeyEvent.CTRL_MASK)
+					actionCopy();
+			break;
+			case KeyEvent.VK_V:
+				if(e.getModifiers()==KeyEvent.CTRL_MASK)
+					actionPaste();
+			break;
+			case KeyEvent.VK_N:
+				if(e.getModifiers()==KeyEvent.CTRL_MASK)
+					actionInsert();
+			break;
+			case KeyEvent.VK_DELETE:
+				actionRemove();
+			break;
+			case KeyEvent.VK_S:
+				if(e.getModifiers()==KeyEvent.CTRL_MASK) {
+					actionSave();
+				}
+				else if(e.getModifiers()==KeyEvent.ALT_MASK) {
+					actionSaveAs();
+				}
+			break;
+			case KeyEvent.VK_O:
+				if(e.getModifiers()==KeyEvent.CTRL_MASK)
+					actionLoad();
+			break;
+		}
+	}
+
+	public void keyReleased(KeyEvent e) {}
+
+	public void mouseDragged(MouseEvent e) {
+		jogl.mouseDragged(e);
+	}
+
+	public void mouseMoved(MouseEvent e) {
+		jogl.mouseMoved(e);
+	}
+
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		layer.mouseWheelMoved(e);
+	}
+
+	public void mouseClicked(MouseEvent e) {}
 
 	public void mousePressed(MouseEvent e) {}
 
@@ -614,14 +788,4 @@ public class g_window implements MouseListener
 	public void mouseEntered(MouseEvent e) {}
 
 	public void mouseExited(MouseEvent e) {}
-
-	public void mouseClicked(MouseEvent e) {}
-	
-    /** Returns an ImageIcon, or null if the path was invalid. */
-    protected static ImageIcon createImageIcon(String path) 
-    {
-        java.net.URL imgURL = g_window.class.getResource(path);
-        if (imgURL != null) { return new ImageIcon(imgURL);} 
-        else { System.err.println("Couldn't find file: " + path); return null; }
-    }
 }
