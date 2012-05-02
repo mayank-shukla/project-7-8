@@ -4,6 +4,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 import javax.media.opengl.DebugGL2;
 import javax.media.opengl.GL2;
@@ -15,7 +17,7 @@ import javax.media.opengl.glu.gl2.GLUgl2;
 
 import com.jogamp.opengl.util.FPSAnimator;
 
-public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, MouseListener, MouseMotionListener, KeyListener{
+public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, MouseListener, MouseMotionListener, KeyListener, MouseWheelListener{
 
 	private static final long serialVersionUID = 1L;
 	private FPSAnimator animator;
@@ -25,6 +27,7 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 	private int[][] cpyred;
 	private int[][] cpygreen;
 	private int mode;
+	private boolean enable;
 
 	/**
 	 * constructor voor de layer object
@@ -36,6 +39,7 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 	public g_jogl_cube_layer(int width, int height, GLCapabilities capabilities, g_jogl_cube jogl) 
 	{
 		super(capabilities);
+		enable = true;
 		mode=2;
 		setSize(width, height);
 		layer = 0;
@@ -157,15 +161,18 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 		gl.glViewport(0, 0, width, height);
 	}
 	
-	//TODO: scroll voor de y-as selectie
-	//TODO: keylistener links/rechts voor frame selectie
-	
+	public void setEnable(boolean enable) {
+		this.enable = enable;
+	}
+
 	/**
 	 * bepaalt aan de hand van de positie van de muis welke vakje in de cube aan moet
 	 * @param e
 	 */
 	public void checkMouseAction(MouseEvent e)
 	{
+		if(!enable)
+			return;
 		double x = e.getX();
 		double z = e.getY();
 		
@@ -337,4 +344,13 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 	public void keyTyped(KeyEvent e) {}
 
 	public void mouseMoved(MouseEvent e) {}
+
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		if(e.getPreciseWheelRotation()>0) {
+			layer++;
+		}
+		else if(e.getPreciseWheelRotation()<0) {
+			layer--;
+		}
+	}
 }

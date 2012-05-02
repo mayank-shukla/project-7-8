@@ -31,6 +31,7 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	private int frame;
 	private g_window window;
 	private Anim anim;
+	public boolean loop;
 	
 	public g_jogl_cube(int width, int height, GLCapabilities capabilities, g_window window) 
 	{
@@ -281,7 +282,6 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		this.hoogte = hoogte;
 	}
 
-
 	/**
 	 * verandert de afstand tot de cube
 	 */
@@ -337,8 +337,31 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		return frame;
 	}
 
+	public int getMaxFrame() {
+		return display.size();
+	}
+
 	public void setFrame(int frame) {
-		this.frame = frame;
+		if(frame>=display.size()) {
+			for(int i = display.size();i<frame;i++) {
+				display.add(new s_display());
+				this.frame++;
+			}
+		}
+		else {
+			this.frame = frame;
+		}
+		window.setFrameNumber((frame+1)+"/"+display.size());
+	}
+
+	public void first() {
+		frame = 0;
+		window.setFrameNumber((frame+1)+"/"+display.size());
+	}
+
+	public void last() {
+		frame=display.size()-1;
+		window.setFrameNumber((frame+1)+"/"+display.size());
 	}
 
 	/**
@@ -497,51 +520,48 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	}
 
 	public boolean getLoop() {
-		return anim.loop;
+		return loop;
 	}
 
 	public void setLoop(boolean loop) {
-		anim.loop = loop;
+		this.loop = loop;
 	}
 
 	public boolean getRun() {
-		return anim.isAlive();
+		return anim.run;
 	}
 
 	private class Anim extends Thread {
 
 		private boolean run;
-		private boolean loop;
 		private int frame;
 		private boolean pause;
 
 		public Anim() {
 			run = true;
 			frame = 0;
-			loop = true;
 			pause = false;
 		}
 
 		public void run() {
 			while(run) {
-				while(!pause) {
-					System.out.println(loop);
-					if(frame==display.size() && !loop) {
-						run = false;
-						break;
-					}
-					else if(frame>=display.size() && loop) {
-						frame=0;
-					}
-					try {
-						sleep(100);
-						notify();
-					}
-					catch (InterruptedException e1) {}
-					catch (IllegalMonitorStateException e1) {}
-					frame ++;
+				while(pause);
+				if(frame==display.size() && !loop) {
+					run = false;
+					break;
 				}
-			}
+				else if(frame>=display.size() && loop) {
+					frame=0;
+				}
+				try {
+					sleep(100);
+					notify();
+				}
+				catch (InterruptedException e1) {}
+				catch (IllegalMonitorStateException e1) {}
+				frame ++;
+				}
+			window.PlayToPlay();
 		}
 	}
 }
