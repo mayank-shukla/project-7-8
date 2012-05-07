@@ -23,7 +23,7 @@ public class s_main extends Thread
 		usb = new AtUsbHidJni();
 		System.loadLibrary("AtUsbHid");
 		usb.loadLibraryUsbHid();
-		if(usb.findHidDevice(0x03EB, 0x2013)!=1) {
+		if(usb.findHidDevice(0xc0, 0x16)!=1) {
 			System.out.println("USB niet gevonden");
 			return;
 		}
@@ -56,7 +56,6 @@ public class s_main extends Thread
 
 	public void run()
 	{
-		g_window window = new g_window();
-		window.createWindow();
+		new g_window();
 	}
 }

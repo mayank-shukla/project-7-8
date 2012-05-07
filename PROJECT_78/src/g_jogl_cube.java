@@ -2,9 +2,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.LinkedList;
 
 import javax.media.opengl.DebugGL2;
@@ -29,11 +26,11 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	private int corY;
 	private int corX;
 	private int frame;
-	private g_window window;
+	private g_simulator window;
 	private Anim anim;
 	public boolean loop;
 	
-	public g_jogl_cube(int width, int height, GLCapabilities capabilities, g_window window) 
+	public g_jogl_cube(int width, int height, GLCapabilities capabilities, g_simulator window) 
 	{
 		super(capabilities);
 		anim = new Anim();
@@ -471,25 +468,6 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		if(frame!=0)
 			frame--;
 		window.setFrameNumber((frame+1)+"/"+display.size());
-	}
-
-	public void generate5Cube() {
-		try {
-			PrintWriter out = new PrintWriter(new FileWriter("C:\\Program Files\\simulatoroutput.txt"));
-			s_display d = null;
-			for(int i=0;i<display.size();i++) {
-				d = display.get(i);
-				out.println(d.generate5CubeText());
-			}
-			out.close();
-		}
-		catch (IOException e) {e.printStackTrace();}
-		
-		s_display d = null;
-		for(int i=0;i<display.size();i++) {
-			d = display.get(i);
-			d.generate5CubeText();
-		}
 	}
 
 	public void startAnim() {
