@@ -5,24 +5,6 @@
  */
 public class s_display {
 
-	/* manier om gegevens naar led cube te streamen:
-	 * geef een mode bit per frame mee om te bepalen welke lampjes niet gedfineerd moeten worden:
-	 * 		bijvoorbeeld het grootste aantal soorten lampjes is die uit staan, dan geef je code 0. dan zet je per default alle lampjes uit tenzij anders gedefineerd in de gegevens
-	 * voor elke lampje heb je 2 byte nodig:
-	 * 		0000 0000 0000 0000
-	 * 		  ^^ ^^^^ ^^^^ ^^^^^
-	 * 		  || |||| |||| |||||
-	 * 		  ||worden voor de positie gebruikt
-	 * 		  ||
-	 * 		  worden voor de kleurcode gebruikt
-	 * 
-	 * met eerder genoemde methode hoofd maximaal 75% van alle lampjes worden verstuurd
-	 * 16^3=4096
-	 * 4096*0.75 = 3072
-	 * 3072*2 = 6144
-	 * 6144+1 = 6145 bytes per frame
-	 */
-
 	private int[][][] cube_red;
 	private int[][][] cube_green;
 
@@ -86,39 +68,6 @@ public class s_display {
 			}
 		}
 		return red;
-	}
-
-	public String generate5CubeText() {
-		int len=0;
-		for(int z=0;z<5;z++) {
-			for(int y=0;y<5;y++) {
-				for(int x=0;x<5;x++) {
-					if(cube_red[x][y][z] == 255 || cube_green[x][y][z] == 255)
-						//code = code + (x+5*y+5*5*z+1) + ",";
-						len++;
-				}
-			}
-		}
-
-		String code;
-		if(len==0)
-			code = "for(int i=0;i<100;i++) {";
-		else if(len<=100)
-			code = "for(int i=0;i<"+100/len+";i++) {";
-		else
-			code = "for(int i=0;i<"+(100/len+1)+";i++) {";
-
-		for(int z=0;z<5;z++) {
-			for(int y=0;y<5;y++) {
-				for(int x=0;x<5;x++) {
-					if(cube_red[x][y][z] == 255 || cube_green[x][y][z] == 255)
-						code = code + "led" + (x+5*y+5*5*z+1) + "();";
-				}
-			}
-		}
-		code=code+"}";
-		
-		return code;
 	}
 
 	public void setGreen(int green, int x, int y, int z) throws Exception {

@@ -6,9 +6,11 @@
 public class s_object {
 
 	private s_led[] leds;
+	private s_display parent;
 
-	public s_object() {
+	public s_object(s_display parent) {
 		leds = new s_led[0];
+		this.parent = parent;
 	}
 
 	public void addLed(s_led led) throws Exception {
@@ -31,4 +33,30 @@ public class s_object {
 	public void reset() {
 		leds = new s_led[0];
 	}
+	
+	/**
+	 * controleert of een nieuwe versie van dit object geen collision heeft met andere objecten in de cube
+	 * @param obj nieuwe versie van dit object
+	 * @return true als er colision is anders false
+	 */
+	public boolean checkCollision(s_object obj) {
+		
+		s_object[] objarr = parent.getObjects();
+		
+		for(int i=0;i<objarr.length;i++) {
+			if(objarr[i] != this) {
+				s_led[] toCompare = objarr[i].getLeds();
+				s_led[] compare = obj.getLeds();
+				for(int k=0;k<toCompare.length;k++) {
+					for(int l=0;l<compare.length;l++) {
+						if(toCompare[k].getX()==compare[l].getX() && toCompare[k].getZ()==compare[l].getZ() && toCompare[k].getY()==compare[l].getY())
+							return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	
 }
