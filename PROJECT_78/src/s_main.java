@@ -1,5 +1,3 @@
-import com.atmel.atusbhidjni.AtUsbHidJni;
-
 /* s_main.java
  * 
  * Bij de .java bestanden wordt er een voorvoegsel gebruikt dat aangeeft bij welke
@@ -13,45 +11,10 @@ import com.atmel.atusbhidjni.AtUsbHidJni;
 
 public class s_main extends Thread
 {
-	private static AtUsbHidJni usb;
-
 	public static void main(String args[]) throws Throwable
 	{
 		new s_main().start();
-		new s_thread().start();
-		
-		usb = new AtUsbHidJni();
-		System.loadLibrary("AtUsbHid");
-		usb.loadLibraryUsbHid();
-		if(usb.findHidDevice(0xc0, 0x16)!=1) {
-			System.out.println("USB niet gevonden");
-			return;
-		}
-
-		System.out.println(usb.getOutputReportLength());
-
-		byte[] b = new byte[usb.getOutputReportLength()];
-		for (int i = 0; i < b.length; ++i) {
-			b[i] = 0;
-		}
-
-		b[1] = (byte) 51;
-
-		b[0] = 49;
-
-		double start = System.nanoTime();;
-		for(int i=0;i<1024/usb.getOutputReportLength();i++)
-			usb.writeData(b);
-		double stop = System.nanoTime();
-		System.out.println((stop-start)/1000000000.0);
-
-		Thread.sleep(1000);
-
-		b[0] = 48;
-
-		usb.writeData(b);
-
-		usb.UnloadloadLibraryUsbHid();
+		new s_thread().start();		
 	}
 
 	public void run()
