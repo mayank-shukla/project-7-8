@@ -12,8 +12,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -38,13 +36,13 @@ import javax.swing.JTextField;
  * gebruikt zal worden.
  * 
  */
-public class g_simulator implements MouseListener, MouseWheelListener, KeyListener
+public class g_simulator implements MouseListener, KeyListener
 {
 	private JFrame frame;
 	private g_jogl_cube jogl;
 	private g_jogl_cube_layer layer;
 	private JButton prev,next,save,saveas,load,copy,paste,insert,remove,red,green,yellow,first,play,stop,last,loop;
-	private JTextField framenumber2;
+	private JTextField framenumber;
 	private File curFile;
 	private JFileChooser fc;
 	private JTextArea console, border, space;
@@ -92,13 +90,10 @@ public class g_simulator implements MouseListener, MouseWheelListener, KeyListen
 
 		frame.addKeyListener(this);
 		frame.addMouseListener(this);
-		frame.addMouseWheelListener(this);
 		jogl.addMouseMotionListener(jogl);
-		jogl.addMouseWheelListener(this);
 		layer.addMouseMotionListener(layer);
 		layer.addMouseListener(this);
 		layer.addKeyListener(this);
-		layer.addMouseWheelListener(this);
 
 		ImageIcon prevIcon = createImageIcon("graphics/icons/prev.png");
 		ImageIcon nextIcon = createImageIcon("graphics/icons/next.png");
@@ -201,8 +196,8 @@ public class g_simulator implements MouseListener, MouseWheelListener, KeyListen
 			}
 		});
 
-		framenumber2 = new JTextField("1/1");
-		framenumber2.addFocusListener(new FocusListener() {
+		framenumber = new JTextField("1/1");
+		framenumber.addFocusListener(new FocusListener() {
 			public void focusGained(FocusEvent e) {
 				framenumberFocusGained(e);
 			}
@@ -210,7 +205,7 @@ public class g_simulator implements MouseListener, MouseWheelListener, KeyListen
 				framenumberFocusLost(e);
 			}
 		});
-		framenumber2.addActionListener(new ActionListener() {
+		framenumber.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
 				actionChangeNumber(e);
@@ -322,7 +317,7 @@ public class g_simulator implements MouseListener, MouseWheelListener, KeyListen
 		pane.add(save);
 		pane.add(saveas);
 		pane.add(load);
-		pane.add(framenumber2);
+		pane.add(framenumber);
 		pane.add(insert);
 		pane.add(remove);
 		
@@ -367,8 +362,8 @@ public class g_simulator implements MouseListener, MouseWheelListener, KeyListen
 		size = load.getPreferredSize();
 		load.setBounds(10, 578, size.width, size.height);
 		
-		size = framenumber2.getPreferredSize();
-		framenumber2.setBounds(102, 588, size.width, size.height);
+		size = framenumber.getPreferredSize();
+		framenumber.setBounds(102, 588, size.width, size.height);
 		
 		size = insert.getPreferredSize();
 		insert.setBounds(10, 528, size.width, size.height);
@@ -412,11 +407,11 @@ public class g_simulator implements MouseListener, MouseWheelListener, KeyListen
 	}
 
 	protected void framenumberFocusLost(FocusEvent e) {
-		framenumber2.setText((jogl.getFrame()+1)+"/"+jogl.getMaxFrame());
+		framenumber.setText((jogl.getFrame()+1)+"/"+jogl.getMaxFrame());
 	}
 
 	protected void framenumberFocusGained(FocusEvent e) {
-		framenumber2.setText("");
+		framenumber.setText("");
 	}
 
 	protected void actionChangeNumber(ActionEvent e) {
@@ -458,6 +453,12 @@ public class g_simulator implements MouseListener, MouseWheelListener, KeyListen
 		remove.setEnabled(true);
 		layer.setEnable(true);
 		stop.setEnabled(false);
+		red.setEnabled(true);
+		green.setEnabled(true);
+		yellow.setEnabled(true);
+		first.setEnabled(true);
+		last.setEnabled(true);
+		framenumber.setFocusable(true);
 	}
 
 	protected void actionPlay() {
@@ -475,6 +476,14 @@ public class g_simulator implements MouseListener, MouseWheelListener, KeyListen
 			remove.setEnabled(false);
 			layer.setEnable(false);
 			stop.setEnabled(true);
+			red.setEnabled(false);
+			green.setEnabled(false);
+			yellow.setEnabled(false);
+			first.setEnabled(false);
+			last.setEnabled(false);
+			//TODO volgende regel indicator van frames waneer de animatie runt maken
+			framenumber.setFocusable(false);
+			
 		}
 		else {
 			if(jogl.pauseAnim()){
@@ -701,10 +710,10 @@ public class g_simulator implements MouseListener, MouseWheelListener, KeyListen
 	 * @param frame
 	 */
 	public void setFrameNumber(String frame) {
-		framenumber2.setText(frame);
+		framenumber.setText(frame);
 		
-		Dimension size = framenumber2.getPreferredSize();
-		framenumber2.setBounds(102, 588, size.width, size.height);
+		Dimension size = framenumber.getPreferredSize();
+		framenumber.setBounds(102, 588, size.width, size.height);
 	}
 
     /** Returns an ImageIcon, or null if the path was invalid. */
@@ -715,9 +724,7 @@ public class g_simulator implements MouseListener, MouseWheelListener, KeyListen
         else { System.err.println("Couldn't find file: " + path); return null; }
     }
 
-
 	public void keyTyped(KeyEvent e) {}
-
 
 	public void keyPressed(KeyEvent e) {
 		layer.keyPressed(e);
@@ -767,10 +774,6 @@ public class g_simulator implements MouseListener, MouseWheelListener, KeyListen
 
 	public void mouseMoved(MouseEvent e) {
 		jogl.mouseMoved(e);
-	}
-
-	public void mouseWheelMoved(MouseWheelEvent e) {
-		layer.mouseWheelMoved(e);
 	}
 
 	public void mouseClicked(MouseEvent e) {}

@@ -1,7 +1,5 @@
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.util.LinkedList;
 
 import javax.media.opengl.DebugGL2;
@@ -15,7 +13,7 @@ import javax.media.opengl.glu.gl2.GLUgl2;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.gl2.GLUT;
 
-public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotionListener, MouseWheelListener {
+public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotionListener {
 
 	private static final long serialVersionUID = 1L;
 	private FPSAnimator animator;
@@ -280,21 +278,6 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	}
 
 	/**
-	 * verandert de afstand tot de cube
-	 */
-	@Override
-	public void mouseWheelMoved(MouseWheelEvent e) 
-	{
-		e.getWheelRotation();
-		if(e.getWheelRotation()>0) afstand+=24;
-		else if(e.getWheelRotation()<0) afstand-=24;
-		if(afstand<1)
-			afstand = 1;
-		if(afstand>800)
-			afstand=800;
-	}
-
-	/**
 	 * verandert het aanzicht van de cube
 	 */
 	@Override
@@ -538,8 +521,10 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 				catch (InterruptedException e1) {}
 				catch (IllegalMonitorStateException e1) {}
 				frame ++;
+				window.setFrameNumber(frame+"");
 				}
 			window.PlayToPlay();
+			window.setFrameNumber((g_jogl_cube.this.frame+1)+"/"+display.size());
 		}
 	}
 }

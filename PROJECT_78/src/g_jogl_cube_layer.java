@@ -4,8 +4,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 
 import javax.media.opengl.DebugGL2;
 import javax.media.opengl.GL2;
@@ -17,7 +15,7 @@ import javax.media.opengl.glu.gl2.GLUgl2;
 
 import com.jogamp.opengl.util.FPSAnimator;
 
-public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, MouseListener, MouseMotionListener, KeyListener, MouseWheelListener{
+public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, MouseListener, MouseMotionListener, KeyListener {
 
 	private static final long serialVersionUID = 1L;
 	private FPSAnimator animator;
@@ -344,13 +342,4 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 	public void keyTyped(KeyEvent e) {}
 
 	public void mouseMoved(MouseEvent e) {}
-
-	public void mouseWheelMoved(MouseWheelEvent e) {
-		if(e.getPreciseWheelRotation()>0) {
-			layer++;
-		}
-		else if(e.getPreciseWheelRotation()<0) {
-			layer--;
-		}
-	}
 }
