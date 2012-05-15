@@ -14,7 +14,7 @@ public class s_main extends Thread
 	public static void main(String args[]) throws Throwable
 	{
 		new s_main().start();
-		new s_thread().start();		
+		new s_thread().start();
 	}
 
 	public void run()
