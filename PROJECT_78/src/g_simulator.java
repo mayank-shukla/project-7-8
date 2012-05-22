@@ -1,5 +1,4 @@
 //TODO cube ook van voor en zijkant bewerken
-//TODO waneer er geanimeerd wordt frame nummer en animatie tijd naar poi schrijven
 //TODO copieren moet met kleur kunnen
 import java.awt.Color;
 import java.awt.Container;
