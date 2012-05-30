@@ -5,6 +5,7 @@
  * 
  * s_ -> systeem gerelateerd
  * g_ -> grafisch
+ * e_ -> entertainment (games)
  * 
  * waneer je naar een jar file exporteerd moet library handeling op package required libraries into generated jar, en alle files die in de JOGL map in dit project moeten met een archive manager(winrar/7zip etc) in de jar worden geplaatst
  */
