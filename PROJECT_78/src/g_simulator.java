@@ -41,13 +41,16 @@ public class g_simulator implements MouseListener, KeyListener
 	private JFrame frame;
 	private g_jogl_cube jogl;
 	private g_jogl_cube_layer layer;
-	private JButton prev,next,save,saveas,load,copy,paste,insert,remove,red,green,yellow,first,play,stop,last,loop;
+	private s_display display;
+	private e_game game;
+	private JButton prev,next,save,saveas,load,copy,paste,insert,remove,red,green,yellow,first,play,stop,last,loop,gametest;
 	private JTextField framenumber;
 	private File curFile;
 	private JFileChooser fc;
-	private JTextArea console, border, space;
+	private JTextArea console, border, space, framedisplay;
 	
 	boolean anim_loop;
+	boolean gamemode;
 
 	/**
 	 * een nieuw window initialiseren
@@ -62,6 +65,7 @@ public class g_simulator implements MouseListener, KeyListener
 		int x = (screen.width-width)/2;
 		int y = (screen.height-height)/2-20;
 		anim_loop = false;
+		gamemode = false;
 		
 		frame.setBounds(x,y,width,height);
 		frame.addWindowListener(new WindowAdapter() 
@@ -87,6 +91,8 @@ public class g_simulator implements MouseListener, KeyListener
 		layer = new g_jogl_cube_layer(415, 370, capabilities,jogl);
 		layer.addGLEventListener(layer);
 		layer.setFocusable(true);
+		
+		display = jogl.getDisplay();
 
 		frame.addKeyListener(this);
 		frame.addMouseListener(this);
@@ -114,9 +120,10 @@ public class g_simulator implements MouseListener, KeyListener
 		ImageIcon pauseIcon = createImageIcon("graphics/icons/stop.png");
 		ImageIcon lastFrameIcon = createImageIcon("graphics/icons/last.png");
 		ImageIcon loopIcon = createImageIcon("graphics/icons/loop.png");
+		ImageIcon gameIcon = createImageIcon("graphics/icons/gametest.png");
 
 		prev = new JButton(prevIcon);
-		prev.setToolTipText("Select previous frame. Left arrow key");
+		prev.setToolTipText("Select previous frame. (Left arrow key)");
 		prev.setFocusable(false);
 		prev.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -125,7 +132,7 @@ public class g_simulator implements MouseListener, KeyListener
 			}
 		});
 		next = new JButton(nextIcon);
-		next.setToolTipText("Select next frame. Right arrow key");
+		next.setToolTipText("Select next frame. (Right arrow key)");
 		next.setFocusable(false);
 		next.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -134,7 +141,7 @@ public class g_simulator implements MouseListener, KeyListener
 			}
 		});
 		copy = new JButton(copyIcon);
-		copy.setToolTipText("Copy selected frame. Ctrl + C");
+		copy.setToolTipText("Copy selected frame. (Ctrl + C)");
 		copy.setFocusable(false);
 		copy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -143,7 +150,7 @@ public class g_simulator implements MouseListener, KeyListener
 			}
 		});
 		paste = new JButton(pasteIcon);
-		paste.setToolTipText("Paste copied frame. Ctrl + V");
+		paste.setToolTipText("Paste copied frame. (Ctrl + V)");
 		paste.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
@@ -151,7 +158,7 @@ public class g_simulator implements MouseListener, KeyListener
 			}
 		});
 		save = new JButton(saveIcon);
-		save.setToolTipText("Save file. Ctrl + S");
+		save.setToolTipText("Save file. (Ctrl + S)");
 		save.setFocusable(false);
 		save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -160,7 +167,7 @@ public class g_simulator implements MouseListener, KeyListener
 			}
 		});
 		saveas = new JButton(saveAsIcon);
-		saveas.setToolTipText("Save file as... Alt + S");
+		saveas.setToolTipText("Save file as. (Alt + S)");
 		saveas.setFocusable(false);
 		saveas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -169,7 +176,7 @@ public class g_simulator implements MouseListener, KeyListener
 			}
 		});
 		load = new JButton(loadIcon);
-		load.setToolTipText("Load file. Ctrl + O");
+		load.setToolTipText("Load file. (Ctrl + O)");
 		load.setFocusable(false);
 		load.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -178,7 +185,7 @@ public class g_simulator implements MouseListener, KeyListener
 			}
 		});
 		insert = new JButton(insertIcon);
-		insert.setToolTipText("Insert a new frame. Ctrl + N");
+		insert.setToolTipText("Insert a new frame. (Ctrl + N)");
 		insert.setFocusable(false);
 		insert.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -187,12 +194,22 @@ public class g_simulator implements MouseListener, KeyListener
 			}
 		});
 		remove = new JButton(removeIcon);
-		remove.setToolTipText("Remove selected frame. DEL");
+		remove.setToolTipText("Remove selected frame. (DEL)");
 		remove.setFocusable(false);
 		remove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
 				actionRemove();
+			}
+		});
+		
+		gametest = new JButton(gameIcon);
+		gametest.setToolTipText("Test a 3D LED cube game.");
+		gametest.setFocusable(false);
+		gametest.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				actionGametest(console);
 			}
 		});
 
@@ -214,8 +231,11 @@ public class g_simulator implements MouseListener, KeyListener
 
 		console = new JTextArea(8, 56);
 		console.setEditable(false);
-
 		console.append("3D LED Cube Simulator and Editor " + s_version.getVersion() + " has been loaded successfully.\n");
+		
+		framedisplay = new JTextArea(1, 2);
+		framedisplay.setEditable(false);
+		framedisplay.append("Frame:");
 		
 		red = new JButton(redIcon);
 		red.setToolTipText("Set your mouse to red LED paint mode.");
@@ -318,6 +338,7 @@ public class g_simulator implements MouseListener, KeyListener
 		pane.add(saveas);
 		pane.add(load);
 		pane.add(framenumber);
+		pane.add(framedisplay);
 		pane.add(insert);
 		pane.add(remove);
 		
@@ -330,6 +351,7 @@ public class g_simulator implements MouseListener, KeyListener
 		pane.add(stop);
 		pane.add(last);
 		pane.add(loop);
+		pane.add(gametest);
 		
 		pane.add(console);
 		pane.add(border);
@@ -363,7 +385,7 @@ public class g_simulator implements MouseListener, KeyListener
 		load.setBounds(10, 578, size.width, size.height);
 		
 		size = framenumber.getPreferredSize();
-		framenumber.setBounds(102, 588, size.width, size.height);
+		framenumber.setBounds(84, 601, size.width, size.height);
 		
 		size = insert.getPreferredSize();
 		insert.setBounds(10, 528, size.width, size.height);
@@ -395,6 +417,9 @@ public class g_simulator implements MouseListener, KeyListener
 		size = loop.getPreferredSize();
 		loop.setBounds(718, 378, size.width, size.height);
 		
+		size = gametest.getPreferredSize();
+		gametest.setBounds(718, 428, size.width, size.height);
+		
 		size = space.getPreferredSize();
 		space.setBounds(159, 478, 625, 146);
 		
@@ -403,6 +428,10 @@ public class g_simulator implements MouseListener, KeyListener
 		
 		size = console.getPreferredSize();
 		console.setBounds(170, 486, 613, size.height);
+		
+		size = framedisplay.getPreferredSize();
+		framedisplay.setBounds(84, 576, size.width, size.height);
+		
 		return pane;
 	}
 
@@ -458,6 +487,7 @@ public class g_simulator implements MouseListener, KeyListener
 		yellow.setEnabled(true);
 		first.setEnabled(true);
 		last.setEnabled(true);
+		gametest.setEnabled(true);
 		framenumber.setFocusable(true);
 	}
 
@@ -481,6 +511,7 @@ public class g_simulator implements MouseListener, KeyListener
 			yellow.setEnabled(false);
 			first.setEnabled(false);
 			last.setEnabled(false);
+			gametest.setEnabled(false);
 			//TODO volgende regel indicator van frames waneer de animatie runt maken
 			framenumber.setFocusable(false);
 			
@@ -518,7 +549,7 @@ public class g_simulator implements MouseListener, KeyListener
 		if (second < 10)
 			s = "0";
 		
-		console.append("(" + h + hour + ":" + m + minute + ":" + s + second + ") " + message + "\n");
+		console.insert("(" + h + hour + ":" + m + minute + ":" + s + second + ") " + message + "\n", 0);
 	}
 
 	/**
@@ -704,6 +735,68 @@ public class g_simulator implements MouseListener, KeyListener
 	protected void actionPrev() {
 		jogl.prev();
 	}
+	
+	/**
+	 * Test een LED cube game
+	 */
+	protected void actionGametest(JTextArea console) 
+	{
+		if (jogl.getGamemode())
+		{
+			consoleMessage("Switching back to animation mode.", console, 0);
+			jogl.setGamemode(false);
+			display.resetAllLeds();
+			
+			play.setEnabled(true);
+			prev.setEnabled(true);
+			next.setEnabled(true);
+			save.setEnabled(true);
+			saveas.setEnabled(true);
+			load.setEnabled(true);
+			copy.setEnabled(true);
+			paste.setEnabled(true);
+			insert.setEnabled(true);
+			remove.setEnabled(true);
+			layer.setEnable(true);
+			stop.setEnabled(false);
+			red.setEnabled(true);
+			green.setEnabled(true);
+			yellow.setEnabled(true);
+			first.setEnabled(true);
+			last.setEnabled(true);
+			loop.setEnabled(true);
+			framenumber.setFocusable(true);
+			gamemode = false;
+		}
+		else if (!gamemode)
+		{
+			consoleMessage("Switching to gaming mode.", console, 0);
+			jogl.setGamemode(true);
+			display.resetAllLeds();
+			game = new e_game(jogl.getDisplay());
+			
+			play.setEnabled(false);
+			prev.setEnabled(false);
+			next.setEnabled(false);
+			save.setEnabled(false);
+			saveas.setEnabled(false);
+			load.setEnabled(false);
+			copy.setEnabled(false);
+			paste.setEnabled(false);
+			insert.setEnabled(false);
+			remove.setEnabled(false);
+			layer.setEnable(false);
+			stop.setEnabled(false);
+			red.setEnabled(false);
+			green.setEnabled(false);
+			yellow.setEnabled(false);
+			first.setEnabled(false);
+			last.setEnabled(false);
+			loop.setEnabled(false);
+			framenumber.setFocusable(false);
+			gamemode = true;
+		}
+	}
 
 	/**
 	 * zet een nieuw frame nummer op de label en past zo nodig de groote van de label aan
@@ -713,7 +806,7 @@ public class g_simulator implements MouseListener, KeyListener
 		framenumber.setText(frame);
 		
 		Dimension size = framenumber.getPreferredSize();
-		framenumber.setBounds(102, 588, size.width, size.height);
+		framenumber.setBounds(84, 601, size.width, size.height);
 	}
 
     /** Returns an ImageIcon, or null if the path was invalid. */
@@ -726,10 +819,19 @@ public class g_simulator implements MouseListener, KeyListener
 
 	public void keyTyped(KeyEvent e) {}
 
-	public void keyPressed(KeyEvent e) {
+	public void keyPressed(KeyEvent e) 
+	{
 		layer.keyPressed(e);
 		int key = e.getKeyCode();
-		switch(key) {
+
+		if (gamemode)
+		{
+			game.checkGamingControls(key);
+			return;
+		}
+		
+		switch(key) 
+		{
 			case KeyEvent.VK_LEFT:
 				jogl.prev();
 			break;

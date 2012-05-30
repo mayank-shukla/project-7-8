@@ -208,21 +208,27 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 		s_display display = jogl.getDisplay();
 		
 		//met mode == 0 rood, mode == 1 groen, mode == 2 geel
-		try {
-			if((e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
+		try 
+		{
+			if((e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) 
+			{
 				display.setGreen(0, (int)x, layer, (int)z);
 				display.setRed(0, (int)x, layer, (int)z);
 			}
-			else if((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
-				if(mode==0) {
+			else if((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) 
+			{
+				if(mode==0) 
+				{
 					display.setRed(255, (int)x, layer, (int)z);
 					display.setGreen(0, (int)x, layer, (int)z);
 				}
-				else if(mode==1) {
+				else if(mode==1) 
+				{
 					display.setRed(0, (int)x, layer, (int)z);
 					display.setGreen(255, (int)x, layer, (int)z);
 				}
-				else if(mode==2) {
+				else if(mode==2) 
+				{
 					display.setRed(255, (int)x, layer, (int)z);
 					display.setGreen(255, (int)x, layer, (int)z);
 				}
@@ -274,11 +280,16 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 	/**
 	 * een aantal sneltoetsen om de cube te besturen
 	 */
-	public void keyPressed(KeyEvent e) {
+	public void keyPressed(KeyEvent e) 
+	{
 		int key = e.getKeyCode();
 		s_display display = jogl.getDisplay();
+		
+		if (jogl.gamemode)
+			return;
 
-		switch(key) {
+		switch(key) 
+		{
 			case KeyEvent.VK_UP:
 				layer++;
 				if(layer>15)
@@ -290,25 +301,37 @@ public class g_jogl_cube_layer extends GLCanvas implements GLEventListener, Mous
 					layer=15;
 				break;
 			case KeyEvent.VK_BACK_SPACE:
-				for(int x=0;x<16;x++) {
-					for(int z=0;z<16;z++) {
-						try {
+				for(int x=0;x<16;x++) 
+				{
+					for(int z=0;z<16;z++) 
+					{
+						try 
+						{
 							display.setGreen(0,x,layer,z);
 							display.setRed(0,x,layer,z);
-						} catch (Exception e1) {
+						} 
+						catch (Exception e1) 
+						{
+							
 							e1.printStackTrace();
 						}
 					}
 				}
 				break;
 			case KeyEvent.VK_DELETE:
-				for(int x=0;x<16;x++) {
-					for(int y=0;y<16;y++) {
-						for(int z=0;z<16;z++) {
-							try {
+				for(int x=0;x<16;x++) 
+				{
+					for(int y=0;y<16;y++) 
+					{
+						for(int z=0;z<16;z++) 
+						{
+							try 
+							{
 								display.setGreen(0,x,y,z);
 								display.setRed(0,x,y,z);
-							} catch (Exception e1) {
+							} 
+							catch (Exception e1) 
+							{
 								e1.printStackTrace();
 							}
 						}

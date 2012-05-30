@@ -7,7 +7,8 @@ public class s_led {
 
 	private int x,y,z,green,red;
 
-	public s_led() {
+	public s_led() 
+	{
 		x=0;
 		y=0;
 		z=0;
@@ -15,7 +16,8 @@ public class s_led {
 		red=0;
 	}
 	
-	public s_led(int x, int y, int z) {
+	public s_led(int x, int y, int z) 
+	{
 		this.x=x;
 		this.y=y;
 		this.z=z;
@@ -24,6 +26,7 @@ public class s_led {
 	}
 	
 	public s_led(int green, int red) {
+		
 		x=0;
 		y=0;
 		z=0;
@@ -31,7 +34,8 @@ public class s_led {
 		this.red=red;
 	}
 	
-	public s_led(int x, int y, int z, int green, int red) {
+	public s_led(int x, int y, int z, int green, int red) 
+	{
 		this.x=x;
 		this.y=y;
 		this.z=z;
@@ -39,56 +43,79 @@ public class s_led {
 		this.red=red;
 	}
 
-	public int getX() {
+	public s_led(s_led a) {
+		this.x = a.getX();
+		this.y = a.getY();
+		this.z = a.getZ();
+		this.green = a.getGreen();
+		this.red = a.getRed();
+	}
+
+	public int getX() 
+	{
 		return x;
 	}
 
-	public int getY() {
+	public int getY() 
+	{
 		return y;
 	}
 
-	public int getZ() {
+	public int getZ() 
+	{
 		return z;
 	}
 
-	public int getGreen() {
+	public int getGreen() 
+	{
 		return green;
 	}
 
-	public int getRed() {
+	public int getRed() 
+	{
 		return red;
 	}
 
-	public void setX(int x) throws Exception {
-		if(x<0 || x>15) {
+	public void setX(int x) throws Exception 
+	{
+		if(x<0 || x>15) 
+		{
 			throw new Exception("invalid value");
 		}
 		this.x = x;
 	}
 
-	public void setY(int y) throws Exception {
-		if(y<0 || y>15) {
+	public void setY(int y) throws Exception 
+	{
+		if(y<0 || y>15) 
+		{
 			throw new Exception("invalid value");
 		}
 		this.y = y;
 	}
 
-	public void setZ(int z) throws Exception {
-		if(z<0 || z>15) {
+	public void setZ(int z) throws Exception 
+	{
+		if(z<0 || z>15) 
+		{
 			throw new Exception("invalid value");
 		}
 		this.z = z;
 	}
 
-	public void setGreen(int green) throws Exception {
-		if(green<0 || green>255) {
+	public void setGreen(int green) throws Exception 
+	{
+		if(green<0 || green>255) 
+		{
 			throw new Exception("invalid value");
 		}
 		this.green = green;
 	}
 
-	public void setRed(int red) throws Exception {
-		if(red<0 || red>255) {
+	public void setRed(int red) throws Exception 
+	{
+		if(red<0 || red>255) 
+		{
 			throw new Exception("invalid value");
 		}
 		this.red = red;

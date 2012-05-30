@@ -17,15 +17,8 @@ public class s_display {
 		cube_red = new int [16][16][16];
 		cube_green = new int [16][16][16];
 		objects = new s_object[0];
-
-		for(int x=0;x<16;x++) {
-			for(int y=0;y<16;y++) {
-				for(int z=0;z<16;z++) {
-					cube_green[x][y][z] = 0;
-					cube_red[x][y][z] = 0;
-				}
-			}
-		}
+		
+		resetAllLeds();
 	}
 
 	public int[][][] getLedsGreen() {
@@ -87,28 +80,35 @@ public class s_display {
 	 * @param obj
 	 * @throws Exception
 	 */
-	public void addObject(s_object obj) throws Exception {
+	public void addObject(s_object obj) throws Exception 
+	{
 		if(objects.length==255)
 			throw new Exception("niet meer dan 255 objecten");
 		s_object[] tempobj = new s_object[objects.length+1];
 		int i;
-		for(i=0;i<=objects.length;i++) {
+		for(i=0;i<objects.length;i++) 
+		{
 			tempobj[i] = objects[i];
 		}
-		i++;
 		tempobj[i] = obj;
+		i++;
 		objects = tempobj;
 	}
 
-	public s_object[] getObjects() {
+	public s_object[] getObjects() 
+	{
 		return objects;
 	}
 
-	public byte[] displayToByte() {
+	public byte[] displayToByte() 
+	{
 		byte[] data = new byte[8192];
-		for(int x=0;x<16;x++) {
-			for(int y=0;y<16;y++) {
-				for(int z=0;z<16;z++) {
+		for(int x=0;x<16;x++) 
+		{
+			for(int y=0;y<16;y++) 
+			{
+				for(int z=0;z<16;z++) 
+				{
 					data[z+y*16+x*256] = (byte) cube_red[x][y][z];
 					data[z+y*16+x*256+4096] = (byte) cube_green[x][y][z];
 				}
@@ -117,12 +117,31 @@ public class s_display {
 		return data;
 	}
 
-	public void byteToDisplay(byte[] data) {
-		for(int x=0;x<16;x++) {
-			for(int y=0;y<16;y++) {
-				for(int z=0;z<16;z++) {
+	public void byteToDisplay(byte[] data) 
+	{
+		for(int x=0;x<16;x++) 
+		{
+			for(int y=0;y<16;y++) 
+			{
+				for(int z=0;z<16;z++) 
+				{
 					cube_red[x][y][z] = data[z+y*16+x*256] & 0xff;
 					cube_green[x][y][z] = data[z+y*16+x*256+4096] & 0xff;
+				}
+			}
+		}
+	}
+	
+	public void resetAllLeds()
+	{
+		for(int x=0;x<16;x++) 
+		{
+			for(int y=0;y<16;y++) 
+			{
+				for(int z=0;z<16;z++) 
+				{
+					cube_green[x][y][z] = 0;
+					cube_red[x][y][z] = 0;
 				}
 			}
 		}

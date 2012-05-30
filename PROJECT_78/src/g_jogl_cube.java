@@ -7,6 +7,7 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
+import javax.media.opengl.GLException;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.gl2.GLUgl2;
 
@@ -27,6 +28,7 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	private g_simulator window;
 	private Anim anim;
 	public boolean loop;
+	public boolean gamemode;
 	
 	public g_jogl_cube(int width, int height, GLCapabilities capabilities, g_simulator window) 
 	{
@@ -81,9 +83,11 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		gl.glLoadIdentity();
 
 		s_display display = null;
-		if(anim.run) {
-			
-			try {
+		
+		if(anim.run) 
+		{	
+			try 
+			{
 				display = this.display.get(anim.frame);
 				cube_red = display.getLedsRed();
 				cube_green = display.getLedsGreen();
@@ -174,9 +178,13 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	    gl.glClear(GL2.GL_DEPTH_BUFFER_BIT | GL2.GL_COLOR_BUFFER_BIT);
 		gl.glClearColor(0f, 0f, 0f, 1f);
 
-		// Start animator.
-		animator = new FPSAnimator(this, 60);
-		animator.start();
+		// Start animator. Try/catch dat shit omdat het retarded is.
+		try
+		{
+			animator = new FPSAnimator(this, 60);
+			animator.start();
+		}
+		catch (GLException e){}
 
 		glu = new GLUgl2();
 	}
@@ -466,7 +474,8 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	 * pauzeert de animatie
 	 * @return true als de animatie is gepauseert false als de animatie niet is gepauseert
 	 */
-	public boolean pauseAnim() {
+	public boolean pauseAnim() 
+	{
 		if(anim.pause) {
 			anim.pause = false;
 		}
@@ -484,16 +493,28 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 		return loop;
 	}
 
-	public void setLoop(boolean loop) {
+	public void setLoop(boolean loop) 
+	{
 		this.loop = loop;
 	}
+	
+	public boolean getGamemode()
+	{
+		return gamemode;
+	}
 
-	public boolean getRun() {
+	public void setGamemode(boolean gamemode) 
+	{
+		this.gamemode = gamemode;
+	}
+
+	public boolean getRun() 
+	{
 		return anim.run;
 	}
 
-	private class Anim extends Thread {
-
+	private class Anim extends Thread 
+	{
 		private boolean run;
 		private int frame;
 		private boolean pause;
@@ -504,17 +525,22 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 			pause = false;
 		}
 
-		public void run() {
-			while(run) {
+		public void run() 
+		{
+			while(run) 
+			{
 				while(pause);
-				if(frame==display.size() && !loop) {
+				if(frame==display.size() && !loop) 
+				{
 					run = false;
 					break;
 				}
-				else if(frame>=display.size() && loop) {
+				else if(frame>=display.size() && loop) 
+				{
 					frame=0;
 				}
-				try {
+				try 
+				{
 					sleep(100);
 					notify();
 				}
