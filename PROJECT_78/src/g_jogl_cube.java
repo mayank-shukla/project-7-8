@@ -178,14 +178,13 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 	    gl.glClear(GL2.GL_DEPTH_BUFFER_BIT | GL2.GL_COLOR_BUFFER_BIT);
 		gl.glClearColor(0f, 0f, 0f, 1f);
 
-		// Start animator. Try/catch dat shit omdat het retarded is.
-		try
-		{
-			animator = new FPSAnimator(this, 60);
-			animator.start();
+		// Start animator.
+		try{
+		animator = new FPSAnimator(this, 60);
+		animator.start();
 		}
-		catch (GLException e){}
-
+		catch(GLException e) {}
+		
 		glu = new GLUgl2();
 	}
 

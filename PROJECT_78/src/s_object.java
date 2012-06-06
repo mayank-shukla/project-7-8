@@ -75,27 +75,20 @@ public class s_object
 	
 	public void moveObject(int x, int y, int z) throws Exception
 	{
-		s_object temp = new s_object(leds);
-		s_led[] led = temp.getLeds();
+		s_led led[] = new s_led[leds.length];
+		
+		for(int i=0;i<led.length;i++) {
+			led[i] = new s_led(leds[i]);
+		}
+		
+		s_object temp = new s_object(led);
 
-		for (int i = 0; i < led.length; i++)
-		{			
+		for (int i = 0; i < led.length; i++) {
 			led[i].setX((led[i].getX()+x));
 			led[i].setY((led[i].getY()+y));
 			led[i].setZ((led[i].getZ()+z));
-			
-			if (!checkCollision(temp))
-				this.leds = led;
 		}
-		
-		for (int k = (led.length-1); k >= 0; k--)
-		{	
-			led[k].setX((led[k].getX()+x));
-			led[k].setY((led[k].getY()+y));
-			led[k].setZ((led[k].getZ()+z));
-			
-			if (!checkCollision(temp))
-				this.leds = led;
-		}
+		if (!checkCollision(temp))
+			this.leds = led;
 	}
 }
