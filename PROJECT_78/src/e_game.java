@@ -28,8 +28,21 @@ public class e_game
 			}
 			
 			update.addObject(temp);
-			//display.setRed(255, x, y, z);
-			//display.setGreen(255, x, y, z);
+			
+			
+			temp = new s_object(update);
+			//temp.addLed(new s_led(x, y, z, 255, 255));
+			
+			for (int i = 0; i < 2; i++)
+			{
+				for (int j = 0; j < 2; j++)
+				{
+					temp.addLed(new s_led(x+i+4, y+4, z+j+4, 255, 255));
+					temp.addLed(new s_led(x+i+4, y+1+4, z+j+4, 255, 255));
+				}
+			}
+			
+			update.addObject(temp);
 		} 
 		catch (Exception e) 
 		{
@@ -57,8 +70,10 @@ public class e_game
 				case KeyEvent.VK_LEFT: ++tx; break;
 				case KeyEvent.VK_RIGHT: --tx; break;
 			}
-			
+			try {
 			object[0].moveObject(tx, ty, tz);
+			}
+			catch(Exception e) {}
 			
 			//update.setRed(255, x, y, z);
 			//update.setGreen(255, x, y, z);
