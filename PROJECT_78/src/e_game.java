@@ -29,18 +29,12 @@ public class e_game
 			
 			update.addObject(temp);
 			
-			
 			temp = new s_object(update);
 			//temp.addLed(new s_led(x, y, z, 255, 255));
 			
-			for (int i = 0; i < 2; i++)
-			{
-				for (int j = 0; j < 2; j++)
-				{
-					temp.addLed(new s_led(x+i+4, y+4, z+j+4, 255, 255));
-					temp.addLed(new s_led(x+i+4, y+1+4, z+j+4, 255, 255));
-				}
-			}
+			temp.addLed(new s_led(2,2,4,255,0));
+			temp.addLed(new s_led(2,5,5,255,0));
+			temp.addLed(new s_led(9,9,9,255,0));
 			
 			update.addObject(temp);
 		} 

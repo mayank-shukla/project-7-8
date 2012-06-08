@@ -16,6 +16,12 @@ public class s_main extends Thread
 	{
 		new s_main().start();
 		new s_thread().start();
+		
+		////////////////////////////////////////////
+		
+		
+		
+		////////////////////////////////////////////
 	}
 
 	public void run()
