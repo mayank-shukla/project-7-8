@@ -1,8 +1,3 @@
-/**
- * deze classe wordt gebruikt om de gegevens van een frame op te slaan er is ook een mogelijkheid om objecten aan een display toe te voegen om meerdere ledjes te gelijk te besturen
- * @author Jimmy
- *
- */
 public class s_display {
 
 	private int[][][] cube_red;
@@ -14,29 +9,29 @@ public class s_display {
 	 * initialiseert een nieuwe frame
 	 */
 	public s_display() {
-		cube_red = new int [16][16][16];
-		cube_green = new int [16][16][16];
+		cube_red = new int[16][16][16];
+		cube_green = new int[16][16][16];
 		objects = new s_object[0];
-		
+
 		resetAllLeds();
 	}
 
 	public int[][][] getLedsGreen() {
 		int[][][] green = new int[16][16][16];
-		for(int x=0;x<16;x++) {
-			for(int y=0;y<16;y++) {
-				for(int z=0;z<16;z++) {
+		for (int x = 0; x < 16; x++) {
+			for (int y = 0; y < 16; y++) {
+				for (int z = 0; z < 16; z++) {
 					green[x][y][z] = cube_green[x][y][z];
 				}
 			}
 		}
 
-		for(int i=0;i<objects.length;i++) {
+		for (int i = 0; i < objects.length; i++) {
 			s_object tempobj = objects[i];
 			s_led[] leds = tempobj.getLeds();
-			
-			for(int j=0;j<leds.length;j++) {
-				green[leds[j].getX()][leds[j].getY()][leds[j].getZ()] = leds[j].getGreen(); 
+
+			for (int j = 0; j < leds.length; j++) {
+				green[leds[j].getX()][leds[j].getY()][leds[j].getZ()] = leds[j].getGreen();
 			}
 		}
 		return green;
@@ -44,50 +39,49 @@ public class s_display {
 
 	public int[][][] getLedsRed() {
 		int[][][] red = new int[16][16][16];
-		for(int x=0;x<16;x++) {
-			for(int y=0;y<16;y++) {
-				for(int z=0;z<16;z++) {
+		for (int x = 0; x < 16; x++) {
+			for (int y = 0; y < 16; y++) {
+				for (int z = 0; z < 16; z++) {
 					red[x][y][z] = cube_red[x][y][z];
 				}
 			}
 		}
 
-		for(int i=0;i<objects.length;i++) {
+		for (int i = 0; i < objects.length; i++) {
 			s_object tempobj = objects[i];
 			s_led[] leds = tempobj.getLeds();
-			
-			for(int j=0;j<leds.length;j++) {
-				red[leds[j].getX()][leds[j].getY()][leds[j].getZ()] = leds[j].getRed(); 
+
+			for (int j = 0; j < leds.length; j++) {
+				red[leds[j].getX()][leds[j].getY()][leds[j].getZ()] = leds[j].getRed();
 			}
 		}
 		return red;
 	}
 
 	public void setGreen(int green, int x, int y, int z) throws Exception {
-		if(green<0 || green >255 || x<0 || y<0 || z<0 || x>15 || y>15 || z>15)
+		if (green < 0 || green > 255 || x < 0 || y < 0 || z < 0 || x > 15 || y > 15 || z > 15)
 			throw new Exception("invalid value");
 		cube_green[x][y][z] = green;
 	}
 
 	public void setRed(int red, int x, int y, int z) throws Exception {
-		if(red<0 || red >255 || x<0 || y<0 || z<0 || x>15 || y>15 || z>15)
+		if (red < 0 || red > 255 || x < 0 || y < 0 || z < 0 || x > 15 || y > 15 || z > 15)
 			throw new Exception("invalid value");
 		cube_red[x][y][z] = red;
 	}
 
 	/**
 	 * voegt een object toe aan de display
+	 * 
 	 * @param obj
 	 * @throws Exception
 	 */
-	public void addObject(s_object obj) throws Exception 
-	{
-		if(objects.length==255)
+	public void addObject(s_object obj) throws Exception {
+		if (objects.length == 255)
 			throw new Exception("niet meer dan 255 objecten");
-		s_object[] tempobj = new s_object[objects.length+1];
+		s_object[] tempobj = new s_object[objects.length + 1];
 		int i;
-		for(i=0;i<objects.length;i++) 
-		{
+		for (i = 0; i < objects.length; i++) {
 			tempobj[i] = objects[i];
 		}
 		tempobj[i] = obj;
@@ -95,51 +89,155 @@ public class s_display {
 		objects = tempobj;
 	}
 
-	public s_object[] getObjects() 
-	{
+	public s_object[] getObjects() {
 		return objects;
 	}
 
-	public byte[] displayToByte() 
-	{
-		byte[] data = new byte[8192];
-		for(int x=0;x<16;x++) 
-		{
-			for(int y=0;y<16;y++) 
-			{
-				for(int z=0;z<16;z++) 
-				{
-					data[z+y*16+x*256] = (byte) cube_red[x][y][z];
-					data[z+y*16+x*256+4096] = (byte) cube_green[x][y][z];
+	public byte[] toByte() {
+		byte[] data = new byte[1024];
+		for (int i = 0; i < 1024; i++) {
+			data[i] = 0x00;
+		}
+		int x, y, z,cor;
+		for (x = 0; x < 2; x++) {
+			for (y = 0; y < 16; y++) {
+				for (z = 0; z < 16; z++) {
+					cor = (x * 256) + (y * 16) + z;
+
+					if(cube_red[x*8][y][z]>0) {
+						data[cor] = (byte) (data[cor] | 0x01);
+					}
+					if(cube_red[x*8+1][y][z]>0) {
+						data[cor] = (byte) (data[cor] | 0x02);
+					}
+					if(cube_red[x*8+2][y][z]>0) {
+						data[cor] = (byte) (data[cor] | 0x04);
+					}
+					if(cube_red[x*8+3][y][z]>0) {
+						data[cor] = (byte) (data[cor] | 0x08);
+					}
+					if(cube_red[x*8+4][y][z]>0) {
+						data[cor] = (byte) (data[cor] | 0x10);
+					}
+					if(cube_red[x*8+5][y][z]>0) {
+						data[cor] = (byte) (data[cor] | 0x20);
+					}
+					if(cube_red[x*8+6][y][z]>0) {
+						data[cor] = (byte) (data[cor] | 0x40);
+					}
+					if(cube_red[x*8+7][y][z]>0) {
+						data[cor] = (byte) (data[cor] | 0x80);
+					}
+					
+					if(cube_green[x*8][y][z]>0) {
+						data[cor+512] = (byte) (data[cor] | 0x01);
+					}
+					if(cube_green[x*8+1][y][z]>0) {
+						data[cor+512] = (byte) (data[cor] | 0x02);
+					}
+					if(cube_green[x*8+2][y][z]>0) {
+						data[cor+512] = (byte) (data[cor] | 0x04);
+					}
+					if(cube_green[x*8+3][y][z]>0) {
+						data[cor+512] = (byte) (data[cor] | 0x08);
+					}
+					if(cube_green[x*8+4][y][z]>0) {
+						data[cor+512] = (byte) (data[cor] | 0x10);
+					}
+					if(cube_green[x*8+5][y][z]>0) {
+						data[cor+512] = (byte) (data[cor] | 0x20);
+					}
+					if(cube_green[x*8+6][y][z]>0) {
+						data[cor+512] = (byte) (data[cor] | 0x40);
+					}
+					if(cube_green[x*8+7][y][z]>0) {
+						data[cor+512] = (byte) (data[cor] | 0x80);
+					}
+					
+					
+					
+					//data[(x * 256) + (y * 16) + z] = red;
+					//data[(x * 256) + (y * 16) + z + 512] = green;
 				}
 			}
 		}
 		return data;
 	}
 
-	public void byteToDisplay(byte[] data) 
-	{
-		for(int x=0;x<16;x++) 
-		{
-			for(int y=0;y<16;y++) 
-			{
-				for(int z=0;z<16;z++) 
-				{
-					cube_red[x][y][z] = data[z+y*16+x*256] & 0xff;
-					cube_green[x][y][z] = data[z+y*16+x*256+4096] & 0xff;
+	public void fromByte(byte[] data) throws Exception {
+		if(data.length!=1024) {
+			throw new Exception("corupt data");
+		}
+		
+		int x, y, z,cor;
+		for (x = 0; x < 2; x++) {
+			for (y = 0; y < 16; y++) {
+				for (z = 0; z < 16; z++) {
+					cor = (x * 256) + (y * 16) + z;
+
+					if((byte)(data[cor] & (byte)0x01)==(byte)0x01) {
+						cube_red[x*8][y][z] = 255;
+					}
+					if((byte)(data[cor] & (byte)0x02)==(byte)0x02) {
+						cube_red[x*8+1][y][z] = 255;
+					}
+					if((byte)(data[cor] & (byte)0x04)==(byte)0x04) {
+						cube_red[x*8+2][y][z] = 255;
+					}
+					if((byte)(data[cor] & (byte)0x08)==(byte)0x08) {
+						cube_red[x*8+3][y][z] = 255;
+					}
+					if((byte)(data[cor] & (byte)0x10)==(byte)0x10) {
+						cube_red[x*8+4][y][z] = 255;
+					}
+					if((byte)(data[cor] & (byte)0x20)==(byte)0x20) {
+						cube_red[x*8+5][y][z] = 255;
+					}
+					if((byte)(data[cor] & (byte)0x40)==(byte)0x40) {
+						cube_red[x*8+6][y][z] = 255;
+					}
+					if((byte)(data[cor] & (byte)0x80)==(byte)0x80) {
+						cube_red[x*8+7][y][z] = 255;
+					}
+					
+					
+					if((byte)(data[cor+512] & (byte)0x01)==(byte)0x01) {
+						cube_green[x*8][y][z] = 255;
+					}
+					if((byte)(data[cor+512] & (byte)0x02)==(byte)0x02) {
+						cube_green[x*8+1][y][z] = 255;
+					}
+					if((byte)(data[cor+512] & (byte)0x04)==(byte)0x04) {
+						cube_green[x*8+2][y][z] = 255;
+					}
+					if((byte)(data[cor+512] & (byte)0x08)==(byte)0x08) {
+						cube_green[x*8+3][y][z] = 255;
+					}
+					if((byte)(data[cor+512] & (byte)0x10)==(byte)0x10) {
+						cube_green[x*8+4][y][z] = 255;
+					}
+					if((byte)(data[cor+512] & (byte)0x20)==(byte)0x20) {
+						cube_green[x*8+5][y][z] = 255;
+					}
+					if((byte)(data[cor+512] & (byte)0x40)==(byte)0x40) {
+						cube_green[x*8+6][y][z] = 255;
+					}
+					if((byte)(data[cor+512] & (byte)0x80)==(byte)0x80) {
+						cube_green[x*8+7][y][z] = 255;
+					}
+					
+					
+					
+					
 				}
 			}
 		}
 	}
-	
-	public void resetAllLeds()
-	{
-		for(int x=0;x<16;x++) 
-		{
-			for(int y=0;y<16;y++) 
-			{
-				for(int z=0;z<16;z++) 
-				{
+
+	public void resetAllLeds() {
+		for (int x = 0; x < 16; x++) {
+			for (int y = 0; y < 16; y++) {
+				for (int z = 0; z < 16; z++) {
 					cube_green[x][y][z] = 0;
 					cube_red[x][y][z] = 0;
 				}
