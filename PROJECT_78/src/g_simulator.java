@@ -617,6 +617,7 @@ public class g_simulator implements MouseListener, KeyListener {
 		FileInputStream fin;
 		try {
 			fin = new FileInputStream(curFile);
+			System.out.println(curFile.length());
 			byte data[] = new byte[(int) curFile.length()];
 			fin.read(data);
 			jogl.load(data);
@@ -624,6 +625,7 @@ public class g_simulator implements MouseListener, KeyListener {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		jogl.last();
 	}
 
 	/**

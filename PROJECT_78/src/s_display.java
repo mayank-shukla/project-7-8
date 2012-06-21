@@ -102,7 +102,8 @@ public class s_display {
 		for (x = 0; x < 2; x++) {
 			for (y = 0; y < 16; y++) {
 				for (z = 0; z < 16; z++) {
-					cor = (x * 256) + (y * 16) + z;
+
+					cor = y*64 + x*32 + z*2;
 
 					if(cube_red[x*8][y][z]>0) {
 						data[cor] = (byte) (data[cor] | 0x01);
@@ -128,36 +129,31 @@ public class s_display {
 					if(cube_red[x*8+7][y][z]>0) {
 						data[cor] = (byte) (data[cor] | 0x80);
 					}
-					
+
 					if(cube_green[x*8][y][z]>0) {
-						data[cor+512] = (byte) (data[cor] | 0x01);
+						data[cor+1] = (byte) (data[cor] | 0x01);
 					}
 					if(cube_green[x*8+1][y][z]>0) {
-						data[cor+512] = (byte) (data[cor] | 0x02);
+						data[cor+1] = (byte) (data[cor] | 0x02);
 					}
 					if(cube_green[x*8+2][y][z]>0) {
-						data[cor+512] = (byte) (data[cor] | 0x04);
+						data[cor+1] = (byte) (data[cor] | 0x04);
 					}
 					if(cube_green[x*8+3][y][z]>0) {
-						data[cor+512] = (byte) (data[cor] | 0x08);
+						data[cor+1] = (byte) (data[cor] | 0x08);
 					}
 					if(cube_green[x*8+4][y][z]>0) {
-						data[cor+512] = (byte) (data[cor] | 0x10);
+						data[cor+1] = (byte) (data[cor] | 0x10);
 					}
 					if(cube_green[x*8+5][y][z]>0) {
-						data[cor+512] = (byte) (data[cor] | 0x20);
+						data[cor+1] = (byte) (data[cor] | 0x20);
 					}
 					if(cube_green[x*8+6][y][z]>0) {
-						data[cor+512] = (byte) (data[cor] | 0x40);
+						data[cor+1] = (byte) (data[cor] | 0x40);
 					}
 					if(cube_green[x*8+7][y][z]>0) {
-						data[cor+512] = (byte) (data[cor] | 0x80);
+						data[cor+1] = (byte) (data[cor] | 0x80);
 					}
-					
-					
-					
-					//data[(x * 256) + (y * 16) + z] = red;
-					//data[(x * 256) + (y * 16) + z + 512] = green;
 				}
 			}
 		}
@@ -173,7 +169,7 @@ public class s_display {
 		for (x = 0; x < 2; x++) {
 			for (y = 0; y < 16; y++) {
 				for (z = 0; z < 16; z++) {
-					cor = (x * 256) + (y * 16) + z;
+					cor = y*64 + x*32 + z*2;
 
 					if((byte)(data[cor] & (byte)0x01)==(byte)0x01) {
 						cube_red[x*8][y][z] = 255;
@@ -201,34 +197,30 @@ public class s_display {
 					}
 					
 					
-					if((byte)(data[cor+512] & (byte)0x01)==(byte)0x01) {
+					if((byte)(data[cor+1] & (byte)0x01)==(byte)0x01) {
 						cube_green[x*8][y][z] = 255;
 					}
-					if((byte)(data[cor+512] & (byte)0x02)==(byte)0x02) {
+					if((byte)(data[cor+1] & (byte)0x02)==(byte)0x02) {
 						cube_green[x*8+1][y][z] = 255;
 					}
-					if((byte)(data[cor+512] & (byte)0x04)==(byte)0x04) {
+					if((byte)(data[cor+1] & (byte)0x04)==(byte)0x04) {
 						cube_green[x*8+2][y][z] = 255;
 					}
-					if((byte)(data[cor+512] & (byte)0x08)==(byte)0x08) {
+					if((byte)(data[cor+1] & (byte)0x08)==(byte)0x08) {
 						cube_green[x*8+3][y][z] = 255;
 					}
-					if((byte)(data[cor+512] & (byte)0x10)==(byte)0x10) {
+					if((byte)(data[cor+1] & (byte)0x10)==(byte)0x10) {
 						cube_green[x*8+4][y][z] = 255;
 					}
-					if((byte)(data[cor+512] & (byte)0x20)==(byte)0x20) {
+					if((byte)(data[cor+1] & (byte)0x20)==(byte)0x20) {
 						cube_green[x*8+5][y][z] = 255;
 					}
-					if((byte)(data[cor+512] & (byte)0x40)==(byte)0x40) {
+					if((byte)(data[cor+1] & (byte)0x40)==(byte)0x40) {
 						cube_green[x*8+6][y][z] = 255;
 					}
-					if((byte)(data[cor+512] & (byte)0x80)==(byte)0x80) {
+					if((byte)(data[cor+1] & (byte)0x80)==(byte)0x80) {
 						cube_green[x*8+7][y][z] = 255;
 					}
-					
-					
-					
-					
 				}
 			}
 		}

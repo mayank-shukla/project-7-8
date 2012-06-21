@@ -83,6 +83,37 @@ public class g_jogl_cube extends GLCanvas implements GLEventListener, MouseMotio
 			cube_red = display.getLedsRed();
 			cube_green = display.getLedsGreen();
 		}
+		
+		// TODO: textures (.png) ipv gele vlakken :(, gele
+		// vlakken is te onoverzichtelijk
+		// gl.glColor3f(1.0f, 1.0f, 0.0f);
+		gl.glColor3f(0f, 0f, 255f);
+		/*
+		 * if (window.getLEDColor() == 0) gl.glColor3f(1f,
+		 * 0.3f, 0.3f); else if (window.getLEDColor() == 1)
+		 * gl.glColor3f(0.2f, 0.8f, 0.4f); else
+		 * gl.glColor3f(1.0f, 0.8f, 0.3f);
+		 */
+		gl.glEnable(GL2.GL_BLEND);
+		gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE);
+		// gl.glDepthMask(false);
+		gl.glPushMatrix();
+		gl.glRotatef(aanzicht, 0.0f, 1.0f, 0.0f);
+		gl.glRotatef(-hoogte, 1.0f, 0.0f, 0.0f);
+		gl.glBegin(GL2.GL_QUADS);
+		gl.glTexCoord2f(0.0f, 0.0f);
+		gl.glVertex3i(0, -3, -4);
+		gl.glTexCoord2f(0.0f, 0.0f);
+		gl.glVertex3i(0, 3, -4);
+		gl.glTexCoord2f(0.0f, 0.0f);
+		gl.glVertex3i(4, 3, -4);
+		gl.glTexCoord2f(0.0f, 0.0f);
+		gl.glVertex3i(4, -3, -4);
+		gl.glEnd();
+		gl.glPopMatrix();
+		
+		
+		
 		// teken alle lampjes
 		for (int x = 0; x < 16; x++) {
 			gl.glTranslatef(8f, 0f, 0f);
