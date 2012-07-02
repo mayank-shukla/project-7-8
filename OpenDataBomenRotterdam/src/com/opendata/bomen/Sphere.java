@@ -140,7 +140,121 @@ public class Sphere {
 	}
 
 	private void write() {
-		//TODO data write op bluetooth
+		byte[] data = new byte[105];
+		for (int c = 0;c < 3;c++) {
+			for (int y = 0;y < 7;y++) {
+				for (int x = 0;x < 5;x++) {
+					byte temp = 0x00;
+					switch(x) {
+						case 0:
+							if (sphere[2][0][y][c])
+								temp |= 0x01;
+							if (sphere[3][0][y][c])
+								temp |= 0x02;
+							if (sphere[4][0][y][c])
+								temp |= 0x04;
+							if (sphere[1][1][y][c])
+								temp |= 0x08;
+							if (sphere[2][1][y][c])
+								temp |= 0x10;
+							if (sphere[3][1][y][c])
+								temp |= 0x20;
+							if (sphere[4][1][y][c])
+								temp |= 0x40;
+							if (sphere[5][1][y][c])
+								temp |= 0x80;
+							break;
+						case 1:
+							if (sphere[0][2][y][c])
+								temp |= 0x01;
+							if (sphere[1][2][y][c])
+								temp |= 0x02;
+							if (sphere[2][2][y][c])
+								temp |= 0x04;
+							if (sphere[3][2][y][c])
+								temp |= 0x08;
+							if (sphere[4][2][y][c])
+								temp |= 0x10;
+							if (sphere[5][2][y][c])
+								temp |= 0x20;
+							if (sphere[6][2][y][c])
+								temp |= 0x40;
+							break;
+						case 2:
+							if (sphere[0][3][y][c])
+								temp |= 0x01;
+							if (sphere[1][3][y][c])
+								temp |= 0x02;
+							if (sphere[2][3][y][c])
+								temp |= 0x04;
+							if (sphere[3][3][y][c])
+								temp |= 0x08;
+							if (sphere[4][3][y][c])
+								temp |= 0x10;
+							if (sphere[5][3][y][c])
+								temp |= 0x20;
+							if (sphere[6][3][y][c])
+								temp |= 0x40;
+							break;
+						case 3:
+							if (sphere[0][4][y][c])
+								temp |= 0x01;
+							if (sphere[1][4][y][c])
+								temp |= 0x02;
+							if (sphere[2][4][y][c])
+								temp |= 0x04;
+							if (sphere[3][4][y][c])
+								temp |= 0x08;
+							if (sphere[4][4][y][c])
+								temp |= 0x10;
+							if (sphere[5][4][y][c])
+								temp |= 0x20;
+							if (sphere[6][4][y][c])
+								temp |= 0x40;
+							break;
+						case 4:
+							if (sphere[0][4][y][c])
+								temp |= 0x01;
+							if (sphere[1][4][y][c])
+								temp |= 0x02;
+							if (sphere[2][4][y][c])
+								temp |= 0x04;
+							if (sphere[3][4][y][c])
+								temp |= 0x08;
+							if (sphere[4][4][y][c])
+								temp |= 0x10;
+							if (sphere[5][4][y][c])
+								temp |= 0x20;
+							if (sphere[6][4][y][c])
+								temp |= 0x40;
+							break;
+						case 5:
+							if (sphere[1][5][y][c])
+								temp |= 0x01;
+							if (sphere[2][5][y][c])
+								temp |= 0x02;
+							if (sphere[3][5][y][c])
+								temp |= 0x04;
+							if (sphere[4][5][y][c])
+								temp |= 0x08;
+							if (sphere[5][5][y][c])
+								temp |= 0x10;
+							if (sphere[2][6][y][c])
+								temp |= 0x20;
+							if (sphere[3][6][y][c])
+								temp |= 0x40;
+							if (sphere[4][6][y][c])
+								temp |= 0x80;
+							break;
+					}
+					data[c * 35 + y * 5 + x] = temp;
+				}
+			}
+		}
+		try {
+			out.write(data);
+		}
+		catch (IOException e) {}
 	}
 
 	public boolean[][][][] getSphere() {
