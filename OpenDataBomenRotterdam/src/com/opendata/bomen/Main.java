@@ -16,16 +16,16 @@ import android.widget.TextView;
 public class Main extends Activity {
 	private Button blueon,blueoff,gpson,gpsoff;
 	private TextView debug;
-	protected Sphere sphere;
 	private LocationManager mlocManager;
 	private MyLocationListener mlocListener;
 	int[][] map;
+	private Bomen bomen;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		sphere = new Sphere(this);
+		bomen = new Bomen(this);
 		setContentView(R.layout.main);
 		blueon = (Button)findViewById(R.id.bluetoothon);
 		blueoff = (Button)findViewById(R.id.bluetoothoff);
@@ -75,16 +75,16 @@ public class Main extends Activity {
 	}
 
 	protected void bluetootOff() {
-		sphere.disableBluetooth();
+		bomen.disableBluetooth();
 	}
 
 	protected void bluetoothOn() {
-		sphere.enableBluetooth();
+		bomen.enableBluetooth();
 	}
 
 	protected void onDestroy() {
-		sphere.deconstruct();
-		sphere = null;
+		bomen.deconstruct();
+		bomen = null;
 		gpsOff();
 		blueon = null;
 		blueoff = null;
@@ -143,7 +143,6 @@ public class Main extends Activity {
 						d = Math.sqrt((x - RDX + 20) * (x - RDX + 20) + (y - RDY + 20) * (y - RDY + 20));
 					}
 				}
-
 				if (d < 100) {
 					bomen += z;
 				}
@@ -156,7 +155,8 @@ public class Main extends Activity {
 			}
 		}
 		catch (IOException e) {}
-
+		
 		//TODO aan hand van counter groen in cube bepalen
+		this.bomen.setPercent(bomen/400);
 	}
 }

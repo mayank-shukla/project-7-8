@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Set;
+import java.util.UUID;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -53,8 +54,6 @@ public class Sphere {
 
 	public void enableBluetooth() {
 		//TODO moet debuggen werkt niet op mobiel
-		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-		main.registerReceiver(mReceiver,filter);
 		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		if (mBluetoothAdapter == null) {
 			TextView debug = (TextView)main.findViewById(R.id.debug);
@@ -62,8 +61,7 @@ public class Sphere {
 			return;
 		}
 		if (!mBluetoothAdapter.isEnabled()) {
-			Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-			main.startActivityForResult(enableBtIntent,REQUEST_ENABLE_BT);
+			mBluetoothAdapter.enable();
 		}
 		Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
 		// If there are paired devices
@@ -75,6 +73,8 @@ public class Sphere {
 				}
 			}
 		}
+		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+		main.registerReceiver(mReceiver,filter);
 		// If no valid paired device found
 		if (device == null) {
 			while (mBluetoothAdapter.startDiscovery() != true) {}
@@ -96,21 +96,23 @@ public class Sphere {
 			return;
 		}
 		//device found
+		//general UUID 00001101-0000-1000-8000-00805F9B34FB
 		try {
-			//general UUID 00001101-0000-1000-8000-00805F9B34FB
-			while (!device.fetchUuidsWithSdp()) {}
-			ParcelUuid[] uuid = device.getUuids();
-			if (uuid == null)
-				throw new IOException("no UUID");
-			socket = device.createRfcommSocketToServiceRecord(uuid[0].getUuid());
+			//Create a Socket connection: need the server's UUID number of registered
+			socket = device.createRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
 			socket.connect();
-			out = socket.getOutputStream();
 			in = socket.getInputStream();
+			out = socket.getOutputStream();
 		}
-		catch (IOException e) {
-			TextView debug = (TextView)main.findViewById(R.id.debug);
-			debug.setText("kan geen verbinding maken probeer opnieuw");
-			return;
+		catch (IOException e) {}
+		finally {
+			if (socket != null) {
+				try {
+					socket.close();
+					return;
+				}
+				catch (IOException e) {}
+			}
 		}
 		TextView debug = (TextView)main.findViewById(R.id.debug);
 		debug.setText("bluetooth aan");
@@ -135,11 +137,12 @@ public class Sphere {
 		out = null;
 		in = null;
 		device = null;
+		BluetoothAdapter.getDefaultAdapter().disable();
 		TextView debug = (TextView)main.findViewById(R.id.debug);
 		debug.setText("bluetooth uit");
 	}
 
-	private void write() {
+	public void write() {
 		byte[] data = new byte[105];
 		for (int c = 0;c < 3;c++) {
 			for (int y = 0;y < 7;y++) {
@@ -275,7 +278,6 @@ public class Sphere {
 				}
 			}
 		}
-		write();
 	}
 
 	private void checkSphereCordinate(int x, int y, int z) throws Exception {
