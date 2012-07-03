@@ -1,2 +1,7 @@
 in bomen.txt staat coordinaten met een waarde erachter.
 de waarde staat voor het aantal bomen in het vak van 20*20 m met als origin de coordinaten
+
+bomen:
+
+min:1
+max:351
