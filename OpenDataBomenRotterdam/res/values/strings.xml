@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <string name="welkom">Deze app maakt verbindg met bluetooth en gps. Met de gps coordinaten wordt bepaald hoeveel bomen er in de omgeving zijn. Dit wordt via bluetooth weergegeven op de cube</string>
-    <string name="app_name">Open Data Bomen Rotterdam</string>
-
-</resources>
