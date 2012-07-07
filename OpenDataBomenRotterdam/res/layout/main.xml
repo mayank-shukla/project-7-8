@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" android:padding="10dip">
+
+	<Button android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text="Open BT"
+		android:onClick="onEnableButtonClicked" />
+
+	<Button android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text="Close BT"
+		android:onClick="onDisableButtonClicked" />
+
+	<Button
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:onClick="onOpenClientSocketButtonClicked"
+	    android:text="AS Client" />
+
+	<Button
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:onClick="onCloseClientSocketButtonClicked"
+	    android:text="Close Connection" />
+
+	<Button
+	    android:id="@+id/Anim"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:onClick="onAnimButtonClicked"
+	    android:text="Anim" />
+
+	<TextView
+	    android:id="@+id/debug"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="Debug"
+	    android:textSize="15dp" />
+			
+</LinearLayout>
