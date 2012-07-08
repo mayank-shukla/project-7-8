@@ -13,20 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package es.pymasde.blueterm;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
 public class TermPreferences extends PreferenceActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // Load the preferences from an XML resource
-        addPreferencesFromResource(R.xml.preferences);
-    }
-
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		// Load the preferences from an XML resource
+		addPreferencesFromResource(R.xml.preferences);
+	}
 }
