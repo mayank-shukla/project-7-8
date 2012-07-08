@@ -3,60 +3,64 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class FileEditor {
-	public static void main(String[] args) {
-		File file = new File("C:\\Users\\Jimmy\\Desktop\\bomen.txt");
+	public static void main(String[] args) throws FileNotFoundException {
+		File file = new File("C:\\Users\\Chinwei\\Desktop\\bomen.txt");
 		FileInputStream fis = null;
 		BufferedInputStream bis = null;
 		BufferedReader dis = null;
 		Integer[][] map = new Integer[162][67];
+
 		for (int a = 0;a < 162;a++) {
 			for (int b = 0;b < 67;b++) {
 				map[a][b] = 0;
 				try {
-					int count =0;
-					fis = new FileInputStream(file);
+					
+					
 					// Here BufferedInputStream is added for fast reading.
-					bis = new BufferedInputStream(fis);
-					dis = new BufferedReader(new InputStreamReader(bis));
+					
+					//dis = new BufferedReader(new InputStreamReader(new BufferedInputStream(new FileInputStream(file))));
+					dis = new BufferedReader(new FileReader(file));
 					String temp = dis.readLine();
-					while (temp != null) {
-						int xbegin = 1,xeind,ybegin,yeind,i = 1;
-						while (!String.valueOf(temp.charAt(i)).equalsIgnoreCase(",")) {
-							i++;
-						}
-						xeind = i;
-						ybegin = i + 1;
-						while (!String.valueOf(temp.charAt(i)).equalsIgnoreCase("]")) {
-							i++;
-						}
-						yeind = i;
-						int x = Integer.parseInt(temp.substring(xbegin,xeind)),y = Integer.parseInt(temp.substring(ybegin,yeind));
+					int x,y;
+					while(temp != null){
+					if(temp.length() == 12)
+					{ x = Integer.parseInt(temp.substring(1,5));y = Integer.parseInt(temp.substring(6,11));}
+					else
+					{x = Integer.parseInt(temp.substring(1,6));y = Integer.parseInt(temp.substring(7,12));}
+					
+					//System.out.println("read:\n  x:"+a+"\n  y:"+b+"\n  count:"+count);
+					
+						//System.out.println("x: "+x+" y: "+y);
 						if (inRange(a*25+6050,b*25+42901,x,y)) {
 							map[a][b] += 1;
 						}
 						//out.write();
 						//out.newLine();
-						count++;
-						System.out.println("read:\n  x:"+a+"\n  y:"+b+"\n  count:"+count);
+						
+						
 						temp = dis.readLine();
 					}
+					System.out.println("read:\n  x:"+a+"\n  y:"+b);
 					// dispose all the resources after using them.
-					fis.close();
-					bis.close();
 					dis.close();
 				}
 				catch (Exception e) {
 					e.printStackTrace();
 				}
+			
+	
 			}
+
 		}
 		try {
-			FileWriter f = new FileWriter("C:\\Users\\Jimmy\\Desktop\\out.txt");
+			FileWriter f = new FileWriter("C:\\Users\\Chinwei\\Desktop\\out.txt");
 			BufferedWriter out = new BufferedWriter(f);
 			for (int y = 0;y < 67;y++) {
 				for (int x = 0;x < 162;x++) {
