@@ -25,8 +25,8 @@ public class FileEditor {
 					
 					// Here BufferedInputStream is added for fast reading.
 					
-					//dis = new BufferedReader(new InputStreamReader(new BufferedInputStream(new FileInputStream(file))));
-					dis = new BufferedReader(new FileReader(file));
+					dis = new BufferedReader(new InputStreamReader(new BufferedInputStream(new FileInputStream(file))));
+					//dis = new BufferedReader(new FileReader(file));
 					String temp = dis.readLine();
 					int x,y;
 					while(temp != null){
@@ -47,7 +47,7 @@ public class FileEditor {
 						
 						temp = dis.readLine();
 					}
-					System.out.println("read:\n  x:"+a+"\n  y:"+b);
+					
 					// dispose all the resources after using them.
 					dis.close();
 				}
@@ -57,8 +57,22 @@ public class FileEditor {
 			
 	
 			}
-
+			System.out.println("read: x:"+a);
+			
+			
+				}
+		for(int i = 0;i<162;i++)
+		{
+		for(int j = 0;j<67;j++)
+			{System.out.println(map[i][j]);}
 		}
+		System.out.println("Done");
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+				}
 		try {
 			FileWriter f = new FileWriter("C:\\Users\\Chinwei\\Desktop\\out.txt");
 			BufferedWriter out = new BufferedWriter(f);
@@ -66,7 +80,7 @@ public class FileEditor {
 				for (int x = 0;x < 162;x++) {
 					String temp = map[x][y].toString();
 					if (temp.length() == 0) {
-						temp = "0000" + temp;
+						temp = "0000";
 					}
 					else if (temp.length() == 1) {
 						temp = "000" + temp;
@@ -76,6 +90,8 @@ public class FileEditor {
 					}
 					else if (temp.length() == 3) {
 						temp = "0" + temp;
+					}else if(temp.length() == 5) {
+						temp = "9999";
 					}
 					out.write(temp);
 				}
