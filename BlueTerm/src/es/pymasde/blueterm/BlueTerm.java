@@ -227,13 +227,16 @@ public class BlueTerm extends Activity {
 			}
 			byte[] data = new byte[1];
 			data[0] = (byte)bomen;
-			if(mSerialService!=null)
+			if(mSerialService!=null) {
+				Log.e(LOG_TAG, "send data from locChange");
 				send(data);
+			}
 		}
 		catch (IOException e) {}
 	}
 
 	public void setLoc() {
+		Log.e(LOG_TAG, "initalse GPS");
 		mlocManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 		if (mlocManager != null) {
 			mlocListener = new MyLocationListener(this);
@@ -582,6 +585,7 @@ public class BlueTerm extends Activity {
 				doDocumentKeys();
 				return true;
 			case R.id.item1: {
+				//TODO
 				setLoc();
 				return true;
 			}
@@ -601,11 +605,6 @@ public class BlueTerm extends Activity {
 	private void doDocumentKeys() {
 		String controlKey = CONTROL_KEY_NAME[mControlKeyId];
 		new AlertDialog.Builder(this).setTitle(getString(R.string.title_document_key_press) + " \"" + controlKey + "\" " + getString(R.string.title_document_key_rest)).setMessage(" Space ==> Control-@ (NUL)\n" + " A..Z ==> Control-A..Z\n" + " I ==> Control-I (TAB)\n" + " 1 ==> Control-[ (ESC)\n" + " 5 ==> Control-_\n" + " . ==> Control-\\\n" + " 0 ==> Control-]\n" + " 6 ==> Control-^").show();
-	}
-
-	public void setlocChange(double longitude, double latitude) {
-		this.longtitude = longitude;
-		this.longtitude = latitude;
 	}
 }
 

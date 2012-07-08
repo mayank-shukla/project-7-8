@@ -12,7 +12,7 @@ public class MyLocationListener implements LocationListener {
 	}
 
 	public void onLocationChanged(Location loc) {
-		main.setlocChange(loc.getLongitude(),loc.getLatitude());
+		main.locChange(loc.getLongitude(),loc.getLatitude());
 	}
 
 	public void onProviderDisabled(String arg0) {}
