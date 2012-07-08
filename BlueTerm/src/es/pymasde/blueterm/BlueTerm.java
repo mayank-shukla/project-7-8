@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -174,9 +175,7 @@ public class BlueTerm extends Activity {
 		int RDX = (int)(155000 + SomX);
 		int RDY = (int)(463000 + SomY);
 		int bomen = 0;
-		
-		Log.e(LOG_TAG, "locatie:"+RDX+","+RDY);
-		
+		Log.e(LOG_TAG,"locatie:" + RDX + "," + RDY);
 		try {
 			InputStream inS = getBaseContext().getAssets().open("bomen.txt");
 			InputStreamReader inR = new InputStreamReader(inS);
@@ -227,16 +226,14 @@ public class BlueTerm extends Activity {
 					bomen += z;
 				}
 			}
-			
-			Log.e(LOG_TAG, "er zijn "+bomen+" bomen in de buurt");
-			
+			Log.e(LOG_TAG,"er zijn " + bomen + " bomen in de buurt");
 			//TODO bomen naar percentage
-			double percent = bomen/400*100;
+			double percent = bomen / 400 * 100;
 			bomen = (int)percent;
 			byte[] data = new byte[1];
 			data[0] = (byte)bomen;
-			if(mSerialService!=null) {
-				Log.e(LOG_TAG, "send data from locChange");
+			if (mSerialService != null) {
+				Log.e(LOG_TAG,"send data from locChange");
 				send(data);
 			}
 		}
@@ -244,31 +241,29 @@ public class BlueTerm extends Activity {
 	}
 
 	public void setLoc() {
-		if(mlocManager==null) {
-			Log.e(LOG_TAG, "initalse GPS");
+		if (mlocManager == null) {
+			Log.e(LOG_TAG,"initalse GPS");
 			mlocManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 			if (mlocManager != null) {
 				mlocListener = new MyLocationListener(this);
 				mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,1,mlocListener);
-				
 				try {
-				Location loc = mlocManager.getLastKnownLocation(mlocManager.getBestProvider(null,true));
-				locChange(loc.getLongitude(),loc.getAltitude());
+					Location loc = mlocManager.getLastKnownLocation(mlocManager.getBestProvider(new Criteria(),true));
+					locChange(loc.getLongitude(),loc.getAltitude());
 				}
-				catch(NullPointerException e) {
-					Log.e(LOG_TAG, "first location failed");
+				catch (NullPointerException e) {
+					Log.e(LOG_TAG,"first location failed");
 				}
 			}
 		}
 		else {
-			Log.e(LOG_TAG, "delete GPS");
+			Log.e(LOG_TAG,"delete GPS");
 			mlocManager.removeUpdates(mlocListener);
 			mlocManager = null;
 		}
 	}
 
-	public void resetLoc() {
-	}
+	public void resetLoc() {}
 
 	@Override
 	public synchronized void onResume() {
