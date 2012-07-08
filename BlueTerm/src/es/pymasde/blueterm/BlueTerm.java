@@ -167,15 +167,15 @@ public class BlueTerm extends Activity {
 		bThreadBool = false;
 	}
 
-	public void locChange(double lo, double la) {
-		Log.e(LOG_TAG,"locatie GPS:" + lo + "," + la);
+	public synchronized void locChange(double lo, double la) {
+		Log.e(LOG_TAG,"locatie GPS:" + la + "," + lo);
 		double longitude = 0.36 * (lo - 52.15517440);
 		double latitude = 0.36 * (la - 5.38720621);
 		double SomX = (190094.945 * latitude) + (-11832.228 * longitude * latitude) + (-144.221 * Math.pow(longitude,2) * latitude) + (-32.391 * Math.pow(latitude,3)) + (-0.705 * longitude) + (-2.340 * Math.pow(longitude,3) * latitude) + (-0.608 * longitude * Math.pow(latitude,30) + (-0.008 * Math.pow(latitude,2)) + (0.148 * Math.pow(longitude,2) * Math.pow(latitude,3)));
 		double SomY = (309056.544 * longitude) + (3638.893 * Math.pow(latitude,2)) + (73.077 * Math.pow(longitude,2)) + (-157.984 * longitude * Math.pow(latitude,2)) + (59.788 * Math.pow(longitude,3)) + (0.433 * latitude) + (-6.439 * Math.pow(longitude,2) * Math.pow(latitude,2)) + (-0.032 * longitude * latitude) + (0.092 * Math.pow(latitude,4)) + (-0.054 * longitude * Math.pow(latitude,4));
 		int RDX = (int)(155000 + SomX);
 		int RDY = (int)(463000 + SomY);
-		int bomen = 0;
+		Integer bomen = 0;
 		Log.e(LOG_TAG,"locatie RD:" + RDX + "," + RDY);
 		try {
 			InputStream inS = getBaseContext().getAssets().open("bomen.txt");
@@ -229,10 +229,10 @@ public class BlueTerm extends Activity {
 			}
 			Log.e(LOG_TAG,"er zijn " + bomen + " bomen in de buurt");
 			//TODO bomen naar percentage
-			double percent = bomen / 400 * 100;
-			bomen = (int)percent;
+			Double percent = bomen.doubleValue() / 400.0 * 100.0;
+			int perc = percent.intValue();
 			byte[] data = new byte[1];
-			data[0] = (byte)bomen;
+			data[0] = (byte)perc;
 			if (mSerialService != null) {
 				Log.e(LOG_TAG,"send data from locChange");
 				send(data);
@@ -263,8 +263,6 @@ public class BlueTerm extends Activity {
 			mlocManager = null;
 		}
 	}
-
-	public void resetLoc() {}
 
 	@Override
 	public synchronized void onResume() {
