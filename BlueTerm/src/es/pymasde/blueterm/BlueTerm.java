@@ -605,9 +605,9 @@ public class BlueTerm extends Activity {
         case R.id.item1: {	//TODO	
         	bThread = new BasicThread2();
         	if(!bThreadBool)
-        	{bThread.run();}
+        	{bThread.run(); bThreadBool = true;}
         	else //STOPPEN //TODO
-        	{Log.i(LOG_TAG,"Starting/Stopping thread");}
+        	{Log.i(LOG_TAG,"Starting/Stopping thread"); bThreadBool = false;}
         	}
         	
         	//TODO
