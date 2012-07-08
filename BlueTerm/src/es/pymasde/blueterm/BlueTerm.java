@@ -250,8 +250,14 @@ public class BlueTerm extends Activity {
 			if (mlocManager != null) {
 				mlocListener = new MyLocationListener(this);
 				mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,1,mlocListener);
-				Location loc = mlocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+				
+				try {
+				Location loc = mlocManager.getLastKnownLocation(mlocManager.getBestProvider(null,true));
 				locChange(loc.getLongitude(),loc.getAltitude());
+				}
+				catch(NullPointerException e) {
+					Log.e(LOG_TAG, "first location failed");
+				}
 			}
 		}
 		else {
