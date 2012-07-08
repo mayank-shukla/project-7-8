@@ -168,6 +168,7 @@ public class BlueTerm extends Activity {
 	}
 
 	public void locChange(double lo, double la) {
+		Log.e(LOG_TAG,"locatie GPS:" + lo + "," + la);
 		double longitude = 0.36 * (lo - 52.15517440);
 		double latitude = 0.36 * (la - 5.38720621);
 		double SomX = (190094.945 * latitude) + (-11832.228 * longitude * latitude) + (-144.221 * Math.pow(longitude,2) * latitude) + (-32.391 * Math.pow(latitude,3)) + (-0.705 * longitude) + (-2.340 * Math.pow(longitude,3) * latitude) + (-0.608 * longitude * Math.pow(latitude,30) + (-0.008 * Math.pow(latitude,2)) + (0.148 * Math.pow(longitude,2) * Math.pow(latitude,3)));
@@ -175,7 +176,7 @@ public class BlueTerm extends Activity {
 		int RDX = (int)(155000 + SomX);
 		int RDY = (int)(463000 + SomY);
 		int bomen = 0;
-		Log.e(LOG_TAG,"locatie:" + RDX + "," + RDY);
+		Log.e(LOG_TAG,"locatie RD:" + RDX + "," + RDY);
 		try {
 			InputStream inS = getBaseContext().getAssets().open("bomen.txt");
 			InputStreamReader inR = new InputStreamReader(inS);
