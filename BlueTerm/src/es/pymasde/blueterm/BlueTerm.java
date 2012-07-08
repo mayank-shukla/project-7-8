@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -93,8 +94,6 @@ public class BlueTerm extends Activity {
 	/*
 	 * USER CHANGES
 	 */
-	public double longtitude;
-	public double latitude;
 	public boolean bThreadBool;
 	private static BluetoothSerialService mSerialService = null;
 	private static InputMethodManager mInputManager;
@@ -175,6 +174,9 @@ public class BlueTerm extends Activity {
 		int RDX = (int)(155000 + SomX);
 		int RDY = (int)(463000 + SomY);
 		int bomen = 0;
+		
+		Log.e(LOG_TAG, "locatie:"+RDX+","+RDY);
+		
 		try {
 			InputStream inS = getBaseContext().getAssets().open("bomen.txt");
 			InputStreamReader inR = new InputStreamReader(inS);
@@ -225,6 +227,12 @@ public class BlueTerm extends Activity {
 					bomen += z;
 				}
 			}
+			
+			Log.e(LOG_TAG, "er zijn "+bomen+" bomen in de buurt");
+			
+			//TODO bomen naar percentage
+			double percent = bomen/400*100;
+			bomen = (int)percent;
 			byte[] data = new byte[1];
 			data[0] = (byte)bomen;
 			if(mSerialService!=null) {
@@ -236,12 +244,24 @@ public class BlueTerm extends Activity {
 	}
 
 	public void setLoc() {
-		Log.e(LOG_TAG, "initalse GPS");
-		mlocManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-		if (mlocManager != null) {
-			mlocListener = new MyLocationListener(this);
-			mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,1,mlocListener);
+		if(mlocManager==null) {
+			Log.e(LOG_TAG, "initalse GPS");
+			mlocManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+			if (mlocManager != null) {
+				mlocListener = new MyLocationListener(this);
+				mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,1,mlocListener);
+				Location loc = mlocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+				locChange(loc.getLongitude(),loc.getAltitude());
+			}
 		}
+		else {
+			Log.e(LOG_TAG, "delete GPS");
+			mlocManager.removeUpdates(mlocListener);
+			mlocManager = null;
+		}
+	}
+
+	public void resetLoc() {
 	}
 
 	@Override
