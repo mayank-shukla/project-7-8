@@ -175,7 +175,6 @@ public class BlueTerm extends Activity {
 		int RDX = (int)(155000 + SomX);
 		int RDY = (int)(463000 + SomY);
 		int bomen = 0;
-		
 		try {
 			InputStream inS = getBaseContext().getAssets().open("bomen.txt");
 			InputStreamReader inR = new InputStreamReader(inS);
@@ -228,7 +227,8 @@ public class BlueTerm extends Activity {
 			}
 			byte[] data = new byte[1];
 			data[0] = (byte)bomen;
-			send(data);
+			if(mSerialService!=null)
+				send(data);
 		}
 		catch (IOException e) {}
 	}
