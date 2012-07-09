@@ -192,6 +192,26 @@ public class BlueTerm extends Activity {
 		
 		Integer bomen = 0;
 		Log.e(LOG_TAG,"locatie RD:" + RDX + "," + RDY);
+		
+		int begin = (int) (Math.round(((RDX-6050.0)/25.0)+0.5)*5);
+		int eind = begin +6;
+		int regel = (int) Math.round(((RDY-42901.0)/25.0)+0.5);
+		
+		
+		try {
+			InputStream inS = getBaseContext().getAssets().open("bomen.txt");
+			InputStreamReader inR = new InputStreamReader(inS);
+			BufferedReader buffR = new BufferedReader(inR);
+			buffR.skip(regel);
+			String temp = buffR.readLine();
+			bomen = Integer.parseInt((temp.subSequence(begin,eind).toString()));
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
+		/*
 		try {
 			InputStream inS = getBaseContext().getAssets().open("bomen.txt");
 			InputStreamReader inR = new InputStreamReader(inS);
@@ -244,7 +264,7 @@ public class BlueTerm extends Activity {
 					d /= Math.sqrt(800);
 					z = (int)Math.round(d * z);
 					bomen += z;
-				}*/
+				}
 			}
 			Log.e(LOG_TAG,"er zijn " + bomen + " bomen in de buurt");
 			//TODO bomen naar percentage
@@ -257,7 +277,7 @@ public class BlueTerm extends Activity {
 				send(data);
 			}
 		}
-		catch (IOException e) {}
+		catch (IOException e) {}//*/
 	}
 
 	public void setLoc() {
