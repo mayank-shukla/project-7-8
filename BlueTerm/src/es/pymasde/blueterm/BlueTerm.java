@@ -169,12 +169,27 @@ public class BlueTerm extends Activity {
 
 	public synchronized void locChange(double lo, double la) {
 		Log.e(LOG_TAG,"locatie GPS:" + la + "," + lo);
-		double longitude = 0.36 * (lo - 52.15517440);
+		/*double longitude = 0.36 * (lo - 52.15517440);
 		double latitude = 0.36 * (la - 5.38720621);
 		double SomX = (190094.945 * latitude) + (-11832.228 * longitude * latitude) + (-144.221 * Math.pow(longitude,2) * latitude) + (-32.391 * Math.pow(latitude,3)) + (-0.705 * longitude) + (-2.340 * Math.pow(longitude,3) * latitude) + (-0.608 * longitude * Math.pow(latitude,30) + (-0.008 * Math.pow(latitude,2)) + (0.148 * Math.pow(longitude,2) * Math.pow(latitude,3)));
 		double SomY = (309056.544 * longitude) + (3638.893 * Math.pow(latitude,2)) + (73.077 * Math.pow(longitude,2)) + (-157.984 * longitude * Math.pow(latitude,2)) + (59.788 * Math.pow(longitude,3)) + (0.433 * latitude) + (-6.439 * Math.pow(longitude,2) * Math.pow(latitude,2)) + (-0.032 * longitude * latitude) + (0.092 * Math.pow(latitude,4)) + (-0.054 * longitude * Math.pow(latitude,4));
 		int RDX = (int)(155000 + SomX);
-		int RDY = (int)(463000 + SomY);
+		int RDY = (int)(463000 + SomY);*/
+		double dF = 0.36 * (la - 52.15517440);
+		double dL = 0.36 * (lo - 5.38720621);
+
+
+		double SomX = (190094.945 * dL) + (-11832.228 * dF * dL) + (-144.221 * Math.pow(dF,2) * dL) + (-32.391 * Math.pow(dL,3)) +
+       (-0.705 * dF) + (-2.340 * Math.pow(dF,3) * dL) + (-0.608 * dF * Math.pow(dL,3)) + (-0.008 * Math.pow(dL,2)) + (0.148 * Math.pow(dF,2) * Math.pow(dL,3));
+		double SomY = (309056.544 * dF) + (3638.893 * Math.pow(dL,2)) + (73.077 * Math.pow(dF,2) ) + (-157.984 * dF * Math.pow(dL,2)) +
+       (59.788 * Math.pow(dF,3) ) + (0.433 * dL) + (-6.439 * Math.pow(dF,2) * Math.pow(dL,2)) + (-0.032 * dF * dL) + (0.092 * Math.pow(dL,4)) + (-0.054 * dF * Math.pow(dL,4));
+
+
+
+		double RDX = 155000 + SomX;
+		double RDY = 463000 + SomY;
+		
+		
 		Integer bomen = 0;
 		Log.e(LOG_TAG,"locatie RD:" + RDX + "," + RDY);
 		try {
@@ -183,7 +198,11 @@ public class BlueTerm extends Activity {
 			BufferedReader buffR = new BufferedReader(inR);
 			String line;
 			while ((line = buffR.readLine()) != null) {
-				int xbegin = 1,xeind,ybegin,yeind,zbegin,zeind = line.length();
+				
+				
+				
+				//line.substring(start, end);
+				/*int xbegin = 1,xeind,ybegin,yeind,zbegin,zeind = line.length();
 				int i = 1;
 				while (!String.valueOf(line.charAt(i)).equals(",")) {
 					i++;
@@ -225,7 +244,7 @@ public class BlueTerm extends Activity {
 					d /= Math.sqrt(800);
 					z = (int)Math.round(d * z);
 					bomen += z;
-				}
+				}*/
 			}
 			Log.e(LOG_TAG,"er zijn " + bomen + " bomen in de buurt");
 			//TODO bomen naar percentage
