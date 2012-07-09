@@ -4,10 +4,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 public class FileEditor {
 	public static void main(String[] args) throws FileNotFoundException {
@@ -17,24 +20,29 @@ public class FileEditor {
 		BufferedReader dis = null;
 		Integer[][] map = new Integer[162][67];
 
+		for(int a = 0; a<162;a++)
+		{
+		for(int b = 0;b<67;b++)
+			{
+			map[a][b] = 0;
+			}
+		}
 		for (int a = 0;a < 162;a++) {
 			for (int b = 0;b < 67;b++) {
-				map[a][b] = 0;
 				try {
-					
-					
 					// Here BufferedInputStream is added for fast reading.
 					
 					dis = new BufferedReader(new InputStreamReader(new BufferedInputStream(new FileInputStream(file))));
 					//dis = new BufferedReader(new FileReader(file));
 					String temp = dis.readLine();
-					int x,y;
+					int x = 0,y = 0;
 					while(temp != null){
 					if(temp.length() == 12)
 					{ x = Integer.parseInt(temp.substring(1,5));y = Integer.parseInt(temp.substring(6,11));}
-					else
+					else if(temp.length() == 13)
 					{x = Integer.parseInt(temp.substring(1,6));y = Integer.parseInt(temp.substring(7,12));}
-					
+					else
+					{System.out.println("Geen regel gevonden");}
 					//System.out.println("read:\n  x:"+a+"\n  y:"+b+"\n  count:"+count);
 					
 						//System.out.println("x: "+x+" y: "+y);
@@ -74,31 +82,38 @@ public class FileEditor {
 			e.printStackTrace();
 				}
 		try {
-			FileWriter f = new FileWriter("C:\\Users\\Chinwei\\Desktop\\out.txt");
-			BufferedWriter out = new BufferedWriter(f);
+			Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("C:\\Users\\Chinwei\\Desktop\\out5bit.txt"),"UTF8"));
+			//FileWriter f = new FileWriter("C:\\Users\\Chinwei\\Desktop\\out.txt");
+			//BufferedWriter out = new BufferedWriter(f);
 			for (int y = 0;y < 67;y++) {
+				System.out.println("regel: " +y);
 				for (int x = 0;x < 162;x++) {
 					String temp = map[x][y].toString();
-					if (temp.length() == 0) {
-						temp = "0000";
+					if (temp == "0") {
+						temp = "00000";
 					}
 					else if (temp.length() == 1) {
-						temp = "000" + temp;
+						temp = "0000" + temp;
 					}
 					else if (temp.length() == 2) {
-						temp = "00" + temp;
+						temp = "000" + temp;
 					}
 					else if (temp.length() == 3) {
-						temp = "0" + temp;
-					}else if(temp.length() == 5) {
-						temp = "9999";
+						temp = "00" + temp;
+					}else if(temp.length() == 4) {
+						temp =  "0" + temp;
 					}
+					out.flush();
 					out.write(temp);
+					out.flush();
 				}
-				out.newLine();
+				
+				out.write("\n");
+				out.flush();
 			}
+		out.close();
 		}
-		catch (IOException e) {}
+		catch (IOException e) {e.printStackTrace();}
 	}
 
 	public static boolean inRange(int orX, int orY, int tarX, int tarY) {
