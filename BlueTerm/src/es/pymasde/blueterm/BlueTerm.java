@@ -197,6 +197,7 @@ public class BlueTerm extends Activity {
 		int begin = (int)(Math.round(((RDX - 6050.0) / 25.0) + 0.5) * 5);
 		int eind = begin + 6;
 		int regel = (int)Math.round(((RDY - 42901.0) / 25.0) + 0.5);
+		Log.e(LOG_TAG,"locatie txt map: regel " + regel + ", char " + begin + " t/m " + eind);
 		try {
 			InputStream inS = getBaseContext().getAssets().open("bomen.txt");
 			InputStreamReader inR = new InputStreamReader(inS);
