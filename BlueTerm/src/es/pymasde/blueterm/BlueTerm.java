@@ -194,17 +194,18 @@ public class BlueTerm extends Activity {
 		double RDY = 463000 + SomY;
 		Integer bomen = 0;
 		Log.e(LOG_TAG,"locatie RD:" + RDX + "," + RDY);
+		
 		double beg = (int)RDX;
-		beg -= 6050;
+		beg -= 60509;
 		beg /= 25;
 		int begin = (int)Math.round(beg + 0.5);
-		begin--;
 		begin *= 5;
 		int eind = begin + 6;
 		double reg = RDY;
-		reg -= 42901;
+		reg -= 429013;
 		reg /= 25;
 		int regel = (int)Math.round(reg + 0.5);
+		
 		Log.e(LOG_TAG,"locatie txt map: regel " + regel + ", char " + begin + " t/m " + eind);
 		try {
 			InputStream inS = getBaseContext().getAssets().open("bomen.txt");
@@ -213,6 +214,7 @@ public class BlueTerm extends Activity {
 			buffR.skip(regel);
 			String temp = buffR.readLine();
 			bomen = Integer.parseInt((temp.subSequence(begin,eind).toString()));
+			Log.e(LOG_TAG,"bomen: " + bomen);
 		}
 		catch (IOException e) {
 			Log.e(LOG_TAG,"IO error" + e.getMessage());
