@@ -195,25 +195,20 @@ public class BlueTerm extends Activity {
 		Integer bomen = 0;
 		Log.e(LOG_TAG,"locatie RD:" + RDX + "," + RDY);
 		
-		double beg = (int)RDX;
-		beg -= 60509;
-		beg /= 25;
-		int begin = (int)Math.round(beg + 0.5);
-		begin *= 5;
-		int eind = begin + 6;
-		double reg = RDY;
-		reg -= 429013;
-		reg /= 25;
-		int regel = (int)Math.round(reg + 0.5);
-		
-		Log.e(LOG_TAG,"locatie txt map: regel " + regel + ", char " + begin + " t/m " + eind);
+		//(((RDY-429013)/25)^*1615) + (((RDX-60509)/25)^)
+		int regel = (int)((Math.round(((RDY-429013)/25)+0.5)*1615)+(Math.round(((RDX-60509)/25))+0.5));
+
+		Log.e(LOG_TAG,"locatie txt map: regel " + (regel+1) );
 		try {
 			InputStream inS = getBaseContext().getAssets().open("bomen.txt");
 			InputStreamReader inR = new InputStreamReader(inS);
 			BufferedReader buffR = new BufferedReader(inR);
-			buffR.skip(regel);
+			while(regel>0) {
+				buffR.readLine();
+				regel--;
+			}
 			String temp = buffR.readLine();
-			bomen = Integer.parseInt((temp.subSequence(begin,eind).toString()));
+			bomen = Integer.parseInt(temp);
 			Log.e(LOG_TAG,"bomen: " + bomen);
 		}
 		catch (IOException e) {
