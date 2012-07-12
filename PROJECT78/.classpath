@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="JOCL/JOCL-0.1.7.jar" sourcepath="JOCL/JOCL-0.1.7.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/PROJECT78NEW/JOCL/JOCL-0.1.7.jar!/org/jocl"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="PROJECT78NEW/JOCL/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="JOGL/jogl.all.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="PROJECT78NEW/JOGL"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="JOGL/gluegen-rt.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="PROJECT78NEW/JOGL"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
