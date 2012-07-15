@@ -324,11 +324,12 @@ public class BluetoothSerialService {
 					// Read from the InputStream
 					bytes = mmInStream.read(buffer);
 					mEmulatorView.write(buffer,bytes);
+					//TODO data op scherm
 					// Send the obtained bytes to the UI Activity
 					//mHandler.obtainMessage(BlueTerm.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
 					String a = buffer.toString();
 					a = "";
-					mmOutStream.write(0x00);
+					//mmOutStream.write(0x00);
 				}
 				catch (IOException e) {
 					Log.e(TAG,"disconnected",e);
