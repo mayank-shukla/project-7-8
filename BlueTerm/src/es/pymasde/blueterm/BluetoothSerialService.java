@@ -328,6 +328,7 @@ public class BluetoothSerialService {
 					//mHandler.obtainMessage(BlueTerm.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
 					String a = buffer.toString();
 					a = "";
+					mmOutStream.write(0x00);
 				}
 				catch (IOException e) {
 					Log.e(TAG,"disconnected",e);
