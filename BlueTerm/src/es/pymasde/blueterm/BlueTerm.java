@@ -120,7 +120,9 @@ public class BlueTerm extends Activity {
 	private MenuItem mMenuItemConnect;
 	private LocationManager mlocManager;
 	private es.pymasde.blueterm.MyLocationListener mlocListener;
-
+	private int[] data;
+	private BaseInputConnection input;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -164,33 +166,17 @@ public class BlueTerm extends Activity {
 			Log.e(LOG_TAG,"++ ON START ++");
 		mEnablingBT = false;
 		bThreadBool = false;
-	}
-
-	//TODO
-	public synchronized void locChange(double lo, double la) {
-		Log.e(LOG_TAG,"locatie GPS:" + la + "," + lo);
-		double dF = 0.36 * (la - 52.15517440);
-		double dL = 0.36 * (lo - 5.38720621);
-		double SomX = (190094.945 * dL) + (-11832.228 * dF * dL) + (-144.221 * Math.pow(dF,2) * dL) + (-32.391 * Math.pow(dL,3)) + (-0.705 * dF) + (-2.340 * Math.pow(dF,3) * dL) + (-0.608 * dF * Math.pow(dL,3)) + (-0.008 * Math.pow(dL,2)) + (0.148 * Math.pow(dF,2) * Math.pow(dL,3));
-		double SomY = (309056.544 * dF) + (3638.893 * Math.pow(dL,2)) + (73.077 * Math.pow(dF,2)) + (-157.984 * dF * Math.pow(dL,2)) + (59.788 * Math.pow(dF,3)) + (0.433 * dL) + (-6.439 * Math.pow(dF,2) * Math.pow(dL,2)) + (-0.032 * dF * dL) + (0.092 * Math.pow(dL,4)) + (-0.054 * dF * Math.pow(dL,4));
-		double RDX = 155000 + SomX;
-		double RDY = 463000 + SomY;
-		Integer bomen = 0;
-		Log.e(LOG_TAG,"locatie RD:" + RDX + "," + RDY);
-		// (((RDY-429013)/25)^*1615) + (((RDX-60509)/25)^)
-		int regel = (int)((Math.round(((RDY - 429013) / 25) + 0.5) * 1615) + (Math.round(((RDX - 60509) / 25)) + 0.5));
-		Log.e(LOG_TAG,"locatie txt map: regel " + (regel + 1));
+		//data = new int[1082050];
 		try {
 			InputStream inS = getBaseContext().getAssets().open("bomen.txt");
 			InputStreamReader inR = new InputStreamReader(inS);
 			BufferedReader buffR = new BufferedReader(inR);
-			while (regel > 0) {
-				buffR.readLine();
-				regel--;
+			data = new int[1082050];
+			int j = 0;
+			for (String i = buffR.readLine();i != null;i = buffR.readLine()) {
+				data[j] = Integer.parseInt(i);
+				j++;
 			}
-			String temp = buffR.readLine();
-			bomen = Integer.parseInt(temp);
-			Log.e(LOG_TAG,"bomen: " + bomen);
 		}
 		catch (IOException e) {
 			Log.e(LOG_TAG,"IO error" + e.getMessage());
@@ -201,6 +187,32 @@ public class BlueTerm extends Activity {
 		catch (IndexOutOfBoundsException e) {
 			Log.e(LOG_TAG,"index out of bounds error" + e.getMessage());
 		}
+	}
+
+	public synchronized void locChange(double lo, double la) {
+		Log.e(LOG_TAG,"locatie GPS:" + la + "," + lo);
+		double dF = 0.36 * (la - 52.15517440);
+		double dL = 0.36 * (lo - 5.38720621);
+		double SomX = (190094.945 * dL) + (-11832.228 * dF * dL) + (-144.221 * Math.pow(dF,2) * dL) + (-32.391 * Math.pow(dL,3)) + (-0.705 * dF) + (-2.340 * Math.pow(dF,3) * dL) + (-0.608 * dF * Math.pow(dL,3)) + (-0.008 * Math.pow(dL,2)) + (0.148 * Math.pow(dF,2) * Math.pow(dL,3));
+		double SomY = (309056.544 * dF) + (3638.893 * Math.pow(dL,2)) + (73.077 * Math.pow(dF,2)) + (-157.984 * dF * Math.pow(dL,2)) + (59.788 * Math.pow(dF,3)) + (0.433 * dL) + (-6.439 * Math.pow(dF,2) * Math.pow(dL,2)) + (-0.032 * dF * dL) + (0.092 * Math.pow(dL,4)) + (-0.054 * dF * Math.pow(dL,4));
+		double RDX = 155000 + SomX;
+		double RDY = 463000 + SomY;
+		int bomen = 0;
+		Log.e(LOG_TAG,"locatie RD:" + RDX + "," + RDY);
+		// (((RDY-429013)/25)^*1615) + (((RDX-60509)/25)^)
+		int regel = (int)((Math.round((RDY - 429013) / 25) * 1615) + (Math.round((RDX - 60509) / 25)));
+		Log.e(LOG_TAG,"locatie txt map: regel " + (regel + 1));
+		try {
+			bomen = data[regel];
+		}
+		catch (ArrayIndexOutOfBoundsException e) {
+			Log.e(LOG_TAG,"GPS coords out of map");
+		}
+		Log.e(LOG_TAG,"bomen: " + bomen);
+		//TODO schrijf data
+		byte[] data = new byte[1];
+		data[0] = (byte)bomen;
+		mSerialService.write(data);
 	}
 
 	public void setLoc() {
@@ -2461,6 +2473,8 @@ class EmulatorView extends View implements GestureDetector.OnGestureListener {
 	public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
 		outAttrs.inputType = EditorInfo.TYPE_NULL;
 		return new BaseInputConnection(this,false) {
+			
+			
 			@Override
 			public boolean beginBatchEdit() {
 				return true;
