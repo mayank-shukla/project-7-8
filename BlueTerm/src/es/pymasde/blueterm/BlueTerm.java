@@ -109,6 +109,7 @@ public class BlueTerm extends Activity {
 	private int[] data;
 	private double min = 0;
 	private double max = 400;
+	private int percent=0;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -202,10 +203,11 @@ public class BlueTerm extends Activity {
 		//(bomen-min)/bomenper1%//percentage bomen
 		bomen = (int)((bomen - min) / ((max - min) / 100.0));
 		Log.e(LOG_TAG,"procent: " + bomen);
-		if (bomen == 0)
-			bomen = 1;
+		if (bomen < 2)
+			bomen = 2;
 		if (bomen > 100)
 			bomen = 100;
+		percent = bomen;
 		byte[] data = new byte[1];
 		data[0] = (byte)bomen;
 		mSerialService.write(data);
@@ -231,6 +233,7 @@ public class BlueTerm extends Activity {
 			Log.e(LOG_TAG,"delete GPS");
 			mlocManager.removeUpdates(mlocListener);
 			mlocManager = null;
+			percent = 0;
 		}
 	}
 
@@ -602,19 +605,25 @@ public class BlueTerm extends Activity {
 	private class FakeData extends Thread {
 		public void run() {
 			byte[] data = new byte[1];
-			data[0] = 0x00;
+			data[0] = 0x01;
 			while (true) {
-				if(mSerialService.getState()==mSerialService.STATE_CONNECTED) {
-					mSerialService.write(data);
-					Log.e(LOG_TAG,"fake data send");
-				}
-				else {
-					Log.e(LOG_TAG,"fake data not send");
-				}
+				if(percent!=0)
+					data[0] = (byte)(1+(percent/14));
+				else
+					data[0] = 0x01;
 				try {
 					Thread.sleep(3000);
+					if(mSerialService.getState()==mSerialService.STATE_CONNECTED) {
+						mSerialService.write(data);
+						Log.e(LOG_TAG,"data send "+percent+"-->"+data[0]);
+					}
+					else {
+						Log.e(LOG_TAG,"data not send");
+					}
 				}
-				catch (InterruptedException e) {}
+				catch (InterruptedException e) {
+					Log.e(LOG_TAG,"data not send",e);
+				}
 			}
 		}
 	}
