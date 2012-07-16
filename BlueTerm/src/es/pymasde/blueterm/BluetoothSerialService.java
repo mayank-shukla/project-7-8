@@ -323,7 +323,7 @@ public class BluetoothSerialService {
 				try {
 					// Read from the InputStream
 					bytes = mmInStream.read(buffer);
-					mEmulatorView.write(buffer,bytes);
+					//mEmulatorView.write(buffer,bytes);
 					//TODO data op scherm
 					// Send the obtained bytes to the UI Activity
 					//mHandler.obtainMessage(BlueTerm.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
