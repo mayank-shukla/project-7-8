@@ -1,0 +1,1 @@
+waneer je exporteert en het niet werkt sleep alle native libs naar de zelfde folder waar de jar staat die het gebruikt

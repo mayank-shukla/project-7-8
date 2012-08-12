@@ -4,12 +4,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.LinkedList;
 import javax.media.opengl.DebugGL2;
+import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLException;
 import javax.media.opengl.awt.GLCanvas;
+import javax.media.opengl.fixedfunc.GLMatrixFunc;
 import javax.media.opengl.glu.gl2.GLUgl2;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.gl2.GLUT;
@@ -51,9 +53,9 @@ public class JoglCube extends GLCanvas implements GLEventListener,MouseMotionLis
 	@Override
 	public void display(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
-		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		setCamera(gl,glu,68,68,68,afstand,aanzicht,hoogte);
-		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
 		Display display = getDisplay();
 		if (anim.run == true) {
@@ -62,8 +64,8 @@ public class JoglCube extends GLCanvas implements GLEventListener,MouseMotionLis
 		int[][][] cube_red = display.getLedsRed();
 		int[][][] cube_green = display.getLedsGreen();
 		gl.glColor3f(0f,0f,255f);
-		gl.glEnable(GL2.GL_BLEND);
-		gl.glBlendFunc(GL2.GL_SRC_ALPHA,GL2.GL_ONE);
+		gl.glEnable(GL.GL_BLEND);
+		gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE);
 		gl.glPushMatrix();
 		gl.glRotatef(aanzicht,0.0f,1.0f,0.0f);
 		gl.glRotatef(-hoogte,1.0f,0.0f,0.0f);
@@ -87,8 +89,8 @@ public class JoglCube extends GLCanvas implements GLEventListener,MouseMotionLis
 					try {
 						if (cube_red[x][y][z] != 0 || cube_green[x][y][z] != 0) {
 							gl.glColor3f(display.getLedsRed()[x][y][z] / 255f,display.getLedsGreen()[x][y][z] / 255f,0f);
-							gl.glEnable(GL2.GL_BLEND);
-							gl.glBlendFunc(GL2.GL_SRC_ALPHA,GL2.GL_ONE);
+							gl.glEnable(GL.GL_BLEND);
+							gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE);
 							// gl.glDepthMask(false);
 							gl.glPushMatrix();
 							gl.glRotatef(aanzicht,0.0f,1.0f,0.0f);
@@ -140,14 +142,14 @@ public class JoglCube extends GLCanvas implements GLEventListener,MouseMotionLis
 		GL2 gl = drawable.getGL().getGL2();
 		drawable.setGL(new DebugGL2(gl));
 		// Enable z-buffer
-		gl.glEnable(GL2.GL_DEPTH_TEST);
+		gl.glEnable(GL.GL_DEPTH_TEST);
 		// Enable blending
-		gl.glEnable(GL2.GL_BLEND);
-		gl.glBlendFunc(GL2.GL_SRC_ALPHA,GL2.GL_ONE_MINUS_SRC_ALPHA);
-		gl.glEnable(GL2.GL_TEXTURE_2D);
+		gl.glEnable(GL.GL_BLEND);
+		gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glEnable(GL.GL_TEXTURE_2D);
 		// Reset view
 		gl.glLoadIdentity();
-		gl.glClear(GL2.GL_DEPTH_BUFFER_BIT | GL2.GL_COLOR_BUFFER_BIT);
+		gl.glClear(GL.GL_DEPTH_BUFFER_BIT | GL.GL_COLOR_BUFFER_BIT);
 		gl.glClearColor(0f,0f,0f,1f);
 		// Start animator.
 		try {
@@ -156,6 +158,10 @@ public class JoglCube extends GLCanvas implements GLEventListener,MouseMotionLis
 		}
 		catch (GLException e) {}
 		glu = new GLUgl2();
+	}
+
+	public void stopAnimator() {
+		animator.stop();
 	}
 
 	@Override
@@ -188,7 +194,7 @@ public class JoglCube extends GLCanvas implements GLEventListener,MouseMotionLis
 	 */
 	private int[] setCamera(GL2 gl, GLUgl2 glu, int X, int Y, int Z, int afstand, int aanzicht, int hoogte) {
 		// Change to projection matrix.
-		gl.glMatrixMode(GL2.GL_PROJECTION);
+		gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
 		gl.glLoadIdentity();
 		// Perspective.
 		float widthHeightRatio = (float)getWidth() / (float)getHeight();
@@ -217,7 +223,7 @@ public class JoglCube extends GLCanvas implements GLEventListener,MouseMotionLis
 		}
 		glu.gluLookAt(eyeX,eyeY,eyeZ,X,Y,Z,0,1,0);
 		// Change back to model view matrix.
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		int[] integer = new int[3];
 		integer[0] = (int)eyeX;
@@ -487,6 +493,7 @@ public class JoglCube extends GLCanvas implements GLEventListener,MouseMotionLis
 			pause = false;
 		}
 
+		@Override
 		public void run() {
 			while (run) {
 				while (pause);

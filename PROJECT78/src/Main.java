@@ -8,6 +8,6 @@ public class Main {
 	}
 
 	public Main() {
-		window = new Window();
+		window = new Window(true);
 	}
 }
