@@ -28,6 +28,7 @@ public class GameMenu implements KeyListener {
 	public Container createWindow(Window frame) {
 		this.frame = frame;
 		//dit is het path naar de locatie van de jar file voeg \\games aan toe voor de game map en maak er een file van
+		game = new Game[0];
 		String path = System.getProperty("user.dir");
 		path += "\\games";
 		File games = new File(path);
@@ -45,7 +46,7 @@ public class GameMenu implements KeyListener {
 			for (int i = 0;i < jars.length;i++) {
 				//als de file een jar is  lee de namen van alle nuttige classes in en kijk of alle hulpclasses aanwezig zijn
 				if (jars[i].getName().endsWith(".jar")) {
-					System.out.println("filenumber " + i + "is a jar file and will now be read");
+					System.out.println("filenumber " + i + " is a jar file and will now be read");
 					try {
 						ZipFile jar = new ZipFile(jars[i]);
 						Enumeration<? extends ZipEntry> entries = jar.entries();
@@ -55,26 +56,28 @@ public class GameMenu implements KeyListener {
 							ZipEntry entry = entries.nextElement();
 							if (entry.getName().equals("game/Game.class"))
 								condition++;
+							else if (entry.getName().equals("game/GameCube.class"))
+								condition++;
 							else if (entry.getName().equals("display/CubeObject.class"))
 								condition++;
 							else if (entry.getName().equals("display/Led.class"))
 								condition++;
 							else if (entry.getName().equals("display/Display.class"))
 								condition++;
-							else if (entry.getName().lastIndexOf("/") != -1 && entry.getName().endsWith(".class")) {
+							else if (entry.getName().startsWith("Game_") && entry.getName().endsWith(".class")) {
 								String[] temp = new String[classes.length + 1];
 								int j;
-								for (j = 0;j < classes.length;j++) {
+								for (j = 0;j < classes.length;) {
 									temp[j] = classes[j];
+									j++;
 								}
-								j++;
 								temp[j] = entry.getName();
 								classes = temp;
 							}
 						}
-						//als de conditie 4 is zijn alle 4 hulpclasses gevonden
-						if (condition == 4) {
-							System.out.println("this file has the correct classes with " + classes.length + "games");
+						//als de conditie 5 is zijn alle 5 hulpclasses gevonden
+						if (condition == 5) {
+							System.out.println("this file has the correct classes with " + classes.length + " games");
 							//maak een class loader voor deze jar
 							ClassLoader loader = URLClassLoader.newInstance(new URL[] {jars[i].toURI().toURL()},getClass().getClassLoader());
 							//loop alle namen door om deze in te laden
@@ -85,7 +88,7 @@ public class GameMenu implements KeyListener {
 									String clas = classes[j].replaceAll("/",".");
 									//verweider de .class extensie
 									int k = clas.lastIndexOf(".");
-									clas = clas.substring(0,k + 1);
+									clas = clas.substring(0,k);
 									//maak een geinstantieerd object van de gevonden class
 									Class<?> clazz = Class.forName(clas,true,loader);
 									Class<? extends Game> runClass = clazz.asSubclass(Game.class);
@@ -96,10 +99,10 @@ public class GameMenu implements KeyListener {
 									//voeg dit object toe aan de array met alle games
 									int l;
 									Game[] temp = new Game[this.game.length + 1];
-									for (l = 0;l < this.game.length;l++) {
+									for (l = 0;l < this.game.length;) {
 										temp[l] = this.game[l];
+										l++;
 									}
-									l++;
 									temp[l] = game;
 									this.game = temp;
 								}
@@ -177,7 +180,9 @@ public class GameMenu implements KeyListener {
 	public void keyReleased(KeyEvent e) {}
 
 	public void run(int selected) {
-		if (game != null)
-			frame.run(game[selected]);
+		if (game != null) {
+			frame.dispose();
+			new Window(2,game[selected]);
+		}
 	}
 }

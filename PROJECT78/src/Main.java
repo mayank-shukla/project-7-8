@@ -8,6 +8,8 @@ public class Main {
 	}
 
 	public Main() {
-		window = new Window(true);
+		window = new Window(0, null);
 	}
 }
+
+//TODO keyevents op gamemenu zetten
