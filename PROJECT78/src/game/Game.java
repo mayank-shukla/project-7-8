@@ -1,77 +1,43 @@
 package game;
 
-import java.awt.event.KeyEvent;
-import display.CubeObject;
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 import display.Display;
-import display.Led;
 
-public class Game {
-	Display update;
-	int x = 4;
-	int z = 4;
-	int y = 4;
+public abstract class Game {
+	/**
+	 * this is the classloader used for the jar where this class would be exported to to load other classes or images
+	 * 
+	 * @param loader the classloader for this jar
+	 */
+	public abstract void setLoader(ClassLoader loader);
 
-	public Game(Display display) {
-		update = display;
-		try {
-			CubeObject temp = new CubeObject(update);
-			//temp.addLed(new s_led(x, y, z, 255, 255));
-			for (int i = 0;i < 2;i++) {
-				for (int j = 0;j < 2;j++) {
-					temp.addLed(new Led(x + i,y,z + j,255,255));
-					temp.addLed(new Led(x + i,y + 1,z + j,255,255));
-				}
-			}
-			update.addObject(temp);
-			temp = new CubeObject(update);
-			//temp.addLed(new s_led(x, y, z, 255, 255));
-			temp.addLed(new Led(2,2,4,255,0));
-			temp.addLed(new Led(2,5,5,255,0));
-			temp.addLed(new Led(9,9,9,255,0));
-			update.addObject(temp);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	/**
+	 * this method should return the name of this game
+	 * 
+	 * @return
+	 */
+	public abstract String getName();
 
-	public void checkGamingControls(int key) {
-		int tx = 0;
-		int ty = 0;
-		int tz = 0;
-		CubeObject[] object = update.getObjects();
-		try {
-			//update.setRed(0, x, y, z);
-			//update.setGreen(0, x, y, z);
-			switch(key) {
-				case KeyEvent.VK_W:
-					++ty;
-					break;
-				case KeyEvent.VK_S:
-					--ty;
-					break;
-				case KeyEvent.VK_UP:
-					++tz;
-					break;
-				case KeyEvent.VK_DOWN:
-					--tz;
-					break;
-				case KeyEvent.VK_LEFT:
-					++tx;
-					break;
-				case KeyEvent.VK_RIGHT:
-					--tx;
-					break;
-			}
-			try {
-				object[0].moveObject(tx,ty,tz);
-			}
-			catch (Exception e) {}
-			//update.setRed(255, x, y, z);
-			//update.setGreen(255, x, y, z);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	/**
+	 * this method should return th description of this game
+	 * 
+	 * @return
+	 */
+	public abstract String getDescription();
+
+	/**
+	 * this method should return the icon of this game or null
+	 * 
+	 * @return
+	 */
+	public abstract ImageIcon getImage();
+
+	/**
+	 * this methode starts the game
+	 * 
+	 * @param dis the display to be used througout the whole game
+	 * @return a costum JPanel that could be displayed at the screen
+	 */
+	public abstract JPanel run(Display dis);
 }

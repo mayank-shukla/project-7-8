@@ -7,11 +7,16 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import javax.media.opengl.DebugGL2;
+import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
+import javax.media.opengl.GL2ES1;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
+import javax.media.opengl.GLException;
 import javax.media.opengl.awt.GLCanvas;
+import javax.media.opengl.fixedfunc.GLLightingFunc;
+import javax.media.opengl.fixedfunc.GLMatrixFunc;
 import javax.media.opengl.glu.gl2.GLUgl2;
 import com.jogamp.opengl.util.FPSAnimator;
 import display.Display;
@@ -117,7 +122,7 @@ public class JoglLayer extends GLCanvas implements GLEventListener,MouseListener
 			int value1 = 18;
 			int value2 = 16;
 			GL2 gl = drawable.getGL().getGL2();
-			gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+			gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 			setCamera(gl,glu,450);
 			gl.glBegin(GL2.GL_QUADS);
 			Display display = jogl.getDisplay();
@@ -158,14 +163,14 @@ public class JoglLayer extends GLCanvas implements GLEventListener,MouseListener
 	 */
 	private void setCamera(GL2 gl, GLUgl2 glu2, float distance) {
 		// Change to projection matrix.
-		gl.glMatrixMode(GL2.GL_PROJECTION);
+		gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
 		gl.glLoadIdentity();
 		// Perspective.
 		float widthHeightRatio = (float)getWidth() / (float)getHeight();
 		glu.gluPerspective(45,widthHeightRatio,1,1000);
 		glu.gluLookAt(167,117,distance,167,117,0,0,1,0);
 		// Change back to model view matrix.
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
 		gl.glLoadIdentity();
 	}
 
@@ -174,15 +179,22 @@ public class JoglLayer extends GLCanvas implements GLEventListener,MouseListener
 		GL2 gl = drawable.getGL().getGL2();
 		drawable.setGL(new DebugGL2(gl));
 		// Global settings.
-		gl.glEnable(GL2.GL_DEPTH_TEST);
-		gl.glDepthFunc(GL2.GL_LEQUAL);
-		gl.glShadeModel(GL2.GL_SMOOTH);
-		gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT,GL2.GL_NICEST);
+		gl.glEnable(GL.GL_DEPTH_TEST);
+		gl.glDepthFunc(GL.GL_LEQUAL);
+		gl.glShadeModel(GLLightingFunc.GL_SMOOTH);
+		gl.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT,GL.GL_NICEST);
 		gl.glClearColor(0.5f,0.5f,0.5f,1f);
 		// Start animator (which should be a field).
-		animator = new FPSAnimator(this,60);
-		animator.start();
+		try {
+			animator = new FPSAnimator(this,60);
+			animator.start();
+		}
+		catch (GLException e) {}
 		glu = new GLUgl2();
+	}
+
+	public void stopAnimator() {
+		animator.stop();
 	}
 
 	@Override
@@ -195,10 +207,12 @@ public class JoglLayer extends GLCanvas implements GLEventListener,MouseListener
 		return layer;
 	}
 
+	@Override
 	public int getX() {
 		return x;
 	}
 
+	@Override
 	public int getY() {
 		return y;
 	}
@@ -211,8 +225,10 @@ public class JoglLayer extends GLCanvas implements GLEventListener,MouseListener
 		this.enable = enable;
 	}
 
+	@Override
 	public void keyTyped(KeyEvent e) {}
 
+	@Override
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
 		Display display = jogl.getDisplay();
@@ -281,21 +297,29 @@ public class JoglLayer extends GLCanvas implements GLEventListener,MouseListener
 		}
 	}
 
+	@Override
 	public void keyReleased(KeyEvent e) {}
 
+	@Override
 	public void mouseDragged(MouseEvent e) {
 		checkMouseAction(e);
 	}
 
+	@Override
 	public void mouseMoved(MouseEvent e) {}
 
+	@Override
 	public void mousePressed(MouseEvent e) {}
 
+	@Override
 	public void mouseReleased(MouseEvent e) {}
 
+	@Override
 	public void mouseEntered(MouseEvent e) {}
 
+	@Override
 	public void mouseExited(MouseEvent e) {}
 
+	@Override
 	public void dispose(GLAutoDrawable arg0) {}
 }

@@ -1,0 +1,5 @@
+games worden gemaakt aan de hand van de Game class
+
+de naam van een Game classe moet beginnen met Game_
+
+de game moet in de default package zijn.

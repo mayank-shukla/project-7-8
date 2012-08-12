@@ -8,12 +8,12 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="PROJECT78NEW/JOCL/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="JOGL/jogl.all.jar">
+	<classpathentry kind="lib" path="JOGL/jogl.all.jar" sourcepath="JOGL/jogl-java-src.zip">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="PROJECT78NEW/JOGL"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="JOGL/gluegen-rt.jar">
+	<classpathentry kind="lib" path="JOGL/gluegen-rt.jar" sourcepath="JOGL/gluegen-java-src.zip">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="PROJECT78NEW/JOGL"/>
 		</attributes>
