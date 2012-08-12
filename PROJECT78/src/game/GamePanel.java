@@ -26,12 +26,11 @@ public class GamePanel extends JPanel {
 	private double animloop;
 
 	public GamePanel(GameMenu menu,Game[] game,int width,int height) {
-		//TODO ads.jhfaesyu
 		img = createImageIcon("graphics/icons/option.png").getImage();
 		this.menu = menu;
 		this.game = game;
 		animating = false;
-		selected = 9;
+		selected = 0;
 		this.width = width;
 		this.height = height;
 		this.setSize(width,height);
@@ -75,38 +74,41 @@ public class GamePanel extends JPanel {
 			return;
 		if (!animating) {
 			for (int i = 0;i < game.length;i++) {
-				switch(Math.abs(i - selected)) {
-					case 0:
-						g.drawImage(img,width - horposi[0],height / 2 - 47 + ((i - selected) * 65),416,65,null);
-						g.drawImage(game[i].getImage().getImage(),width - horposi[0] + 16,height / 2 - 47 + ((i - selected) * 65) + 16,32,32,null);
-						g.drawString(game[i].getName(),width - horposi[0] + 69,height / 2 - 47 + ((i - selected) * 65) + 35);
-						break;
-					case 1:
-						g.drawImage(img,width - horposi[1],height / 2 - 47 + ((i - selected) * 65),416,65,null);
-						g.drawImage(game[i].getImage().getImage(),width - horposi[1] + 16,height / 2 - 47 + ((i - selected) * 65) + 16,32,32,null);
-						g.drawString(game[i].getName(),width - horposi[1] + 69,height / 2 - 47 + ((i - selected) * 65) + 35);
-						break;
-					case 2:
-						g.drawImage(img,width - horposi[2],height / 2 - 47 + ((i - selected) * 65),416,65,null);
-						g.drawImage(game[i].getImage().getImage(),width - horposi[2] + 16,height / 2 - 47 + ((i - selected) * 65) + 16,32,32,null);
-						g.drawString(game[i].getName(),width - horposi[2] + 69,height / 2 - 47 + ((i - selected) * 65) + 35);
-						break;
-					case 3:
-						g.drawImage(img,width - horposi[3],height / 2 - 47 + ((i - selected) * 65),416,65,null);
-						g.drawImage(game[i].getImage().getImage(),width - horposi[3] + 16,height / 2 - 47 + ((i - selected) * 65) + 16,32,32,null);
-						g.drawString(game[i].getName(),width - horposi[3] + 69,height / 2 - 47 + ((i - selected) * 65) + 35);
-						break;
-					case 4:
-						g.drawImage(img,width - horposi[4],height / 2 - 47 + ((i - selected) * 65),416,65,null);
-						g.drawImage(game[i].getImage().getImage(),width - horposi[4] + 16,height / 2 - 47 + ((i - selected) * 65) + 16,32,32,null);
-						g.drawString(game[i].getName(),width - horposi[4] + 69,height / 2 - 47 + ((i - selected) * 65) + 35);
-						break;
-					case 5:
-						g.drawImage(img,width - horposi[5],height / 2 - 47 + ((i - selected) * 65),416,65,null);
-						g.drawImage(game[i].getImage().getImage(),width - horposi[5] + 16,height / 2 - 47 + ((i - selected) * 65) + 16,32,32,null);
-						g.drawString(game[i].getName(),width - horposi[5] + 69,height / 2 - 47 + ((i - selected) * 65) + 35);
-						break;
+				try {
+					switch(Math.abs(i - selected)) {
+						case 0:
+							g.drawImage(img,width - horposi[0],height / 2 - 47 + ((i - selected) * 65),416,65,null);
+							g.drawImage(game[i].getImage(),width - horposi[0] + 16,height / 2 - 47 + ((i - selected) * 65) + 16,32,32,null);
+							g.drawString(game[i].getName(),width - horposi[0] + 69,height / 2 - 47 + ((i - selected) * 65) + 35);
+							break;
+						case 1:
+							g.drawImage(img,width - horposi[1],height / 2 - 47 + ((i - selected) * 65),416,65,null);
+							g.drawImage(game[i].getImage(),width - horposi[1] + 16,height / 2 - 47 + ((i - selected) * 65) + 16,32,32,null);
+							g.drawString(game[i].getName(),width - horposi[1] + 69,height / 2 - 47 + ((i - selected) * 65) + 35);
+							break;
+						case 2:
+							g.drawImage(img,width - horposi[2],height / 2 - 47 + ((i - selected) * 65),416,65,null);
+							g.drawImage(game[i].getImage(),width - horposi[2] + 16,height / 2 - 47 + ((i - selected) * 65) + 16,32,32,null);
+							g.drawString(game[i].getName(),width - horposi[2] + 69,height / 2 - 47 + ((i - selected) * 65) + 35);
+							break;
+						case 3:
+							g.drawImage(img,width - horposi[3],height / 2 - 47 + ((i - selected) * 65),416,65,null);
+							g.drawImage(game[i].getImage(),width - horposi[3] + 16,height / 2 - 47 + ((i - selected) * 65) + 16,32,32,null);
+							g.drawString(game[i].getName(),width - horposi[3] + 69,height / 2 - 47 + ((i - selected) * 65) + 35);
+							break;
+						case 4:
+							g.drawImage(img,width - horposi[4],height / 2 - 47 + ((i - selected) * 65),416,65,null);
+							g.drawImage(game[i].getImage(),width - horposi[4] + 16,height / 2 - 47 + ((i - selected) * 65) + 16,32,32,null);
+							g.drawString(game[i].getName(),width - horposi[4] + 69,height / 2 - 47 + ((i - selected) * 65) + 35);
+							break;
+						case 5:
+							g.drawImage(img,width - horposi[5],height / 2 - 47 + ((i - selected) * 65),416,65,null);
+							g.drawImage(game[i].getImage(),width - horposi[5] + 16,height / 2 - 47 + ((i - selected) * 65) + 16,32,32,null);
+							g.drawString(game[i].getName(),width - horposi[5] + 69,height / 2 - 47 + ((i - selected) * 65) + 35);
+							break;
+					}
 				}
+				catch (ArrayIndexOutOfBoundsException e) {}
 			}
 		}
 		else {
@@ -122,178 +124,181 @@ public class GamePanel extends JPanel {
 					locheight = height / 2 - 47 + ((i - selected + 1) * 65) - (int)(animloop);
 				else
 					locheight = height / 2 - 47 + ((i - selected - 1) * 65) + (int)(animloop);
-				switch(i - selected + 5) {
-					case -1:
-						if (direction > 0) {
-							locwidth = width - horposi[5] + (int)((horposi[5] - horposi[6]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						break;
-					case 0:
-						if (direction < 0) {
-							locwidth = width - horposi[6] - (int)((horposi[5] - horposi[6]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						else {
-							locwidth = width - horposi[4] + (int)((horposi[4] - horposi[5]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						break;
-					case 1:
-						if (direction < 0) {
-							locwidth = width - horposi[5] - (int)((horposi[4] - horposi[5]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						else {
-							locwidth = width - horposi[3] + (int)((horposi[3] - horposi[4]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						break;
-					case 2:
-						if (direction < 0) {
-							locwidth = width - horposi[4] - (int)((horposi[3] - horposi[4]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						else {
-							locwidth = width - horposi[2] + (int)((horposi[2] - horposi[3]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						break;
-					case 3:
-						if (direction < 0) {
-							locwidth = width - horposi[3] - (int)((horposi[2] - horposi[3]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						else {
-							locwidth = width - horposi[1] + (int)((horposi[1] - horposi[2]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						break;
-					case 4:
-						if (direction < 0) {
-							locwidth = width - horposi[2] - (int)((horposi[1] - horposi[2]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						else {
-							locwidth = width - horposi[0] + (int)((horposi[0] - horposi[1]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						break;
-					case 5:
-						if (direction < 0) {
-							locwidth = width - horposi[1] - (int)((horposi[0] - horposi[1]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						else {
-							locwidth = width - horposi[1] - (int)((horposi[0] - horposi[1]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						break;
-					case 6:
-						if (direction < 0) {
-							locwidth = width - horposi[0] + (int)((horposi[0] - horposi[1]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						else {
-							locwidth = width - horposi[2] - (int)((horposi[1] - horposi[2]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						break;
-					case 7:
-						if (direction < 0) {
-							locwidth = width - horposi[1] + (int)((horposi[1] - horposi[2]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						else {
-							locwidth = width - horposi[3] - (int)((horposi[2] - horposi[3]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						break;
-					case 8:
-						if (direction < 0) {
-							locwidth = width - horposi[2] + (int)((horposi[2] - horposi[3]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						else {
-							locwidth = width - horposi[4] - (int)((horposi[3] - horposi[4]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						break;
-					case 9:
-						if (direction < 0) {
-							locwidth = width - horposi[3] + (int)((horposi[3] - horposi[4]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						else {
-							locwidth = width - horposi[5] - (int)((horposi[4] - horposi[5]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						break;
-					case 10:
-						if (direction < 0) {
-							locwidth = width - horposi[4] + (int)((horposi[4] - horposi[5]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						else {
-							locwidth = width - horposi[6] - (int)((horposi[5] - horposi[6]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						break;
-					case 11:
-						if (direction < 0) {
-							locwidth = width - horposi[5] + (int)((horposi[5] - horposi[6]) * (animloop / 65.0));
-							g.drawImage(img,locwidth,locheight,416,65,null);
-							g.drawImage(game[i].getImage().getImage(),locwidth + 16,locheight + 16,32,32,null);
-							g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
-						}
-						break;
+				try {
+					switch(i - selected + 5) {
+						case -1:
+							if (direction > 0) {
+								locwidth = width - horposi[5] + (int)((horposi[5] - horposi[6]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							break;
+						case 0:
+							if (direction < 0) {
+								locwidth = width - horposi[6] - (int)((horposi[5] - horposi[6]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							else {
+								locwidth = width - horposi[4] + (int)((horposi[4] - horposi[5]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							break;
+						case 1:
+							if (direction < 0) {
+								locwidth = width - horposi[5] - (int)((horposi[4] - horposi[5]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							else {
+								locwidth = width - horposi[3] + (int)((horposi[3] - horposi[4]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							break;
+						case 2:
+							if (direction < 0) {
+								locwidth = width - horposi[4] - (int)((horposi[3] - horposi[4]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							else {
+								locwidth = width - horposi[2] + (int)((horposi[2] - horposi[3]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							break;
+						case 3:
+							if (direction < 0) {
+								locwidth = width - horposi[3] - (int)((horposi[2] - horposi[3]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							else {
+								locwidth = width - horposi[1] + (int)((horposi[1] - horposi[2]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							break;
+						case 4:
+							if (direction < 0) {
+								locwidth = width - horposi[2] - (int)((horposi[1] - horposi[2]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							else {
+								locwidth = width - horposi[0] + (int)((horposi[0] - horposi[1]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							break;
+						case 5:
+							if (direction < 0) {
+								locwidth = width - horposi[1] - (int)((horposi[0] - horposi[1]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							else {
+								locwidth = width - horposi[1] - (int)((horposi[0] - horposi[1]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							break;
+						case 6:
+							if (direction < 0) {
+								locwidth = width - horposi[0] + (int)((horposi[0] - horposi[1]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							else {
+								locwidth = width - horposi[2] - (int)((horposi[1] - horposi[2]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							break;
+						case 7:
+							if (direction < 0) {
+								locwidth = width - horposi[1] + (int)((horposi[1] - horposi[2]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							else {
+								locwidth = width - horposi[3] - (int)((horposi[2] - horposi[3]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							break;
+						case 8:
+							if (direction < 0) {
+								locwidth = width - horposi[2] + (int)((horposi[2] - horposi[3]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							else {
+								locwidth = width - horposi[4] - (int)((horposi[3] - horposi[4]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							break;
+						case 9:
+							if (direction < 0) {
+								locwidth = width - horposi[3] + (int)((horposi[3] - horposi[4]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							else {
+								locwidth = width - horposi[5] - (int)((horposi[4] - horposi[5]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							break;
+						case 10:
+							if (direction < 0) {
+								locwidth = width - horposi[4] + (int)((horposi[4] - horposi[5]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							else {
+								locwidth = width - horposi[6] - (int)((horposi[5] - horposi[6]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							break;
+						case 11:
+							if (direction < 0) {
+								locwidth = width - horposi[5] + (int)((horposi[5] - horposi[6]) * (animloop / 65.0));
+								g.drawImage(img,locwidth,locheight,416,65,null);
+								g.drawImage(game[i].getImage(),locwidth + 16,locheight + 16,32,32,null);
+								g.drawString(game[i].getName(),locwidth + 69,locheight + 35);
+							}
+							break;
+					}
 				}
+				catch (ArrayIndexOutOfBoundsException e) {}
 			}
 			try {
 				Thread.sleep(1);

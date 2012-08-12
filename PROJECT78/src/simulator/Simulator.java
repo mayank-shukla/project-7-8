@@ -643,7 +643,7 @@ public class Simulator implements MouseListener,KeyListener {
 	 */
 	protected void actionGametest(JTextArea console) {
 		frame.dispose();
-		frame = new Window(false);
+		frame = new Window(1, null);
 	}
 
 	/**

@@ -1,7 +1,9 @@
 import game.Game;
+import game.GameCube;
 import game.GamePanel;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -10,7 +12,6 @@ import java.awt.event.WindowEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import display.Display;
 import simulator.Simulator;
 
 public class Test implements KeyListener {
@@ -77,16 +78,34 @@ public class Test implements KeyListener {
 		}
 
 		@Override
-		public ImageIcon getImage() {
+		public Image getImage() {
 			java.net.URL imgURL = Simulator.class.getResource("graphics/icons/play.png");
 			if (imgURL == null)
 				return null;
-			return new ImageIcon(imgURL);
+			return new ImageIcon(imgURL).getImage();
 		}
 
 		@Override
-		public JPanel run(Display dis) {
+		public JPanel run(GameCube game) {
 			return null;
+		}
+
+		@Override
+		public void keyTyped(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 
